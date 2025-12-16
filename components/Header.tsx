@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Search, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { AdBanner } from '@/components/AdSense';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,8 +20,9 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container-custom">
+    <>
+      <header className="bg-white shadow-md sticky top-0 z-50">
+        <div className="container-custom">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
@@ -33,16 +35,16 @@ export default function Header() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/tractores" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Tractores
+              Tractors
             </Link>
             <Link href="/marcas" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Marcas
+              Brands
             </Link>
             <Link href="/comparar" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Comparar
+              Compare
             </Link>
             <Link href="/noticias" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Noticias
+              News
             </Link>
           </nav>
 
@@ -80,7 +82,7 @@ export default function Header() {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Buscar tractores..."
+                    placeholder="Search tractors..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -91,34 +93,40 @@ export default function Header() {
                 className="text-gray-700 hover:text-primary-600 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Tractores
+                Tractors
               </Link>
               <Link
                 href="/marcas"
                 className="text-gray-700 hover:text-primary-600 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Marcas
+                Brands
               </Link>
               <Link
                 href="/comparar"
                 className="text-gray-700 hover:text-primary-600 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Comparar
+                Compare
               </Link>
               <Link
                 href="/noticias"
                 className="text-gray-700 hover:text-primary-600 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Noticias
+                News
               </Link>
             </nav>
           </div>
         )}
       </div>
     </header>
+    <div className="bg-gray-50 border-b">
+      <div className="container-custom">
+        <AdBanner />
+      </div>
+    </div>
+    </>
   );
 }
 

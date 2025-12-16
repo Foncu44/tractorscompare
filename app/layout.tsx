@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -8,24 +9,24 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'TractorsCompare - Comparador de Tractores y Especificaciones',
-    template: '%s | TractorsCompare',
+    default: 'Tractor Data - Complete Tractor Specifications & Database',
+    template: '%s | Tractor Data',
   },
-  description: 'Compara especificaciones de tractores agrícolas, de jardín e industriales. Encuentra el tractor perfecto con nuestro comparador de más de 18,000 modelos.',
-  keywords: ['tractores', 'comparador tractores', 'especificaciones tractores', 'tractores agrícolas', 'john deere', 'kubota', 'new holland', 'case ih'],
+  description: 'Tractor data and specifications database. Compare over 18,000 tractors with detailed technical information, specifications, and performance data for all major brands.',
+  keywords: ['tractor data', 'tractor specifications', 'tractor database', 'tractor compare', 'tractor information', 'tractor specs', 'tractors', 'john deere', 'kubota', 'new holland', 'case ih'],
   authors: [{ name: 'TractorsCompare' }],
   openGraph: {
     type: 'website',
-    locale: 'es_ES',
+    locale: 'en_US',
     url: 'https://tractorscompare.com',
-    siteName: 'TractorsCompare',
-    title: 'TractorsCompare - Comparador de Tractores',
-    description: 'Compara especificaciones de tractores agrícolas, de jardín e industriales',
+    siteName: 'Tractor Data',
+    title: 'Tractor Data - Complete Tractor Specifications Database',
+    description: 'Comprehensive tractor data and specifications database. Compare over 18,000 tractors with detailed technical information.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TractorsCompare - Comparador de Tractores',
-    description: 'Compara especificaciones de tractores agrícolas',
+    title: 'Tractor Data - Complete Tractor Specifications',
+    description: 'Tractor data and specifications database with detailed technical information for all major brands',
   },
   robots: {
     index: true,
@@ -49,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://tractorscompare.com" />
@@ -59,9 +60,9 @@ export default function RootLayout({
             __html: JSON.stringify({
               '@context': 'https://schema.org',
               '@type': 'WebSite',
-              name: 'TractorsCompare',
+              name: 'Tractor Data',
               url: 'https://tractorscompare.com',
-              description: 'Comparador de tractores y especificaciones técnicas',
+              description: 'Complete tractor data, specifications, and technical information database',
               potentialAction: {
                 '@type': 'SearchAction',
                 target: 'https://tractorscompare.com/buscar?q={search_term_string}',
@@ -72,6 +73,12 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />

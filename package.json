@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "download-images": "node scripts/downloadImages.js",
-    "scrape-tractors": "node scripts/scrapeTractorData.js",
     "scrape-from-brands": "node scripts/scrapeFromBrandPages.js",
+    "scrape-all": "node scripts/scrapeAllTractors.js",
     "process-scraped": "node scripts/processScrapedData.js"
   },
   "dependencies": {

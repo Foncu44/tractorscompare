@@ -51,25 +51,33 @@ NEXT_PUBLIC_TRACTOR_DATA_SOURCE=hybrid
 NEXT_PUBLIC_TRACTOR_API_URL=https://tu-api.com
 ```
 
-### 4. Importación de Datos
+### 4. Agregar Datos Manualmente
 
-Puedes importar datos desde JSON o CSV:
+Puedes agregar tractores directamente en `data/tractors.ts`:
 
 ```typescript
-import { importTractorsFromJSON, importTractorsFromCSV } from '@/lib/dataImporter';
-
-// Desde JSON
-const json = `[
+// data/tractors.ts
+export const tractors: Tractor[] = [
   {
-    "id": "tractor-1",
-    "brand": "John Deere",
-    "model": "8245R",
-    "type": "farm",
-    "engine": { "powerHP": 245, "cylinders": 6 }
-    // ...
-  }
-]`;
-const tractors = await importTractorsFromJSON(json);
+    id: "tractor-1",
+    brand: "John Deere",
+    model: "8245R",
+    type: "farm",
+    slug: "john-deere-8245r",
+    engine: { 
+      powerHP: 245, 
+      cylinders: 6,
+      fuelType: "diesel",
+      cooling: "liquid"
+    },
+    transmission: {
+      type: "powershift",
+      gears: 24
+    }
+    // ... más campos según types/tractor.ts
+  },
+  // ... más tractores
+];
 ```
 
 ## Fuentes de Datos Potenciales

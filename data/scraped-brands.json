@@ -1,0 +1,982 @@
+[
+  {
+    "name": "Allis Chalmers",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/allischalmers/allischalmers-tractors.html"
+  },
+  {
+    "name": "John Deere",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/johndeere/johndeere-tractors.html"
+  },
+  {
+    "name": "CaseIH",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/caseih/caseih-tractors.html"
+  },
+  {
+    "name": "Kubota",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/kubota/kubota-tractors.html"
+  },
+  {
+    "name": "David Brown",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/davidbrown/davidbrown-tractors.html"
+  },
+  {
+    "name": "Mahindra",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mahindra/mahindra-tractors.html"
+  },
+  {
+    "name": "Deutz-Fahr",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/deutzfahr/deutzfahr-tractors.html"
+  },
+  {
+    "name": "Massey Ferguson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/massey-ferguson/massey-ferguson-tractors.html"
+  },
+  {
+    "name": "Farmall",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/farmall/farmall-tractors.html"
+  },
+  {
+    "name": "Minneapolis-Moline",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/minneapolis-moline/minneapolis-moline-tractors.html"
+  },
+  {
+    "name": "Fendt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fendt/fendt-tractors.html"
+  },
+  {
+    "name": "New Holland",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/newholland/newholland-tractors.html"
+  },
+  {
+    "name": "Fiat",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fiat/fiat-tractors.html"
+  },
+  {
+    "name": "Oliver",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/oliver/oliver-tractors.html"
+  },
+  {
+    "name": "Ford",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ford/ford-tractors.html"
+  },
+  {
+    "name": "White",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/white/white-tractors.html"
+  },
+  {
+    "name": "International Harvester",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ih/ih-tractors.html"
+  },
+  {
+    "name": "Yanmar",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/yanmar/yanmar-tractors.html"
+  },
+  {
+    "name": "J.I. Case",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/case/case-tractors.html"
+  },
+  {
+    "name": "Zetor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/zetor/zetor-tractors.html"
+  },
+  {
+    "name": "AGCO",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agco/agco-tractors.html"
+  },
+  {
+    "name": "AGCO Allis",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agcoallis/agcoallis-tractors.html"
+  },
+  {
+    "name": "ATC",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/atc/atc-tractors.html"
+  },
+  {
+    "name": "Acremaster",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/acremaster/acremaster-tractors.html"
+  },
+  {
+    "name": "Advance-Rumely",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/rumely/rumely-tractors.html"
+  },
+  {
+    "name": "Ag King",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agking/agking-tractors.html"
+  },
+  {
+    "name": "AgTrac",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agtrac/agtrac-tractors.html"
+  },
+  {
+    "name": "AgraCat",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agracat/agracat-tractors.html"
+  },
+  {
+    "name": "Agri-Power",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agripower/agripower-tractors.html"
+  },
+  {
+    "name": "Agria Hispania",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agria-hispania/agria-hispania-tractors.html"
+  },
+  {
+    "name": "Agrico",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agrico/agrico-tractors.html"
+  },
+  {
+    "name": "Agrinar",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/agrinar/agrinar-tractors.html"
+  },
+  {
+    "name": "Antonio Carraro",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/antonio-carraro/antonio-carraro-tractors.html"
+  },
+  {
+    "name": "Apollo",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/apollo/apollo-tractors.html"
+  },
+  {
+    "name": "ArmaTrac",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/armatrac/armatrac-tractors.html"
+  },
+  {
+    "name": "Ascot Universal",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ascot-universal/ascot-universal-tractors.html"
+  },
+  {
+    "name": "Aultman & Taylor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/aultmantaylor/aultmantaylor-tractors.html"
+  },
+  {
+    "name": "Avery",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/avery/avery-tractors.html"
+  },
+  {
+    "name": "B.F. Avery",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bfavery/bfavery-tractors.html"
+  },
+  {
+    "name": "Bad Boy",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bad-boy/bad-boy-tractors.html"
+  },
+  {
+    "name": "Baldwin",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/baldwin/baldwin-tractors.html"
+  },
+  {
+    "name": "Barreiros",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/barreiros/barreiros-tractors.html"
+  },
+  {
+    "name": "Belarus",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/belarus/belarus-tractors.html"
+  },
+  {
+    "name": "Benye",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/benye/benye-tractors.html"
+  },
+  {
+    "name": "Best",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/best/best-tractors.html"
+  },
+  {
+    "name": "Big Bud",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bigbud/bigbud-tractors.html"
+  },
+  {
+    "name": "Bima",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bima/bima-tractors.html"
+  },
+  {
+    "name": "Bobcat",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bobcat/bobcat-tractors.html"
+  },
+  {
+    "name": "Bolens",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bolens/bolens-tractors.html"
+  },
+  {
+    "name": "Bolinder-Munktell",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bolinder-munktell/bolinder-munktell-tractors.html"
+  },
+  {
+    "name": "Bombardier",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bombardier/bombardier-tractors.html"
+  },
+  {
+    "name": "Branson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/branson/branson-tractors.html"
+  },
+  {
+    "name": "Bristol",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bristol/bristol-tractors.html"
+  },
+  {
+    "name": "Brockway",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/brockway/brockway-tractors.html"
+  },
+  {
+    "name": "Buhler Versatile",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/buhlerversatile/buhlerversatile-tractors.html"
+  },
+  {
+    "name": "Bukh",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/bukh/bukh-tractors.html"
+  },
+  {
+    "name": "C.O.D. Tractor Company",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cod-tractor/cod-tractor-tractors.html"
+  },
+  {
+    "name": "CBT",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cbt/cbt-tractors.html"
+  },
+  {
+    "name": "CO-OP",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/coop/coop-tractors.html"
+  },
+  {
+    "name": "Cabelas",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cabelas/cabelas-tractors.html"
+  },
+  {
+    "name": "Cameco",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cameco/cameco-tractors.html"
+  },
+  {
+    "name": "Captain",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/captain/captain-tractors.html"
+  },
+  {
+    "name": "Carraro",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/carraro/carraro-tractors.html"
+  },
+  {
+    "name": "Caterpillar",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/caterpillar/caterpillar-tractors.html"
+  },
+  {
+    "name": "Centaur",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/centaur/centaur-tractors.html"
+  },
+  {
+    "name": "Century",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/century/century-tractors.html"
+  },
+  {
+    "name": "Challenger",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/challenger/challenger-tractors.html"
+  },
+  {
+    "name": "Chamberlain",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/chamberlain/chamberlain-tractors.html"
+  },
+  {
+    "name": "Chery",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/chery/chery-tractors.html"
+  },
+  {
+    "name": "Claas",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/claas/claas-tractors.html"
+  },
+  {
+    "name": "Cletrac",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cletrac/cletrac-tractors.html"
+  },
+  {
+    "name": "Cockshutt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cockshutt/cockshutt-tractors.html"
+  },
+  {
+    "name": "Coleman",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/coleman/coleman-tractors.html"
+  },
+  {
+    "name": "Corbitt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/corbitt/corbitt-tractors.html"
+  },
+  {
+    "name": "County",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/county/county-tractors.html"
+  },
+  {
+    "name": "Cub Cadet",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/cubcadet/cubcadet-tractors.html"
+  },
+  {
+    "name": "Custom",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/custom/custom-tractors.html"
+  },
+  {
+    "name": "Daedong",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/daedong/daedong-tractors.html"
+  },
+  {
+    "name": "Denning",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/denning/denning-tractors.html"
+  },
+  {
+    "name": "Deutz",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/deutz/deutz-tractors.html"
+  },
+  {
+    "name": "Deutz-Allis",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/deutzallis/deutzallis-tractors.html"
+  },
+  {
+    "name": "Dongfeng",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/dongfeng/dongfeng-tractors.html"
+  },
+  {
+    "name": "Dutra",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/dutra/dutra-tractors.html"
+  },
+  {
+    "name": "Eagle",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/eagle/eagle-tractors.html"
+  },
+  {
+    "name": "Eagle Manufacturing",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/eagle-mfg/eagle-mfg-tractors.html"
+  },
+  {
+    "name": "Earthmaster",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/earthmaster/earthmaster-tractors.html"
+  },
+  {
+    "name": "East Wind",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/eastwind/eastwind-tractors.html"
+  },
+  {
+    "name": "Ebro",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ebro/ebro-tractors.html"
+  },
+  {
+    "name": "Eicher",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/eicher/eicher-tractors.html"
+  },
+  {
+    "name": "Empire",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/empire/empire-tractors.html"
+  },
+  {
+    "name": "Erkunt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/erkunt/erkunt-tractors.html"
+  },
+  {
+    "name": "Escorts",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/escorts/escorts-tractors.html"
+  },
+  {
+    "name": "Fahr",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fahr/fahr-tractors.html"
+  },
+  {
+    "name": "Farm Pro",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/farm-pro/farm-pro-tractors.html"
+  },
+  {
+    "name": "Farmtrac",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/farmtrac/farmtrac-tractors.html"
+  },
+  {
+    "name": "Fate-Root-Heath",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fate-root-heath/fate-root-heath-tractors.html"
+  },
+  {
+    "name": "Ferguson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ferguson/ferguson-tractors.html"
+  },
+  {
+    "name": "Fiat-Hesston",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hesston/hesston-tractors.html"
+  },
+  {
+    "name": "Force Motors",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/forcemotors/forcemotors-tractors.html"
+  },
+  {
+    "name": "Ford-New Holland",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fordnh/fordnh-tractors.html"
+  },
+  {
+    "name": "Fordson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fordson/fordson-tractors.html"
+  },
+  {
+    "name": "Fortschritt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fortschritt/fortschritt-tractors.html"
+  },
+  {
+    "name": "Foton",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/foton/foton-tractors.html"
+  },
+  {
+    "name": "Fox River Tractor Company",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/fox-river-tractor/fox-river-tractor-tractors.html"
+  },
+  {
+    "name": "Friday",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/friday/friday-tractors.html"
+  },
+  {
+    "name": "GBT",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/gbt/gbt-tractors.html"
+  },
+  {
+    "name": "Galloway",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/galloway/galloway-tractors.html"
+  },
+  {
+    "name": "General Ordnance",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/general-ordnance/general-ordnance-tractors.html"
+  },
+  {
+    "name": "Gibson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/gibson/gibson-tractors.html"
+  },
+  {
+    "name": "Graham-Bradley",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/graham-bradley/graham-bradley-tractors.html"
+  },
+  {
+    "name": "Gray Tractor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/gray-tractor/gray-tractor-tractors.html"
+  },
+  {
+    "name": "Haas",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/haas/haas-tractors.html"
+  },
+  {
+    "name": "Happy Farmer",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/happy-farmer/happy-farmer-tractors.html"
+  },
+  {
+    "name": "Hart-Parr",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hartparr/hartparr-tractors.html"
+  },
+  {
+    "name": "Hefty",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hefty/hefty-tractors.html"
+  },
+  {
+    "name": "Heider",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/heider/heider-tractors.html"
+  },
+  {
+    "name": "Hinomoto",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hinomoto/hinomoto-tractors.html"
+  },
+  {
+    "name": "Hitachi",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hitachi/hitachi-tractors.html"
+  },
+  {
+    "name": "Holder",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/holder/holder-tractors.html"
+  },
+  {
+    "name": "Holt",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/holt/holt-tractors.html"
+  },
+  {
+    "name": "Huber",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/huber/huber-tractors.html"
+  },
+  {
+    "name": "Hurlimann",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/hurlimann/hurlimann-tractors.html"
+  },
+  {
+    "name": "IMR Rakovica",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/imr-rakovica/imr-rakovica-tractors.html"
+  },
+  {
+    "name": "IMT",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/imt/imt-tractors.html"
+  },
+  {
+    "name": "Interstate Tractor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/interstate-tractor/interstate-tractor-tractors.html"
+  },
+  {
+    "name": "Iseki",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/iseki/iseki-tractors.html"
+  },
+  {
+    "name": "Ivel Agricultural Motors",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ivel/ivel-tractors.html"
+  },
+  {
+    "name": "JCB",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/jcb/jcb-tractors.html"
+  },
+  {
+    "name": "Jackson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/jackson/jackson-tractors.html"
+  },
+  {
+    "name": "Jacobsen",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/jacobsen/jacobsen-tractors.html"
+  },
+  {
+    "name": "Jeep",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/jeep/jeep-tractors.html"
+  },
+  {
+    "name": "Jinma",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/jinma/jinma-tractors.html"
+  },
+  {
+    "name": "Johnson Manufacturing",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/johnson-manufacturing/johnson-manufacturing-tractors.html"
+  },
+  {
+    "name": "KAMCO",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/kamco/kamco-tractors.html"
+  },
+  {
+    "name": "Keck-Gonnerman",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/keck-gonnerman/keck-gonnerman-tractors.html"
+  },
+  {
+    "name": "Kioti",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/kioti/kioti-tractors.html"
+  },
+  {
+    "name": "Kirovets",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/kirovets/kirovets-tractors.html"
+  },
+  {
+    "name": "Knudson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/knudson/knudson-tractors.html"
+  },
+  {
+    "name": "LS",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ls/ls-tractors.html"
+  },
+  {
+    "name": "Lamborghini",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/lamborghini/lamborghini-tractors.html"
+  },
+  {
+    "name": "Landini",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/landini/landini-tractors.html"
+  },
+  {
+    "name": "Lanz",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/lanz/lanz-tractors.html"
+  },
+  {
+    "name": "Leader",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/leader/leader-tractors.html"
+  },
+  {
+    "name": "Lenar",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/lenar/lenar-tractors.html"
+  },
+  {
+    "name": "Leyland",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/leyland/leyland-tractors.html"
+  },
+  {
+    "name": "Limb",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/limb/limb-tractors.html"
+  },
+  {
+    "name": "Lindner",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/lindner/lindner-tractors.html"
+  },
+  {
+    "name": "Long",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/long/long-tractors.html"
+  },
+  {
+    "name": "M-R-S",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/m-r-s/m-r-s-tractors.html"
+  },
+  {
+    "name": "Mahindra Gujarat",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mahindra-gujarat/mahindra-gujarat-tractors.html"
+  },
+  {
+    "name": "Marshall",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/marshall/marshall-tractors.html"
+  },
+  {
+    "name": "Massey-Harris",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/masseyharris/masseyharris-tractors.html"
+  },
+  {
+    "name": "McConnell-Marc",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mcconnellmarc/mcconnellmarc-tractors.html"
+  },
+  {
+    "name": "McCormick Intl",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mccormickti/mccormickti-tractors.html"
+  },
+  {
+    "name": "McCormick-Deering",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mccormickdeering/mccormickdeering-tractors.html"
+  },
+  {
+    "name": "McCulloch",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mcculloch/mcculloch-tractors.html"
+  },
+  {
+    "name": "McKee",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mckee/mckee-tractors.html"
+  },
+  {
+    "name": "Memo",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/memo/memo-tractors.html"
+  },
+  {
+    "name": "Mercedes-Benz",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mercedesbenz/mercedesbenz-tractors.html"
+  },
+  {
+    "name": "Merlin",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/merlin/merlin-tractors.html"
+  },
+  {
+    "name": "Minneapolis",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/minneapolis/minneapolis-tractors.html"
+  },
+  {
+    "name": "Minot",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/minot/minot-tractors.html"
+  },
+  {
+    "name": "Mitsubishi",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/mitsubishi/mitsubishi-tractors.html"
+  },
+  {
+    "name": "Montana",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/montana/montana-tractors.html"
+  },
+  {
+    "name": "Montgomery Ward",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/montgomery-ward/montgomery-ward-tractors.html"
+  },
+  {
+    "name": "Muir-Hill",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/muir-hill/muir-hill-tractors.html"
+  },
+  {
+    "name": "Müller",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/muller/muller-tractors.html"
+  },
+  {
+    "name": "Nichols-Shepard",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/nichols-shepard/nichols-shepard-tractors.html"
+  },
+  {
+    "name": "NorTrac",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/nortrac/nortrac-tractors.html"
+  },
+  {
+    "name": "Nuffield",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/nuffield/nuffield-tractors.html"
+  },
+  {
+    "name": "Parrett",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/parrett/parrett-tractors.html"
+  },
+  {
+    "name": "Pasquali",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/pasquali/pasquali-tractors.html"
+  },
+  {
+    "name": "Pioneer Tractor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/pioneer-tractor/pioneer-tractor-tractors.html"
+  },
+  {
+    "name": "Porsche",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/porsche/porsche-tractors.html"
+  },
+  {
+    "name": "RK Tractors",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/rk-tractors/rk-tractors-tractors.html"
+  },
+  {
+    "name": "Raba",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/raba/raba-tractors.html"
+  },
+  {
+    "name": "Ranch Hand",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ranchhand/ranchhand-tractors.html"
+  },
+  {
+    "name": "Ransomes",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ransomes/ransomes-tractors.html"
+  },
+  {
+    "name": "Renault",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/renault/renault-tractors.html"
+  },
+  {
+    "name": "Rhino",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/rhino/rhino-tractors.html"
+  },
+  {
+    "name": "Rock Island",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/rock-island/rock-island-tractors.html"
+  },
+  {
+    "name": "Rome",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/rome/rome-tractors.html"
+  },
+  {
+    "name": "SAME",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/same/same-tractors.html"
+  },
+  {
+    "name": "SFV",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/sfv/sfv-tractors.html"
+  },
+  {
+    "name": "SOMECA",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/someca/someca-tractors.html"
+  },
+  {
+    "name": "Samson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/samson/samson-tractors.html"
+  },
+  {
+    "name": "Satoh",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/satoh/satoh-tractors.html"
+  },
+  {
+    "name": "Saukville",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/saukville/saukville-tractors.html"
+  },
+  {
+    "name": "Saunderson",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/saunderson/saunderson-tractors.html"
+  },
+  {
+    "name": "Schilter",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/schilter/schilter-tractors.html"
+  },
+  {
+    "name": "Schluter",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/schluter/schluter-tractors.html"
+  },
+  {
+    "name": "Sears",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/sears/sears-tractors.html"
+  },
+  {
+    "name": "Shaktimaan",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/shaktimaan/shaktimaan-tractors.html"
+  },
+  {
+    "name": "Sheppard Diesel",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/sheppard-diesel/sheppard-diesel-tractors.html"
+  },
+  {
+    "name": "Shibaura",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/shibaura/shibaura-tractors.html"
+  },
+  {
+    "name": "Silver King",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/silver-king/silver-king-tractors.html"
+  },
+  {
+    "name": "Simplicity",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/simplicity/simplicity-tractors.html"
+  },
+  {
+    "name": "Simpson Jumbo",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/simpson-jumbo/simpson-jumbo-tractors.html"
+  },
+  {
+    "name": "Siromer",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/siromer/siromer-tractors.html"
+  },
+  {
+    "name": "Skoda-LIAZ",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/skoda-liaz/skoda-liaz-tractors.html"
+  },
+  {
+    "name": "Solis",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/solis/solis-tractors.html"
+  },
+  {
+    "name": "Sonalika",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/sonalika/sonalika-tractors.html"
+  },
+  {
+    "name": "Square Turn",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/square-turn/square-turn-tractors.html"
+  },
+  {
+    "name": "Steiger",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/steiger/steiger-tractors.html"
+  },
+  {
+    "name": "Steyr",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/steyr/steyr-tractors.html"
+  },
+  {
+    "name": "Stihl",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/stihl/stihl-tractors.html"
+  },
+  {
+    "name": "Summit Tractors",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/summit-tractors/summit-tractors-tractors.html"
+  },
+  {
+    "name": "Suzue",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/suzue/suzue-tractors.html"
+  },
+  {
+    "name": "Swaraj",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/swaraj/swaraj-tractors.html"
+  },
+  {
+    "name": "TAFE",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/tafe/tafe-tractors.html"
+  },
+  {
+    "name": "TYM",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/tym/tym-tractors.html"
+  },
+  {
+    "name": "Taishan-America",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/taishan-america/taishan-america-tractors.html"
+  },
+  {
+    "name": "Terraplane",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/terraplane/terraplane-tractors.html"
+  },
+  {
+    "name": "Terrion",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/terrion/terrion-tractors.html"
+  },
+  {
+    "name": "Thieman Harvester",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/thieman/thieman-tractors.html"
+  },
+  {
+    "name": "Toro",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/toro/toro-tractors.html"
+  },
+  {
+    "name": "Turner Manufacturing",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/turner-manufacturing/turner-manufacturing-tractors.html"
+  },
+  {
+    "name": "Turner-Simplicity",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/turner-simplicity/turner-simplicity-tractors.html"
+  },
+  {
+    "name": "Twin City",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/twincity/twincity-tractors.html"
+  },
+  {
+    "name": "Tytan",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/tytan/tytan-tractors.html"
+  },
+  {
+    "name": "UTB/Universal",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/utb/utb-tractors.html"
+  },
+  {
+    "name": "Unimog",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/unimog/unimog-tractors.html"
+  },
+  {
+    "name": "Unitrak",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/unitrak/unitrak-tractors.html"
+  },
+  {
+    "name": "Upton",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/upton/upton-tractors.html"
+  },
+  {
+    "name": "Ursus",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/ursus/ursus-tractors.html"
+  },
+  {
+    "name": "VST",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/vst/vst-tractors.html"
+  },
+  {
+    "name": "Valmet",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/valmet/valmet-tractors.html"
+  },
+  {
+    "name": "Valpadana",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/valpadana/valpadana-tractors.html"
+  },
+  {
+    "name": "Valtra",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/valtra/valtra-tractors.html"
+  },
+  {
+    "name": "Versatile",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/versatile/versatile-tractors.html"
+  },
+  {
+    "name": "Volvo",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/volvo/volvo-tractors.html"
+  },
+  {
+    "name": "Wagner",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wagner/wagner-tractors.html"
+  },
+  {
+    "name": "Wallis",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wallis/wallis-tractors.html"
+  },
+  {
+    "name": "Waltanna",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/waltanna/waltanna-tractors.html"
+  },
+  {
+    "name": "Waterloo Boy",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/waterlooboy/waterlooboy-tractors.html"
+  },
+  {
+    "name": "Waterloo Manufacturing Company",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/waterloo-manufacturing-co/waterloo-manufacturing-co-tractors.html"
+  },
+  {
+    "name": "Wetmore",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wetmore/wetmore-tractors.html"
+  },
+  {
+    "name": "Wingin",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wingin/wingin-tractors.html"
+  },
+  {
+    "name": "Wisconsin Tractor",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wisconsin/wisconsin-tractors.html"
+  },
+  {
+    "name": "Woods & Copeland",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/woods-copeland/woods-copeland-tractors.html"
+  },
+  {
+    "name": "Wuzheng",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/wuzheng/wuzheng-tractors.html"
+  },
+  {
+    "name": "XTZ",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/xtz/xtz-tractors.html"
+  },
+  {
+    "name": "YTO",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/yto/yto-tractors.html"
+  },
+  {
+    "name": "Zanello",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/zanello/zanello-tractors.html"
+  },
+  {
+    "name": "Zetor Zebra",
+    "url": "https://www.tractordata.com/farm-tractors/tractor-brands/zetorzebra/zetorzebra-tractors.html"
+  }
+]

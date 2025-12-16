@@ -1,13 +1,14 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Tractor as TractorIcon, Filter } from 'lucide-react';
 import { tractors, TractorType } from '@/data/tractors';
 import { Tractor } from '@/types/tractor';
+import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
+import { AdInContent, AdList } from '@/components/AdSense';
 
 export const metadata = {
-  title: 'Todos los Tractores - Especificaciones Completas',
-  description: 'Explora nuestra base de datos completa de tractores agrícolas, de jardín e industriales. Filtra por marca, tipo y características.',
-  keywords: ['tractores', 'lista tractores', 'tractores agrícolas', 'tractores jardín'],
+  title: 'Tractor Data Database - All Tractors & Specifications',
+  description: 'Complete tractor data database with specifications for all tractors. Search and filter by brand, type, power, and features. Access detailed tractor data and technical specifications.',
+  keywords: ['tractor data', 'tractor database', 'tractor specifications', 'all tractors', 'tractor list', 'tractor data database', 'agricultural tractors', 'lawn tractors', 'tractor specs'],
 };
 
 interface TractoresPageProps {
@@ -44,17 +45,17 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
   }
 
   const types: { value: TractorType; label: string }[] = [
-    { value: 'farm', label: 'Agrícolas' },
-    { value: 'lawn', label: 'Jardín' },
-    { value: 'industrial', label: 'Industriales' },
+    { value: 'farm', label: 'Agricultural' },
+    { value: 'lawn', label: 'Lawn' },
+    { value: 'industrial', label: 'Industrial' },
   ];
 
   return (
     <div className="container-custom py-12">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Todos los Tractores</h1>
+        <h1 className="text-4xl font-bold mb-4">Complete Tractor Data Database</h1>
         <p className="text-gray-600 text-lg">
-          Explora nuestra base de datos completa de {tractors.length}+ tractores con especificaciones detalladas.
+          Access comprehensive tractor data and specifications for {tractors.length}+ tractors. Search, filter, and compare detailed technical information, engine specs, dimensions, and performance data for all major tractor brands.
         </p>
       </div>
 
@@ -62,11 +63,11 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="flex items-center mb-4">
           <Filter className="w-5 h-5 mr-2 text-gray-600" />
-          <h2 className="text-xl font-semibold">Filtros</h2>
+          <h2 className="text-xl font-semibold">Filters</h2>
         </div>
         <div className="flex flex-wrap gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Tipo</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
             <div className="flex gap-2">
               {types.map((type) => (
                 <Link
@@ -89,29 +90,34 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
       {/* Results */}
       <div className="mb-4">
         <p className="text-gray-600">
-          Mostrando <strong>{filteredTractors.length}</strong> tractores
+          Showing <strong>{filteredTractors.length}</strong> tractors
         </p>
       </div>
 
+      <AdInContent />
+      
       {/* Tractors Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredTractors.map((tractor) => (
-          <Link
-            key={tractor.id}
-            href={`/tractores/${tractor.slug}`}
-            className="card p-6 hover:scale-105 transition-transform"
-          >
-            {tractor.imageUrl && (
-              <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden bg-gray-200">
-                <Image
-                  src={tractor.imageUrl}
-                  alt={`${tractor.brand} ${tractor.model}`}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
+        {filteredTractors.map((tractor, index) => (
+          <div key={tractor.id}>
+            {index === Math.floor(filteredTractors.length / 2) && (
+              <div className="col-span-full mb-6">
+                <AdList />
               </div>
             )}
+            <Link
+              href={`/tractores/${tractor.slug}`}
+              className="card p-6 hover:scale-105 transition-transform block"
+            >
+            <div className="w-full mb-4 rounded-lg overflow-hidden">
+              <TractorImagePlaceholder
+                brand={tractor.brand}
+                model={tractor.model}
+                width={400}
+                height={300}
+                className="w-full h-48 rounded-lg"
+              />
+            </div>
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-semibold text-primary-600">{tractor.brand}</span>
               {tractor.year && (
@@ -132,16 +138,17 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
               <p className="text-gray-600 text-sm line-clamp-2">{tractor.description}</p>
             )}
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <span className="text-xs text-primary-600 font-semibold">Ver especificaciones →</span>
+              <span className="text-xs text-primary-600 font-semibold">View specifications →</span>
             </div>
           </Link>
+          </div>
         ))}
       </div>
 
       {filteredTractors.length === 0 && (
         <div className="text-center py-12">
           <TractorIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-xl text-gray-600">No se encontraron tractores con los filtros seleccionados.</p>
+          <p className="text-xl text-gray-600">No tractors found with the selected filters.</p>
         </div>
       )}
     </div>

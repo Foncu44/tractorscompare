@@ -69,8 +69,9 @@ async function processScrapedData() {
       };
     }).filter(tractor => 
       tractor.brand !== 'Unknown' && 
-      tractor.model !== 'Unknown' &&
-      tractor.engine.powerHP > 0
+      tractor.model !== 'Unknown'
+      // Removemos el filtro de powerHP > 0 para aceptar todos los tractores válidos
+      // Los tractores sin HP se pueden procesar después o tener valores por defecto
     );
 
     console.log(`✅ ${processedTractors.length} tractores procesados y validados`);

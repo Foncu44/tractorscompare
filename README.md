@@ -59,8 +59,7 @@ La aplicación estará disponible en `http://localhost:3000`
 ├── data/                  # Datos de tractores
 │   └── tractors.ts        # Base de datos de tractores
 ├── lib/                   # Utilidades y servicios
-│   ├── tractorService.ts  # Servicio unificado de datos
-│   └── dataImporter.ts    # Importador de datos
+│   └── tractorService.ts  # Servicio unificado de datos
 ├── types/                 # Tipos TypeScript
 │   └── tractor.ts         # Tipos de datos de tractores
 └── public/                # Archivos estáticos
@@ -100,22 +99,6 @@ El proyecto incluye endpoints API que puedes usar o extender:
 - `GET /api/tractors/brand/[brand]` - Obtiene tractores por marca
 - `GET /api/brands` - Obtiene todas las marcas
 
-## 📥 Importación de Datos
-
-El proyecto incluye utilidades para importar datos desde múltiples fuentes:
-
-```typescript
-import { importTractorsFromJSON, importTractorsFromCSV } from '@/lib/dataImporter';
-
-// Desde JSON
-const jsonData = '...'; // JSON string
-const tractors = await importTractorsFromJSON(jsonData);
-
-// Desde CSV
-const csvData = '...'; // CSV string
-const tractors = await importTractorsFromCSV(csvData);
-```
-
 ## 🔍 Fuentes de Datos para Tractores
 
 Aunque no existe una API pública universal, puedes obtener datos de:
@@ -134,7 +117,7 @@ Aunque no existe una API pública universal, puedes obtener datos de:
 
 4. **Crear tu propia base de datos**: 
    - Usa el formato de `types/tractor.ts`
-   - Importa usando `dataImporter.ts`
+   - Agrega los datos directamente en `data/tractors.ts`
 
 ## 🎯 Características SEO
 

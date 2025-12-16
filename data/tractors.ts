@@ -1,8 +1,75 @@
 import { Tractor } from '@/types/tractor';
+import { scrapedTractors } from './processed-tractors';
+
+// Función para normalizar los datos scrapeados
+function normalizeScrapedTractor(tractor: Tractor): Tractor {
+  // Corregir el campo brand que está mal separado
+  let brand = tractor.brand;
+  let model = tractor.model;
+
+  // Casos especiales de marcas con nombres compuestos
+  if (brand === 'John' && model.startsWith('Deere ')) {
+    brand = 'John Deere';
+    model = model.replace('Deere ', '');
+  } else if (brand === 'New' && model.startsWith('Holland ')) {
+    brand = 'New Holland';
+    model = model.replace('Holland ', '');
+  } else if (brand === 'Massey' && model.startsWith('Ferguson ')) {
+    brand = 'Massey Ferguson';
+    model = model.replace('Ferguson ', '');
+  }
+
+  // Generate description and metadata optimized for SEO with "tractor data" keyword
+  const fullName = `${brand} ${model}`;
+  const yearText = tractor.year ? ` ${tractor.year}` : '';
+  
+  const description = tractor.description || 
+    `The ${fullName}${yearText} is a ${tractor.type === 'farm' ? 'farm' : 'lawn'} tractor with ${tractor.engine.powerHP} HP power.`;
+  
+  const metaDescription = tractor.metaDescription || 
+    `${fullName}${yearText} tractor data and complete specifications. ${tractor.engine.powerHP} HP ${tractor.engine.cylinders > 0 ? `${tractor.engine.cylinders}-cylinder ` : ''}${tractor.engine.fuelType} engine, ${tractor.transmission.type} transmission.${tractor.weight ? ` Weight: ${Math.round(tractor.weight / 1000)} tons.` : ''} Access detailed tractor data, technical specifications, dimensions, hydraulic system, and performance information.`;
+  
+  const metaKeywords = tractor.metaKeywords || [
+    `${fullName.toLowerCase()} tractor data`,
+    `${brand.toLowerCase()} ${model.toLowerCase()} specifications`,
+    `${brand.toLowerCase()} ${model.toLowerCase()} specs`,
+    `${brand.toLowerCase()} ${model.toLowerCase()} data`,
+    `${brand.toLowerCase()} tractor data`,
+    `${model.toLowerCase()} tractor specifications`,
+    'tractor data',
+    'tractor specifications',
+    `tractor ${tractor.engine.powerHP} hp`,
+    tractor.type === 'farm' ? 'farm tractor data' : 'lawn tractor data',
+    brand.toLowerCase(),
+    model.toLowerCase(),
+  ];
+
+  // Generar slug corregido
+  const slug = `${brand.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${model.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}`;
+
+  return {
+    ...tractor,
+    brand,
+    model,
+    slug,
+    description,
+    metaDescription,
+    metaKeywords,
+    // Agregar imageUrl por defecto si está vacío
+    imageUrl: tractor.imageUrl || `/images/tractors/${slug}.jpg`,
+    // Completar campos opcionales
+    ptoHP: tractor.ptoHP || Math.round(tractor.engine.powerHP * 0.85), // Estimación: 85% del HP del motor
+    ptoRPM: tractor.ptoRPM || 540,
+    category: tractor.category || (tractor.type === 'farm' ? 'Farm' : 'Lawn'),
+  };
+}
+
+// Normalizar tractores scrapeados
+const normalizedScrapedTractors = scrapedTractors.map(normalizeScrapedTractor);
 
 // Datos de ejemplo basados en la estructura de TractorData.com
 // En producción, estos datos vendrían de una base de datos o API
-export const tractors: Tractor[] = [
+const staticTractors: Tractor[] = [
   {
     id: 'john-deere-8245r',
     brand: 'John Deere',
@@ -42,16 +109,16 @@ export const tractors: Tractor[] = [
     },
     ptoHP: 230,
     ptoRPM: 540,
-    description: 'El John Deere 8245R es un tractor agrícola de gran potencia diseñado para trabajos exigentes en el campo. Con un motor de 245 HP y transmisión AutoPowr IVT, ofrece rendimiento excepcional y eficiencia de combustible.',
+    description: 'The John Deere 8245R is a high-power agricultural tractor designed for demanding field work. With a 245 HP engine and AutoPowr IVT transmission, it offers exceptional performance and fuel efficiency.',
     features: [
-      'Cabina CommandView con climatización',
-      'Transmisión AutoPowr IVT de 24 velocidades',
-      'Sistema hidráulico de alto flujo',
-      'Toma de fuerza de 230 HP',
-      'Compatibilidad con implementos inteligentes',
+      'CommandView cab with climate control',
+      '24-speed AutoPowr IVT transmission',
+      'High-flow hydraulic system',
+      '230 HP power take-off',
+      'Compatibility with smart implements',
     ],
-    metaDescription: 'Especificaciones completas del John Deere 8245R: 245 HP, transmisión AutoPowr IVT, hidráulica de 227 L/min. Compara precios y características.',
-    metaKeywords: ['john deere 8245r', 'tractor 245 hp', 'tractor agrícola', 'john deere', 'tractor row crop'],
+    metaDescription: 'Complete specifications of John Deere 8245R: 245 HP, AutoPowr IVT transmission, 227 L/min hydraulics. Compare prices and features.',
+    metaKeywords: ['john deere 8245r tractor data', 'john deere 8245r specifications', 'john deere 8245r specs', 'tractor data', 'tractor specifications', 'tractor 245 hp', 'john deere', 'tractor row crop'],
   },
   {
     id: 'kubota-m7-171',
@@ -73,7 +140,7 @@ export const tractors: Tractor[] = [
     },
     transmission: {
       type: 'hydrostatic',
-      description: 'Transmisión hidrostática CVT',
+      description: 'Hydrostatic CVT transmission',
     },
     dimensions: {
       length: 4850,
@@ -90,15 +157,15 @@ export const tractors: Tractor[] = [
     },
     ptoHP: 160,
     ptoRPM: 540,
-    description: 'El Kubota M7-171 combina potencia y versatilidad en un diseño compacto. Ideal para una amplia gama de aplicaciones agrícolas.',
+    description: 'The Kubota M7-171 combines power and versatility in a compact design. Ideal for a wide range of agricultural applications.',
     features: [
-      'Motor V3800-CR-TI-E4',
-      'Transmisión CVT',
-      'Cabina cómoda con control climático',
-      'Sistema de gestión inteligente',
+      'V3800-CR-TI-E4 engine',
+      'CVT transmission',
+      'Comfortable cab with climate control',
+      'Intelligent management system',
     ],
-    metaDescription: 'Especificaciones del Kubota M7-171: 171 HP, transmisión CVT, peso 7.850 kg. Información completa y comparación.',
-    metaKeywords: ['kubota m7-171', 'tractor 171 hp', 'kubota', 'tractor utility'],
+    metaDescription: 'Kubota M7-171 2021 tractor data and complete specifications. 171 HP, CVT transmission, weight 7,850 kg. Access detailed technical information, engine specs, dimensions, and performance data.',
+    metaKeywords: ['kubota m7-171 tractor data', 'kubota m7-171 specifications', 'kubota m7-171 specs', 'tractor data', 'tractor specifications', 'tractor 171 hp', 'kubota', 'tractor utility'],
   },
   {
     id: 'new-holland-t8-435',
@@ -120,7 +187,7 @@ export const tractors: Tractor[] = [
     },
     transmission: {
       type: 'cvt',
-      description: 'Transmisión continua CVT',
+      description: 'Continuous CVT transmission',
     },
     dimensions: {
       length: 6150,
@@ -137,16 +204,16 @@ export const tractors: Tractor[] = [
     },
     ptoHP: 410,
     ptoRPM: 1000,
-    description: 'El New Holland T8.435 es un tractor de alta potencia diseñado para trabajos de gran escala. Con 435 HP y transmisión CVT de última generación.',
+    description: 'The New Holland T8.435 is a high-power tractor designed for large-scale work. With 435 HP and state-of-the-art CVT transmission.',
     features: [
-      'Motor FPT Cursor 13 de 6 cilindros',
-      'Transmisión CVT de rango infinito',
-      'Sistema hidráulico de 230 L/min',
-      'Cabina VisionView ultra silenciosa',
-      'Tecnología de conducción autónoma opcional',
+      'FPT Cursor 13 6-cylinder engine',
+      'Infinite range CVT transmission',
+      '230 L/min hydraulic system',
+      'Ultra-quiet VisionView cab',
+      'Optional autonomous driving technology',
     ],
-    metaDescription: 'New Holland T8.435: 435 HP, transmisión CVT, sistema hidráulico de 230 L/min. Especificaciones completas y precio.',
-    metaKeywords: ['new holland t8.435', 'tractor 435 hp', 'new holland', 'tractor agrícola'],
+    metaDescription: 'New Holland T8.435 2022 tractor data and complete specifications. 435 HP, CVT transmission, 230 L/min hydraulic system. Access detailed technical information, engine specs, dimensions, and performance data.',
+    metaKeywords: ['new holland t8.435 tractor data', 'new holland t8.435 specifications', 'new holland t8.435 specs', 'tractor data', 'tractor specifications', 'tractor 435 hp', 'new holland', 'tractor row crop'],
   },
   {
     id: 'case-ih-magnum-240',
@@ -169,7 +236,7 @@ export const tractors: Tractor[] = [
     transmission: {
       type: 'powershift',
       gears: 18,
-      description: 'Transmisión de 18 velocidades',
+      description: '18-speed transmission',
     },
     dimensions: {
       length: 5750,
@@ -186,15 +253,15 @@ export const tractors: Tractor[] = [
     },
     ptoHP: 225,
     ptoRPM: 540,
-    description: 'El Case IH Magnum 240 ofrece potencia y durabilidad para trabajos agrícolas intensivos. Diseñado para máxima productividad y eficiencia.',
+    description: 'The Case IH Magnum 240 offers power and durability for intensive agricultural work. Designed for maximum productivity and efficiency.',
     features: [
-      'Motor FPT Cursor 9 de 6 cilindros',
-      'Transmisión de 18 velocidades',
-      'Sistema hidráulico de alto rendimiento',
-      'Cabina AFS Pro 700',
+      'FPT Cursor 9 6-cylinder engine',
+      '18-speed transmission',
+      'High-performance hydraulic system',
+      'AFS Pro 700 cab',
     ],
-    metaDescription: 'Case IH Magnum 240: 240 HP, transmisión de 18 velocidades. Especificaciones técnicas completas y características.',
-    metaKeywords: ['case ih magnum 240', 'tractor 240 hp', 'case ih', 'tractor row crop'],
+    metaDescription: 'Case IH Magnum 240 2021 tractor data and complete specifications. 240 HP, 18-speed transmission. Access detailed technical information, engine specs, dimensions, and performance data.',
+    metaKeywords: ['case ih magnum 240 tractor data', 'case ih magnum 240 specifications', 'case ih magnum 240 specs', 'tractor data', 'tractor specifications', 'tractor 240 hp', 'case ih', 'tractor row crop'],
   },
   {
     id: 'massey-ferguson-8660',
@@ -216,7 +283,7 @@ export const tractors: Tractor[] = [
     },
     transmission: {
       type: 'cvt',
-      description: 'Transmisión Dyna-VT',
+      description: 'Dyna-VT transmission',
     },
     dimensions: {
       length: 5600,
@@ -232,17 +299,30 @@ export const tractors: Tractor[] = [
     },
     ptoHP: 245,
     ptoRPM: 540,
-    description: 'El Massey Ferguson 8660 combina potencia y eficiencia con la tecnología Dyna-VT para un rendimiento óptimo en campo.',
+    description: 'The Massey Ferguson 8660 combines power and efficiency with Dyna-VT technology for optimal field performance.',
     features: [
-      'Motor AGCO Power de 6 cilindros',
-      'Transmisión Dyna-VT CVT',
-      'Sistema hidráulico de 200 L/min',
-      'Cabina Dyna-6 climatizada',
+      'AGCO Power 6-cylinder engine',
+      'Dyna-VT CVT transmission',
+      '200 L/min hydraulic system',
+      'Climate-controlled Dyna-6 cab',
     ],
-    metaDescription: 'Massey Ferguson 8660: 260 HP, transmisión Dyna-VT CVT. Especificaciones y características completas.',
-    metaKeywords: ['massey ferguson 8660', 'tractor 260 hp', 'massey ferguson', 'tractor agrícola'],
+    metaDescription: 'Massey Ferguson 8660 2022 tractor data and complete specifications. 260 HP, Dyna-VT CVT transmission. Access detailed technical information, engine specs, dimensions, and performance data.',
+    metaKeywords: ['massey ferguson 8660 tractor data', 'massey ferguson 8660 specifications', 'massey ferguson 8660 specs', 'tractor data', 'tractor specifications', 'tractor 260 hp', 'massey ferguson', 'tractor row crop'],
   },
 ];
+
+// Combinar tractores estáticos con los scrapeados, evitando duplicados por ID
+const existingIds = new Set(staticTractors.map(t => t.id));
+const uniqueScrapedTractors = normalizedScrapedTractors.filter(t => !existingIds.has(t.id));
+
+// Array final de tractores: primero los estáticos (con más información), luego los scrapeados
+export const tractors: Tractor[] = [
+  ...staticTractors,
+  ...uniqueScrapedTractors,
+];
+
+// Exportar también el tipo para uso en otros archivos
+export type TractorType = Tractor['type'];
 
 // Función helper para buscar tractores
 export function getTractorById(id: string): Tractor | undefined {

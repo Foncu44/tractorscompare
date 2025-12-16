@@ -1,43 +1,49 @@
 import Link from 'next/link';
+import { AdBanner } from '@/components/AdSense';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-gray-900 text-gray-300 mt-20">
+      <div className="bg-gray-50 border-t border-gray-800 py-4">
+        <div className="container-custom">
+          <AdBanner />
+        </div>
+      </div>
       <div className="container-custom py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About */}
           <div>
             <h3 className="text-white font-bold text-lg mb-4">TractorsCompare</h3>
             <p className="text-sm">
-              La fuente más completa de información sobre tractores agrícolas, de jardín e industriales. 
-              Compara especificaciones y encuentra el tractor perfecto.
+              The most complete source of information on agricultural, lawn, and industrial tractors. 
+              Compare specifications and find the perfect tractor.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Enlaces Rápidos</h3>
+            <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/tractores" className="hover:text-white transition-colors">
-                  Todos los Tractores
+                  All Tractors
                 </Link>
               </li>
               <li>
                 <Link href="/marcas" className="hover:text-white transition-colors">
-                  Marcas
+                  Brands
                 </Link>
               </li>
               <li>
                 <Link href="/comparar" className="hover:text-white transition-colors">
-                  Comparar Tractores
+                  Compare Tractors
                 </Link>
               </li>
               <li>
                 <Link href="/noticias" className="hover:text-white transition-colors">
-                  Noticias
+                  News
                 </Link>
               </li>
             </ul>
@@ -45,21 +51,21 @@ export default function Footer() {
 
           {/* Categories */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Categorías</h3>
+            <h3 className="text-white font-bold text-lg mb-4">Categories</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/tractores?tipo=farm" className="hover:text-white transition-colors">
-                  Tractores Agrícolas
+                  Agricultural Tractors
                 </Link>
               </li>
               <li>
                 <Link href="/tractores?tipo=lawn" className="hover:text-white transition-colors">
-                  Tractores de Jardín
+                  Lawn Tractors
                 </Link>
               </li>
               <li>
                 <Link href="/tractores?tipo=industrial" className="hover:text-white transition-colors">
-                  Tractores Industriales
+                  Industrial Tractors
                 </Link>
               </li>
             </ul>
@@ -67,26 +73,26 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h3 className="text-white font-bold text-lg mb-4">Contacto</h3>
+            <h3 className="text-white font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/contacto" className="hover:text-white transition-colors">
-                  Contactar
+                  Contact Us
                 </Link>
               </li>
               <li>
                 <Link href="/sobre-nosotros" className="hover:text-white transition-colors">
-                  Sobre Nosotros
+                  About Us
                 </Link>
               </li>
               <li>
                 <Link href="/privacidad" className="hover:text-white transition-colors">
-                  Privacidad
+                  Privacy
                 </Link>
               </li>
               <li>
                 <Link href="/terminos" className="hover:text-white transition-colors">
-                  Términos de Uso
+                  Terms of Use
                 </Link>
               </li>
             </ul>
@@ -94,9 +100,9 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
-          <p>&copy; {currentYear} TractorsCompare. Todos los derechos reservados.</p>
+          <p>&copy; {currentYear} TractorsCompare. All rights reserved.</p>
           <p className="mt-2 text-xs text-gray-500">
-            Toda la información es proporcionada como referencia. Consulta siempre las especificaciones oficiales del fabricante.
+            All information is provided for reference. Always consult the manufacturer's official specifications.
           </p>
         </div>
       </div>
