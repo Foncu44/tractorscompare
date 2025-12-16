@@ -1,0 +1,104 @@
+/**
+ * Script para procesar datos scraped y convertirlos al formato de nuestra base de datos
+ */
+
+const fs = require('fs-extra');
+const path = require('path');
+
+const SCRAPED_FILE = path.join(__dirname, '..', 'data', 'scraped-tractors.json');
+const OUTPUT_FILE = path.join(__dirname, '..', 'data', 'processed-tractors.ts');
+
+async function processScrapedData() {
+  try {
+    console.log('📖 Leyendo datos scraped...');
+    const scrapedData = await fs.readJson(SCRAPED_FILE);
+
+    console.log(`📊 Procesando ${scrapedData.length} tractores...`);
+
+    // Leer tractores existentes
+    const existingTractorsPath = path.join(__dirname, '..', 'data', 'tractors.ts');
+    let existingTractors = [];
+    
+    try {
+      const tractorsContent = await fs.readFile(existingTractorsPath, 'utf-8');
+      // Extraer los tractores existentes (simple parsing)
+      const match = tractorsContent.match(/export const tractors: Tractor\[\] = \[([\s\S]*?)\];/);
+      if (match) {
+        // Esto es una aproximación simple, en producción usarías un parser de TypeScript
+        console.log('⚠️  Tractores existentes encontrados, se añadirán los nuevos al final');
+      }
+    } catch (error) {
+      console.log('ℹ️  No se encontraron tractores existentes');
+    }
+
+    // Procesar y limpiar datos
+    const processedTractors = scrapedData.map(tractor => {
+      // Asegurar que todos los campos requeridos estén presentes
+      return {
+        id: tractor.id || `tractor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        brand: tractor.brand || 'Unknown',
+        model: tractor.model || 'Unknown',
+        year: tractor.year || undefined,
+        type: tractor.type || 'farm',
+        category: tractor.category || undefined,
+        slug: tractor.slug || tractor.id,
+        imageUrl: tractor.imageUrl || '',
+        engine: {
+          cylinders: tractor.engine?.cylinders || 0,
+          displacement: tractor.engine?.displacement,
+          powerHP: tractor.engine?.powerHP || 0,
+          powerKW: tractor.engine?.powerKW,
+          fuelType: tractor.engine?.fuelType || 'diesel',
+          cooling: tractor.engine?.cooling || 'liquid',
+          turbocharged: tractor.engine?.turbocharged,
+        },
+        transmission: {
+          type: tractor.transmission?.type || 'manual',
+          gears: tractor.transmission?.gears,
+          description: tractor.transmission?.description,
+        },
+        dimensions: tractor.dimensions,
+        weight: tractor.weight,
+        hydraulicSystem: tractor.hydraulicSystem,
+        ptoHP: tractor.ptoHP,
+        ptoRPM: tractor.ptoRPM,
+        description: tractor.description,
+        features: tractor.features,
+        metaDescription: tractor.metaDescription,
+        metaKeywords: tractor.metaKeywords,
+      };
+    }).filter(tractor => 
+      tractor.brand !== 'Unknown' && 
+      tractor.model !== 'Unknown' &&
+      tractor.engine.powerHP > 0
+    );
+
+    console.log(`✅ ${processedTractors.length} tractores procesados y validados`);
+
+    // Generar archivo TypeScript
+    const tsContent = `import { Tractor } from '@/types/tractor';
+
+// Tractores extraídos desde TractorData.com
+// Generado automáticamente - NO editar manualmente
+// Fecha: ${new Date().toISOString()}
+
+export const scrapedTractors: Tractor[] = ${JSON.stringify(processedTractors, null, 2)};
+`;
+
+    await fs.writeFile(OUTPUT_FILE, tsContent, 'utf-8');
+    console.log(`💾 Datos procesados guardados en: ${OUTPUT_FILE}`);
+    console.log(`\n📝 Siguiente paso: Revisa y combina con data/tractors.ts si es necesario`);
+
+  } catch (error) {
+    console.error('Error procesando datos:', error);
+    throw error;
+  }
+}
+
+// Ejecutar si se llama directamente
+if (require.main === module) {
+  processScrapedData().catch(console.error);
+}
+
+module.exports = { processScrapedData };
+
