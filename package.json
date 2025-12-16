@@ -10,7 +10,10 @@
     "download-images": "node scripts/downloadImages.js",
     "scrape-from-brands": "node scripts/scrapeFromBrandPages.js",
     "scrape-all": "node scripts/scrapeAllTractors.js",
-    "process-scraped": "node scripts/processScrapedData.js"
+    "process-scraped": "node scripts/processScrapedData.js",
+    "check-data": "tsx scripts/checkData.ts",
+    "find-images": "node scripts/findTractorImages.js",
+    "update-images": "node scripts/updateTractorImages.js"
   },
   "dependencies": {
     "axios": "^1.13.2",

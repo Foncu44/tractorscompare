@@ -112,8 +112,8 @@ async function getTractorsFromBrandPage(page, brandUrl) {
             return;
           }
           
-          // Patrón de tractor individual: /farm-tractors/000/X/X/XXXX-brand-model.html
-          const tractorPattern = /\/(farm-tractors|lawn-tractors)\/\d{3}\/\d+\/\d+\/\d+-[\w-]+\.html$/i;
+          // Patrón de tractor individual: /farm-tractors/, /lawn-tractors/, o /industrial-tractors/
+          const tractorPattern = /\/(farm-tractors|lawn-tractors|industrial-tractors)\/\d{3}\/\d+\/\d+\/\d+-[\w-]+\.html$/i;
           
           if (tractorPattern.test(href) && !seen.has(href)) {
             seen.add(href);
@@ -213,7 +213,8 @@ async function scrapeTractorPage(page, url) {
       brand: brand,
       model: model,
       slug: createSlug(brand, model),
-      type: url.includes('/lawn-tractors/') ? 'lawn' : 'farm',
+      type: url.includes('/lawn-tractors/') ? 'lawn' : 
+            url.includes('/industrial-tractors/') ? 'industrial' : 'farm',
       imageUrl: '',
       engine: {
         cylinders: 0,

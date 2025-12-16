@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { getAllBrands, getTractorsByBrand } from '@/data/tractors';
+import { getBrandColor } from '@/lib/brandLogos';
+import BrandLogo from '@/components/BrandLogo';
 
 export const metadata = {
   title: 'Tractor Brands - Complete Brand Database & Tractor Data',
@@ -19,22 +21,33 @@ export default function MarcasPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {brands.map((brand) => {
           const brandTractors = getTractorsByBrand(brand);
+          const brandColor = getBrandColor(brand);
+          
           return (
             <Link
               key={brand}
               href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
-              className="card p-6 text-center hover:scale-105 transition-transform"
+              className="group relative overflow-hidden rounded-lg transition-transform hover:scale-105"
             >
-              <div className="text-4xl font-bold text-primary-600 mb-3">
-                {brand.charAt(0)}
+              <div className={`${brandColor} p-6 text-white min-h-[140px] flex flex-col items-center justify-center transition-all group-hover:shadow-lg`}>
+                <div className="mb-3 w-20 h-20 flex items-center justify-center bg-white rounded-lg p-2 shadow-md">
+                  <BrandLogo
+                    brandName={brand}
+                    width={80}
+                    height={80}
+                    className="w-full h-full"
+                  />
+                </div>
+                <div className="text-sm font-semibold text-black mb-1 text-center">
+                  {brand}
+                </div>
+                <div className="text-xs text-white/70">
+                  {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
+                </div>
               </div>
-              <h3 className="font-bold text-lg text-gray-800 mb-2">{brand}</h3>
-              <p className="text-sm text-gray-600">
-                {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
-              </p>
             </Link>
           );
         })}

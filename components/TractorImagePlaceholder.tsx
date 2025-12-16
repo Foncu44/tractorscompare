@@ -1,6 +1,12 @@
+'use client';
+
+import { useState } from 'react';
+import Image from 'next/image';
+
 interface TractorImagePlaceholderProps {
   brand?: string;
   model?: string;
+  imageUrl?: string;
   width?: number;
   height?: number;
   className?: string;
@@ -9,13 +15,45 @@ interface TractorImagePlaceholderProps {
 export default function TractorImagePlaceholder({
   brand,
   model,
+  imageUrl,
   width = 400,
   height = 300,
   className = '',
 }: TractorImagePlaceholderProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+  
   const centerX = width / 2;
   const centerY = height / 2;
   
+  // Si hay imageUrl y no hay error, mostrar la imagen
+  if (imageUrl && !imageError && imageUrl.trim() !== '') {
+    return (
+      <div 
+        className={`bg-white flex items-center justify-center relative overflow-hidden ${className}`}
+        style={{ width, height }}
+      >
+        {imageLoading && (
+          <div className="absolute inset-0 bg-gray-100 animate-pulse" />
+        )}
+        <img
+          src={imageUrl}
+          alt={brand && model ? `${brand} ${model}` : 'Tractor'}
+          width={width}
+          height={height}
+          className="w-full h-full object-contain"
+          style={{ display: imageLoading ? 'none' : 'block' }}
+          onLoad={() => setImageLoading(false)}
+          onError={() => {
+            setImageError(true);
+            setImageLoading(false);
+          }}
+        />
+      </div>
+    );
+  }
+  
+  // Mostrar placeholder si no hay imagen o hubo error
   return (
     <div 
       className={`bg-white flex items-center justify-center relative overflow-hidden ${className}`}

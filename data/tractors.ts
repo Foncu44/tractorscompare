@@ -18,6 +18,11 @@ function normalizeScrapedTractor(tractor: Tractor): Tractor {
     brand = 'Massey Ferguson';
     model = model.replace('Ferguson ', '');
   }
+  
+  // Normalizar variantes de Case IH
+  if (brand === 'CaseIH' || brand === 'Case IH' || brand === 'Case' || brand === 'J.I. Case' || brand === 'J.I Case') {
+    brand = 'Case IH';
+  }
 
   // Generate description and metadata optimized for SEO with "tractor data" keyword
   const fullName = `${brand} ${model}`;
@@ -55,12 +60,14 @@ function normalizeScrapedTractor(tractor: Tractor): Tractor {
     description,
     metaDescription,
     metaKeywords,
-    // Agregar imageUrl por defecto si está vacío
-    imageUrl: tractor.imageUrl || `/images/tractors/${slug}.jpg`,
+    // Preservar el tipo original del tractor
+    type: tractor.type || 'farm',
+    // Preservar imageUrl solo si existe (si no, usar placeholder)
+    imageUrl: tractor.imageUrl || '',
     // Completar campos opcionales
     ptoHP: tractor.ptoHP || Math.round(tractor.engine.powerHP * 0.85), // Estimación: 85% del HP del motor
     ptoRPM: tractor.ptoRPM || 540,
-    category: tractor.category || (tractor.type === 'farm' ? 'Farm' : 'Lawn'),
+    category: tractor.category || (tractor.type === 'farm' ? 'Farm' : tractor.type === 'lawn' ? 'Lawn' : 'Industrial'),
   };
 }
 
@@ -334,7 +341,20 @@ export function getTractorBySlug(slug: string): Tractor | undefined {
 }
 
 export function getTractorsByBrand(brand: string): Tractor[] {
-  return tractors.filter(t => t.brand.toLowerCase() === brand.toLowerCase());
+  // Normalizar el brand de búsqueda
+  const normalizedSearchBrand = (brand === 'CaseIH' || brand === 'Case' || brand === 'J.I. Case' || brand === 'J.I Case') 
+    ? 'Case IH' 
+    : brand;
+  
+  // Normalizar las marcas de los tractores al filtrar
+  return tractors.filter(t => {
+    let tractorBrand = t.brand;
+    // Normalizar variantes de Case IH
+    if (tractorBrand === 'CaseIH' || tractorBrand === 'Case' || tractorBrand === 'J.I. Case' || tractorBrand === 'J.I Case') {
+      tractorBrand = 'Case IH';
+    }
+    return tractorBrand.toLowerCase() === normalizedSearchBrand.toLowerCase();
+  });
 }
 
 export function getTractorsByType(type: Tractor['type']): Tractor[] {
@@ -342,7 +362,17 @@ export function getTractorsByType(type: Tractor['type']): Tractor[] {
 }
 
 export function getAllBrands(): string[] {
-  return Array.from(new Set(tractors.map(t => t.brand))).sort();
+  // Normalizar marcas antes de eliminar duplicados
+  const normalizedBrands = tractors.map(t => {
+    const brand = t.brand;
+    // Normalizar variantes de Case IH
+    if (brand === 'CaseIH' || brand === 'Case' || brand === 'J.I. Case' || brand === 'J.I Case') {
+      return 'Case IH';
+    }
+    return brand;
+  });
+  
+  return Array.from(new Set(normalizedBrands)).sort();
 }
 
 export function searchTractors(query: string): Tractor[] {

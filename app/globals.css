@@ -9,6 +9,11 @@
   
   body {
     @apply bg-gray-50 text-gray-900;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  * {
+    font-family: 'Times New Roman', Times, serif;
   }
 }
 

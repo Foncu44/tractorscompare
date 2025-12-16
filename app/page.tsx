@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { Tractor, TrendingUp, Search, GitCompare } from 'lucide-react';
-import { getAllBrands, tractors } from '@/data/tractors';
+import { getAllBrands, tractors, getTractorsByBrand } from '@/data/tractors';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 import { AdInContent } from '@/components/AdSense';
+import { getBrandLogo, getBrandColor } from '@/lib/brandLogos';
+import BrandLogo from '@/components/BrandLogo';
 
 export const metadata = {
   title: 'Tractor Data - Complete Tractor Specifications Database',
@@ -14,27 +16,80 @@ export default function HomePage() {
   const brands = getAllBrands();
   const featuredTractors = tractors.slice(0, 6);
   const farmTractors = tractors.filter(t => t.type === 'farm').slice(0, 4);
+  
+  // Marcas principales con logos disponibles
+  const mainBrands = brands
+    .filter(brand => getBrandLogo(brand))
+    .slice(0, 10); // Primeras 10 marcas con logos
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-20">
-        <div className="container-custom">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Complete Tractor Data & Specifications Database
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-primary-100">
-              Access comprehensive tractor data and specifications for over 18,000 agricultural, lawn, and industrial tractors. 
-              Compare specs, find detailed technical information, and make informed decisions with our complete tractor data database.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/tractores" className="btn-primary bg-white text-primary-600 hover:bg-gray-100 text-center">
-                Explore Tractors
-              </Link>
-              <Link href="/comparar" className="btn-secondary bg-primary-500 text-white hover:bg-primary-400 text-center">
-                Compare Models
-              </Link>
+      {/* Hero Section - Estilo TractorData.es */}
+      <section className="relative bg-gradient-to-br from-green-700 via-green-600 to-green-800 text-white py-20 md:py-32 overflow-hidden">
+        {/* Background Image Effect */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-transparent to-green-900" />
+        </div>
+        
+        <div className="container-custom relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Text Content */}
+            <div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                The Most Complete Tractor Database
+              </h1>
+              <p className="text-lg md:text-xl mb-8 text-green-100 leading-relaxed">
+                Detailed specifications for over 18,000 agricultural, garden, and industrial tractors. 
+                Your definitive resource for machinery information.
+              </p>
+              
+              {/* Search Bar */}
+              <form action="/buscar" method="get" className="mb-8">
+                <div className="flex gap-2 bg-white rounded-lg p-2 shadow-xl">
+                  <Search className="w-6 h-6 text-gray-400 ml-3 my-auto" />
+                  <input
+                    type="text"
+                    name="q"
+                    placeholder="Search by brand or model..."
+                    className="flex-1 px-4 py-3 text-gray-900 focus:outline-none rounded-lg"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors"
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
+
+              {/* Statistics */}
+              <div className="flex flex-wrap gap-8">
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-orange-400">
+                    {tractors.length.toLocaleString()}
+                  </div>
+                  <div className="text-green-100 text-sm md:text-base">Tractors</div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-orange-400">
+                    {brands.length}+
+                  </div>
+                  <div className="text-green-100 text-sm md:text-base">Brands</div>
+                </div>
+                <div>
+                  <div className="text-3xl md:text-4xl font-bold text-orange-400">
+                    20+
+                  </div>
+                  <div className="text-green-100 text-sm md:text-base">Years Online</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - Tractor Visual (placeholder) */}
+            <div className="hidden lg:block relative">
+              <div className="relative w-full h-96 rounded-lg overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-800/20 to-transparent" />
+              </div>
             </div>
           </div>
         </div>
@@ -96,6 +151,7 @@ export default function HomePage() {
                   <TractorImagePlaceholder
                     brand={tractor.brand}
                     model={tractor.model}
+                    imageUrl={tractor.imageUrl}
                     width={400}
                     height={300}
                     className="w-full h-48 rounded-lg"
@@ -124,23 +180,84 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Brands Section */}
+      {/* Brands Section - Estilo TractorData.es */}
       <section className="py-16 bg-white">
         <div className="container-custom">
-          <h2 className="text-3xl font-bold mb-8 text-center">Main Brands</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {brands.map((brand) => (
-              <Link
-                key={brand}
-                href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
-                className="card p-6 text-center hover:border-primary-500 border-2 border-transparent transition-colors"
-              >
-                <div className="text-2xl font-bold text-gray-800 mb-2">
-                  {brand.charAt(0)}
-                </div>
-                <h3 className="font-semibold text-gray-700">{brand}</h3>
-              </Link>
-            ))}
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Agricultural Tractors</h2>
+            <Link href="/marcas" className="text-gray-500 hover:text-primary-600 font-semibold">
+              View all →
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {mainBrands.map((brand) => {
+              const brandTractors = getTractorsByBrand(brand);
+              const logoPath = getBrandLogo(brand);
+              const brandColor = getBrandColor(brand);
+              
+              return (
+                <Link
+                  key={brand}
+                  href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="group relative overflow-hidden rounded-lg transition-transform hover:scale-105"
+                >
+                  {/* Background Color */}
+                  <div className={`${brandColor} p-6 text-white min-h-[140px] flex flex-col items-center justify-center transition-all group-hover:shadow-lg`}>
+                    {/* Logo */}
+                    <div className="mb-3 w-20 h-20 flex items-center justify-center bg-white rounded-lg p-2 shadow-md">
+                      <BrandLogo
+                        brandName={brand}
+                        width={80}
+                        height={80}
+                        className="w-full h-full"
+                      />
+                    </div>
+                    
+                    {/* Brand Name (small) */}
+                    <div className="text-sm font-semibold text-black mb-1 text-center">
+                      {brand}
+                    </div>
+                    
+                    {/* Model Count */}
+                    <div className="text-xs text-white/70">
+                      {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+            
+            {/* Agregar más marcas sin logo */}
+            {brands.slice(mainBrands.length, mainBrands.length + 5).map((brand) => {
+              const brandTractors = getTractorsByBrand(brand);
+              const brandColor = getBrandColor(brand);
+              
+              return (
+                <Link
+                  key={brand}
+                  href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="group relative overflow-hidden rounded-lg transition-transform hover:scale-105"
+                >
+                  <div className={`${brandColor} p-6 text-white min-h-[140px] flex flex-col items-center justify-center transition-all group-hover:shadow-lg`}>
+                    <div className="mb-3 w-20 h-20 flex items-center justify-center bg-white rounded-lg p-2 shadow-md">
+                      <BrandLogo
+                        brandName={brand}
+                        width={80}
+                        height={80}
+                        className="w-full h-full"
+                      />
+                    </div>
+                    <div className="text-sm font-semibold text-white/90 mb-1 text-center">
+                      {brand}
+                    </div>
+                    <div className="text-xs text-white/70">
+                      {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

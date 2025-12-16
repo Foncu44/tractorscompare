@@ -1,18 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: 'export', // Habilita export estático
   images: {
-    // Para imágenes locales no necesitamos configuración adicional
-    // Solo para imágenes externas
+    unoptimized: true, // Necesario para export estático
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
       },
     ],
-    formats: ['image/avif', 'image/webp'],
+  },
+  // Ignorar las API routes en el build estático
+  exportPathMap: async function () {
+    return {};
   },
 }
 
 module.exports = nextConfig
-

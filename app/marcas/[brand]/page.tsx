@@ -73,6 +73,7 @@ export default function BrandPage({ params }: BrandPageProps) {
               <TractorImagePlaceholder
                 brand={tractor.brand}
                 model={tractor.model}
+                imageUrl={tractor.imageUrl}
                 width={400}
                 height={300}
                 className="w-full h-48 rounded-lg"

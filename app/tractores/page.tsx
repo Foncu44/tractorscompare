@@ -24,7 +24,11 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
 
   // Filtrar por tipo
   if (searchParams.tipo) {
-    filteredTractors = filteredTractors.filter(t => t.type === searchParams.tipo);
+    const tipoLower = searchParams.tipo.toLowerCase();
+    filteredTractors = filteredTractors.filter(t => {
+      const tractorType = (t.type || 'farm').toLowerCase();
+      return tractorType === tipoLower;
+    });
   }
 
   // Filtrar por marca
@@ -69,10 +73,20 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
             <div className="flex gap-2">
+              <Link
+                href="/tractores"
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  !searchParams.tipo
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                All
+              </Link>
               {types.map((type) => (
                 <Link
                   key={type.value}
-                  href={`/tractores${searchParams.tipo === type.value ? '' : `?tipo=${type.value}`}`}
+                  href={`/tractores?tipo=${type.value}`}
                   className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                     searchParams.tipo === type.value
                       ? 'bg-primary-600 text-white'
@@ -113,6 +127,7 @@ export default function TractoresPage({ searchParams }: TractoresPageProps) {
               <TractorImagePlaceholder
                 brand={tractor.brand}
                 model={tractor.model}
+                imageUrl={tractor.imageUrl}
                 width={400}
                 height={300}
                 className="w-full h-48 rounded-lg"

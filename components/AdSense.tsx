@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: any[];
+    adsbygoogle: any[] | { loaded?: boolean; push: (ad: any) => void };
   }
 }
 
@@ -25,8 +25,16 @@ export default function AdSense({
 }: AdSenseProps) {
   useEffect(() => {
     try {
-      if (window.adsbygoogle && window.adsbygoogle.loaded) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      // Inicializar adsbygoogle si no existe
+      if (!window.adsbygoogle) {
+        window.adsbygoogle = [];
+      }
+      
+      // Verificar si es un array y hacer push
+      if (Array.isArray(window.adsbygoogle)) {
+        window.adsbygoogle.push({});
+      } else if (window.adsbygoogle && typeof window.adsbygoogle.push === 'function') {
+        window.adsbygoogle.push({});
       }
     } catch (err) {
       console.error('AdSense error:', err);
@@ -103,4 +111,3 @@ export function AdList({ className = '' }: { className?: string }) {
     </div>
   );
 }
-

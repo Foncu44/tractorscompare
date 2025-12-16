@@ -31,15 +31,57 @@ async function processScrapedData() {
       console.log('ℹ️  No se encontraron tractores existentes');
     }
 
+    // Función para detectar el tipo de tractor basándose en características
+    function detectTractorType(tractor) {
+      // Detectar basándose en HP y otras características
+      const hp = tractor.engine?.powerHP || 0;
+      const weight = tractor.weight || 0;
+      const transmissionType = tractor.transmission?.type || '';
+      
+      // Tractores industriales: generalmente > 200 HP o muy pesados (> 15000 kg)
+      // También considerar si tiene características industriales
+      if (hp >= 200 || weight > 15000) {
+        return 'industrial';
+      }
+      
+      // Tractores de jardín (lawn): generalmente < 30 HP y más ligeros
+      // Criterios: HP < 30 Y (peso < 1500 kg O transmisión hidrostática)
+      if (hp > 0 && hp < 30) {
+        // Si también es ligero (< 1500 kg), probablemente es lawn
+        if (weight > 0 && weight < 1500) {
+          return 'lawn';
+        }
+        // Si tiene transmisión hidrostática y HP bajo, probablemente es lawn
+        if (transmissionType === 'hydrostatic' && hp < 25) {
+          return 'lawn';
+        }
+        // Si no tiene peso definido pero HP es muy bajo (< 20), probablemente es lawn
+        if (hp < 20 && weight === 0) {
+          return 'lawn';
+        }
+      }
+      
+      // Si HP está entre 0-30 pero peso > 1500, probablemente es farm (compacto)
+      if (hp > 0 && hp < 30 && weight >= 1500) {
+        return 'farm';
+      }
+      
+      // Por defecto, farm (agrícolas) para HP >= 30 o sin HP definido
+      return 'farm';
+    }
+    
     // Procesar y limpiar datos
     const processedTractors = scrapedData.map(tractor => {
+      // Detectar tipo correcto si no está bien definido
+      const detectedType = detectTractorType(tractor);
+      
       // Asegurar que todos los campos requeridos estén presentes
       return {
         id: tractor.id || `tractor-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         brand: tractor.brand || 'Unknown',
         model: tractor.model || 'Unknown',
         year: tractor.year || undefined,
-        type: tractor.type || 'farm',
+        type: detectedType,
         category: tractor.category || undefined,
         slug: tractor.slug || tractor.id,
         imageUrl: tractor.imageUrl || '',

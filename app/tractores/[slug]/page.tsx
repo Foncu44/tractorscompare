@@ -191,6 +191,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
               <TractorImagePlaceholder
                 brand={tractor.brand}
                 model={tractor.model}
+                imageUrl={tractor.imageUrl}
                 width={800}
                 height={600}
                 className="w-full h-96 rounded-lg"
