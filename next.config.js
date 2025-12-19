@@ -15,10 +15,6 @@ const nextConfig = {
       },
     ],
   },
-  // Ignorar las API routes en el build estático
-  exportPathMap: async function () {
-    return {};
-  },
 }
 
 module.exports = nextConfig

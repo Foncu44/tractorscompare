@@ -74,7 +74,8 @@ export default function RootLayout({
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
           crossOrigin="anonymous"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
+          id="adsbygoogle-init"
         />
         <Header />
         <main className="min-h-screen">{children}</main>

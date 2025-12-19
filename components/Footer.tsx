@@ -27,8 +27,13 @@ export default function Footer() {
             <h3 className="text-white font-bold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/tractores" className="hover:text-white transition-colors">
-                  All Tractors
+                <Link href="/tractores-agricolas" className="hover:text-white transition-colors">
+                  Agricultural Tractors
+                </Link>
+              </li>
+              <li>
+                <Link href="/tractores-jardin" className="hover:text-white transition-colors">
+                  Lawn Tractors
                 </Link>
               </li>
               <li>
@@ -38,7 +43,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/comparar" className="hover:text-white transition-colors">
-                  Compare Tractors
+                  Compare
                 </Link>
               </li>
               <li>
@@ -54,18 +59,18 @@ export default function Footer() {
             <h3 className="text-white font-bold text-lg mb-4">Categories</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/tractores?tipo=farm" className="hover:text-white transition-colors">
-                  Agricultural Tractors
+                <Link href="/tractores" className="hover:text-white transition-colors">
+                  Tractors (categories)
                 </Link>
               </li>
               <li>
-                <Link href="/tractores?tipo=lawn" className="hover:text-white transition-colors">
-                  Lawn Tractors
+                <Link href="/marcas" className="hover:text-white transition-colors">
+                  Brands
                 </Link>
               </li>
               <li>
-                <Link href="/tractores?tipo=industrial" className="hover:text-white transition-colors">
-                  Industrial Tractors
+                <Link href="/comparar" className="hover:text-white transition-colors">
+                  Compare
                 </Link>
               </li>
             </ul>

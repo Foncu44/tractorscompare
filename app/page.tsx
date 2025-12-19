@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { Tractor, TrendingUp, Search, GitCompare } from 'lucide-react';
-import { getAllBrands, tractors, getTractorsByBrand } from '@/data/tractors';
+import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 import { AdInContent } from '@/components/AdSense';
-import { getBrandLogo, getBrandColor } from '@/lib/brandLogos';
-import BrandLogo from '@/components/BrandLogo';
+import { getBrandColor } from '@/lib/brandLogos';
+import NewsSections from '@/components/NewsSections';
+import newsData from '@/data/news.json';
 
 export const metadata = {
   title: 'Tractor Data - Complete Tractor Specifications Database',
@@ -15,12 +16,25 @@ export const metadata = {
 export default function HomePage() {
   const brands = getAllBrands();
   const featuredTractors = tractors.slice(0, 6);
-  const farmTractors = tractors.filter(t => t.type === 'farm').slice(0, 4);
-  
-  // Marcas principales con logos disponibles
-  const mainBrands = brands
-    .filter(brand => getBrandLogo(brand))
-    .slice(0, 10); // Primeras 10 marcas con logos
+
+  // Top marcas por categoría (una sola pasada)
+  const farmCounts = new Map<string, number>();
+  const lawnCounts = new Map<string, number>();
+  for (const t of tractors) {
+    const type = (t.type || 'farm');
+    if (type === 'farm') farmCounts.set(t.brand, (farmCounts.get(t.brand) || 0) + 1);
+    if (type === 'lawn') lawnCounts.set(t.brand, (lawnCounts.get(t.brand) || 0) + 1);
+  }
+
+  const topFarmBrands = Array.from(farmCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12)
+    .map(([brand, count]) => ({ brand, count, slug: brandToSlug(brand), color: getBrandColor(brand) }));
+
+  const topLawnBrands = Array.from(lawnCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 12)
+    .map(([brand, count]) => ({ brand, count, slug: brandToSlug(brand), color: getBrandColor(brand) }));
 
   return (
     <>
@@ -76,12 +90,6 @@ export default function HomePage() {
                   </div>
                   <div className="text-green-100 text-sm md:text-base">Brands</div>
                 </div>
-                <div>
-                  <div className="text-3xl md:text-4xl font-bold text-orange-400">
-                    20+
-                  </div>
-                  <div className="text-green-100 text-sm md:text-base">Years Online</div>
-                </div>
               </div>
             </div>
 
@@ -135,9 +143,6 @@ export default function HomePage() {
         <div className="container-custom">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold">Featured Tractors</h2>
-            <Link href="/tractores" className="text-primary-600 hover:text-primary-700 font-semibold">
-              View all →
-            </Link>
           </div>
           <AdInContent />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -180,87 +185,72 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Brands Section - Estilo TractorData.es */}
-      <section className="py-16 bg-white">
+      {/* Tractores Agrícolas (como tu diseño) */}
+      <section className="py-16 bg-[#fbf7f1]">
         <div className="container-custom">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold">Agricultural Tractors</h2>
-            <Link href="/marcas" className="text-gray-500 hover:text-primary-600 font-semibold">
+            <Link href="/tractores-agricolas" className="text-gray-700 hover:text-primary-700 font-semibold">
               View all →
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {mainBrands.map((brand) => {
-              const brandTractors = getTractorsByBrand(brand);
-              const logoPath = getBrandLogo(brand);
-              const brandColor = getBrandColor(brand);
-              
-              return (
-                <Link
-                  key={brand}
-                  href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="group relative overflow-hidden rounded-lg transition-transform hover:scale-105"
-                >
-                  {/* Background Color */}
-                  <div className={`${brandColor} p-6 text-white min-h-[140px] flex flex-col items-center justify-center transition-all group-hover:shadow-lg`}>
-                    {/* Logo */}
-                    <div className="mb-3 w-20 h-20 flex items-center justify-center bg-white rounded-lg p-2 shadow-md">
-                      <BrandLogo
-                        brandName={brand}
-                        width={80}
-                        height={80}
-                        className="w-full h-full"
-                      />
-                    </div>
-                    
-                    {/* Brand Name (small) */}
-                    <div className="text-sm font-semibold text-black mb-1 text-center">
-                      {brand}
-                    </div>
-                    
-                    {/* Model Count */}
-                    <div className="text-xs text-white/70">
-                      {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
-                    </div>
+            {topFarmBrands.map(({ brand, count, slug, color }) => (
+              <Link
+                key={brand}
+                href={`/marcas/${slug}?tipo=farm`}
+                className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
+              >
+                <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden`}>
+                  <div className="text-white text-2xl font-bold px-3 text-center leading-tight">
+                    {brand}
                   </div>
-                </Link>
-              );
-            })}
-            
-            {/* Agregar más marcas sin logo */}
-            {brands.slice(mainBrands.length, mainBrands.length + 5).map((brand) => {
-              const brandTractors = getTractorsByBrand(brand);
-              const brandColor = getBrandColor(brand);
-              
-              return (
-                <Link
-                  key={brand}
-                  href={`/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="group relative overflow-hidden rounded-lg transition-transform hover:scale-105"
-                >
-                  <div className={`${brandColor} p-6 text-white min-h-[140px] flex flex-col items-center justify-center transition-all group-hover:shadow-lg`}>
-                    <div className="mb-3 w-20 h-20 flex items-center justify-center bg-white rounded-lg p-2 shadow-md">
-                      <BrandLogo
-                        brandName={brand}
-                        width={80}
-                        height={80}
-                        className="w-full h-full"
-                      />
-                    </div>
-                    <div className="text-sm font-semibold text-white/90 mb-1 text-center">
-                      {brand}
-                    </div>
-                    <div className="text-xs text-white/70">
-                      {brandTractors.length} {brandTractors.length === 1 ? 'model' : 'models'}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                </div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
+                  {brand}
+                </h3>
+                <p className="text-sm text-gray-500">{count} models</p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Tractores de Jardín (como tu diseño) */}
+      <section className="py-16 bg-[#fbf7f1]">
+        <div className="container-custom">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-bold">Lawn Tractors</h2>
+            <Link href="/tractores-jardin" className="text-gray-700 hover:text-primary-700 font-semibold">
+              View all →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            {topLawnBrands.map(({ brand, count, slug, color }) => (
+              <Link
+                key={brand}
+                href={`/marcas/${slug}?tipo=lawn`}
+                className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
+              >
+                <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden`}>
+                  <div className="text-white text-2xl font-bold px-3 text-center leading-tight">
+                    {brand}
+                  </div>
+                </div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
+                  {brand}
+                </h3>
+                <p className="text-sm text-gray-500">{count} models</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Noticias (antes del footer) */}
+      <NewsSections items={(newsData as any).items || []} />
 
       {/* CTA Section */}
       <section className="py-16 bg-primary-600 text-white">
@@ -271,8 +261,8 @@ export default function HomePage() {
           <p className="text-xl mb-8 text-primary-100">
             Explore our complete database and compare models to make the best decision.
           </p>
-          <Link href="/tractores" className="btn-primary bg-white text-primary-600 hover:bg-gray-100 inline-block">
-            Start Search
+          <Link href="/tractores-agricolas" className="btn-primary bg-white text-primary-600 hover:bg-gray-100 inline-block">
+            Empezar
           </Link>
         </div>
       </section>

@@ -62,8 +62,10 @@ function normalizeScrapedTractor(tractor: Tractor): Tractor {
     metaKeywords,
     // Preservar el tipo original del tractor
     type: tractor.type || 'farm',
-    // Preservar imageUrl solo si existe (si no, usar placeholder)
-    imageUrl: tractor.imageUrl || '',
+    // Preservar imageUrl solo si existe y es válida (si no, undefined para usar placeholder)
+    imageUrl: (tractor.imageUrl && tractor.imageUrl.trim() !== '' && tractor.imageUrl !== 'null' && tractor.imageUrl !== 'undefined') 
+      ? tractor.imageUrl 
+      : undefined,
     // Completar campos opcionales
     ptoHP: tractor.ptoHP || Math.round(tractor.engine.powerHP * 0.85), // Estimación: 85% del HP del motor
     ptoRPM: tractor.ptoRPM || 540,
@@ -85,7 +87,7 @@ const staticTractors: Tractor[] = [
     type: 'farm',
     category: 'Row Crop',
     slug: 'john-deere-8245r',
-    imageUrl: '/images/tractors/tractor_8245r.jpg',
+    imageUrl: undefined, // Imagen no disponible - usar placeholder
     engine: {
       cylinders: 6,
       displacement: 9.0,
@@ -135,7 +137,7 @@ const staticTractors: Tractor[] = [
     type: 'farm',
     category: 'Utility',
     slug: 'kubota-m7-171',
-    imageUrl: '/images/tractors/Kubota M7-171.jpeg',
+    imageUrl: undefined, // Imagen no disponible - usar placeholder
     engine: {
       cylinders: 6,
       displacement: 6.1,
@@ -182,7 +184,7 @@ const staticTractors: Tractor[] = [
     type: 'farm',
     category: 'Row Crop',
     slug: 'new-holland-t8-435',
-    imageUrl: '/images/tractors/New Holland T8.435.jpg',
+    imageUrl: undefined, // Imagen no disponible - usar placeholder
     engine: {
       cylinders: 6,
       displacement: 9.0,
@@ -230,7 +232,7 @@ const staticTractors: Tractor[] = [
     type: 'farm',
     category: 'Row Crop',
     slug: 'case-ih-magnum-240',
-    imageUrl: '/images/tractors/Case IH Magnum 240.webp',
+    imageUrl: undefined, // Imagen no disponible - usar placeholder
     engine: {
       cylinders: 6,
       displacement: 8.7,
@@ -278,7 +280,7 @@ const staticTractors: Tractor[] = [
     type: 'farm',
     category: 'Row Crop',
     slug: 'massey-ferguson-8660',
-    imageUrl: '/images/tractors/Massey Ferguson 8660.jpg',
+    imageUrl: undefined, // Imagen no disponible - usar placeholder
     engine: {
       cylinders: 6,
       displacement: 7.4,
@@ -320,7 +322,18 @@ const staticTractors: Tractor[] = [
 
 // Combinar tractores estáticos con los scrapeados, evitando duplicados por ID
 const existingIds = new Set(staticTractors.map(t => t.id));
-const uniqueScrapedTractors = normalizedScrapedTractors.filter(t => !existingIds.has(t.id));
+
+// Primero eliminar duplicados dentro de los datos scrapeados (mantener el primero encontrado)
+const seenScrapedIds = new Set<string>();
+const uniqueScrapedTractors = normalizedScrapedTractors.filter(t => {
+  if (seenScrapedIds.has(t.id)) {
+    // Duplicado dentro de los scrapeados, ignorar
+    return false;
+  }
+  seenScrapedIds.add(t.id);
+  // También verificar que no esté en los estáticos
+  return !existingIds.has(t.id);
+});
 
 // Array final de tractores: primero los estáticos (con más información), luego los scrapeados
 export const tractors: Tractor[] = [
@@ -373,6 +386,36 @@ export function getAllBrands(): string[] {
   });
   
   return Array.from(new Set(normalizedBrands)).sort();
+}
+
+/**
+ * Convierte un nombre de marca a un slug estable para URLs.
+ * Importante: evita reconstrucciones tipo "replace('-', ' ')" que rompen marcas con guiones
+ * (p.ej. "Deutz-Fahr") y con acentos.
+ */
+export function brandToSlug(brand: string): string {
+  return brand
+    .trim()
+    .toLowerCase()
+    // Quitar acentos/diacríticos para URLs estables
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    // Normalizar ampersand
+    .replace(/&/g, 'and')
+    // Convertir cualquier separador/puntuación a guiones
+    .replace(/[^a-z0-9]+/g, '-')
+    // Recortar guiones al inicio/fin
+    .replace(/^-+/, '')
+    .replace(/-+$/, '');
+}
+
+/**
+ * Obtiene el nombre exacto de la marca a partir del slug de la URL.
+ * Devuelve undefined si el slug no corresponde a ninguna marca.
+ */
+export function getBrandBySlug(slug: string): string | undefined {
+  const normalizedSlug = slug.trim().toLowerCase();
+  return getAllBrands().find((brand) => brandToSlug(brand) === normalizedSlug);
 }
 
 export function searchTractors(query: string): Tractor[] {

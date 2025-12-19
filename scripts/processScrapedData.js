@@ -125,7 +125,8 @@ async function processScrapedData() {
 // Generado automáticamente - NO editar manualmente
 // Fecha: ${new Date().toISOString()}
 
-export const scrapedTractors: Tractor[] = ${JSON.stringify(processedTractors, null, 2)};
+// @ts-expect-error - Array muy grande que causa error de complejidad de tipo en TypeScript
+export const scrapedTractors: Tractor[] = ${JSON.stringify(processedTractors, null, 2)} as Tractor[];
 `;
 
     await fs.writeFile(OUTPUT_FILE, tsContent, 'utf-8');

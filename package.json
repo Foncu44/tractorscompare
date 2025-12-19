@@ -13,7 +13,13 @@
     "process-scraped": "node scripts/processScrapedData.js",
     "check-data": "tsx scripts/checkData.ts",
     "find-images": "node scripts/findTractorImages.js",
-    "update-images": "node scripts/updateTractorImages.js"
+    "update-images": "node scripts/updateTractorImages.js",
+    "convert-wikimedia-urls": "node scripts/convertToFullWikimediaUrls.js",
+    "find-brand-logos": "node scripts/findBrandLogos.js",
+    "update-brand-logos": "node scripts/updateBrandLogos.js",
+    "update-brand-websites": "node scripts/updateBrandWebsites.js",
+    "fetch-news": "node scripts/fetchNews.js",
+    "enrich-tractors": "node scripts/enrichTractorData.js"
   },
   "dependencies": {
     "axios": "^1.13.2",

@@ -20,6 +20,9 @@ export default function BrandLogo({
 }: BrandLogoProps) {
   const logoPath = getBrandLogo(brandName);
   const [hasError, setHasError] = useState(false);
+  
+  // Determinar si es una URL externa o una ruta local
+  const isExternalUrl = logoPath && (logoPath.startsWith('http://') || logoPath.startsWith('https://'));
 
   if (!logoPath || hasError) {
     // Calcular tamaño de fuente basado en el ancho disponible
@@ -75,7 +78,8 @@ export default function BrandLogo({
   const brandSpecificStyles = getBrandSpecificStyles();
 
   // Para SVG, usar componente especializado que carga el SVG como HTML
-  if (logoPath.endsWith('.svg')) {
+  // También manejar URLs externas que pueden ser SVG
+  if (logoPath.endsWith('.svg') || (isExternalUrl && logoPath.includes('.svg'))) {
     return (
       <div 
         className={className}
@@ -99,7 +103,48 @@ export default function BrandLogo({
     );
   }
 
-  // Para PNG/JPG usar Next.js Image
+  // Para URLs externas, usar img tag directamente
+  if (isExternalUrl) {
+    return (
+      <div 
+        className={className}
+        style={{ 
+          width: `${width}px`, 
+          height: `${height}px`, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          position: 'relative'
+        }}
+      >
+        <img
+          src={logoPath}
+          alt={brandName}
+          width={width}
+          height={height}
+          className="object-contain"
+          style={{ 
+            maxWidth: '100%', 
+            maxHeight: '100%',
+            width: 'auto',
+            height: 'auto',
+            ...brandSpecificStyles
+          }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          onError={() => {
+            console.error(`Error loading external logo: ${logoPath} for brand: ${brandName}`);
+            setHasError(true);
+          }}
+          onLoad={() => {
+            console.log(`Successfully loaded external logo: ${logoPath} for brand: ${brandName}`);
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Para PNG/JPG locales usar Next.js Image
   return (
     <div 
       className={className}

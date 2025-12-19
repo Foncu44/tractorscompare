@@ -1,15 +1,23 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getTractorBySlug } from '@/data/tractors';
-import { Tractor, Calendar, Weight, Gauge, Settings, Zap } from 'lucide-react';
+import { brandToSlug, getTractorBySlug, tractors } from '@/data/tractors';
+import { Tractor, Calendar, Weight, Gauge, Settings, Zap, ArrowLeft, GitCompare, Fuel, Cog } from 'lucide-react';
 import type { Metadata } from 'next';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 import { AdInContent, AdSidebar } from '@/components/AdSense';
+import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 
 interface TractorDetailPageProps {
   params: {
     slug: string;
   };
+}
+
+// Generar parámetros estáticos para export estático
+export async function generateStaticParams() {
+  return tractors.map((tractor) => ({
+    slug: tractor.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: TractorDetailPageProps): Promise<Metadata> {
@@ -70,6 +78,12 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
   if (!tractor) {
     notFound();
   }
+
+  const typeLabel =
+    tractor.type === 'farm' ? 'Agricultural' :
+    tractor.type === 'lawn' ? 'Lawn' :
+    tractor.type === 'industrial' ? 'Industrial' :
+    'Tractor';
 
   const fullName = `${tractor.brand} ${tractor.model}`;
   
@@ -136,294 +150,173 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
           __html: JSON.stringify(structuredData),
         }}
       />
-      
-      <div className="container-custom py-12">
+
+      <div className="min-h-screen">
         {/* Breadcrumb */}
-        <nav className="text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
-          <ol className="flex items-center space-x-2">
-            <li>
-              <Link href="/" className="hover:text-primary-600">Home</Link>
-            </li>
-            <li>/</li>
-            <li>
-              <Link href="/tractores" className="hover:text-primary-600">Tractor Data</Link>
-            </li>
-            <li>/</li>
-            <li className="text-gray-900">{tractor.brand} {tractor.model}</li>
-          </ol>
-        </nav>
-        
-        {/* Structured Data for Breadcrumb */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  name: 'Home',
-                  item: 'https://tractorscompare.com',
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 2,
-                  name: 'Tractor Data',
-                  item: 'https://tractorscompare.com/tractores',
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 3,
-                  name: `${tractor.brand} ${tractor.model}`,
-                  item: `https://tractorscompare.com/tractores/${tractor.slug}`,
-                },
-              ],
-            }),
-          }}
-        />
+        <div className="bg-gray-100/60 border-b border-gray-200">
+          <div className="container-custom py-4">
+            <nav className="text-sm text-gray-600" aria-label="Breadcrumb">
+              <Link href="/" className="hover:text-primary-700">Home</Link>
+              {' / '}
+              <Link href="/tractores" className="hover:text-primary-700">Tractors</Link>
+              {' / '}
+              <span className="text-gray-900">{tractor.brand} {tractor.model}</span>
+            </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Left Column - Image */}
-          <div>
-            <div className="w-full rounded-lg overflow-hidden mb-6">
-              <TractorImagePlaceholder
-                brand={tractor.brand}
-                model={tractor.model}
-                imageUrl={tractor.imageUrl}
-                width={800}
-                height={600}
-                className="w-full h-96 rounded-lg"
-              />
-            </div>
-          </div>
-
-          {/* Right Column - Info */}
-          <div>
-            <div className="mb-6">
-              <Link
-                href={`/marcas/${tractor.brand.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
-              >
-                {tractor.brand}
-              </Link>
-              <h1 className="text-4xl font-bold mt-2 mb-4">{tractor.brand} {tractor.model}{tractor.year ? ` ${tractor.year}` : ''} - Tractor Data</h1>
-              {tractor.year && (
-                <div className="flex items-center text-gray-600 mb-4">
-                  <Calendar className="w-5 h-5 mr-2" />
-                  <span>Year: {tractor.year}</span>
-                </div>
-              )}
-              {tractor.description && (
-                <p className="text-gray-700 text-lg mb-6">{tractor.description}</p>
-              )}
-            </div>
-
-            {/* Key Specs */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-primary-50 p-4 rounded-lg">
-                <div className="flex items-center text-primary-600 mb-2">
-                  <Zap className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">Power</span>
-                </div>
-                <p className="text-2xl font-bold">{tractor.engine.powerHP} HP</p>
-                {tractor.engine.powerKW && (
-                  <p className="text-sm text-gray-600">{tractor.engine.powerKW} kW</p>
-                )}
-              </div>
-              {tractor.weight && (
-                <div className="bg-primary-50 p-4 rounded-lg">
-                  <div className="flex items-center text-primary-600 mb-2">
-                    <Weight className="w-5 h-5 mr-2" />
-                    <span className="font-semibold">Weight</span>
-                  </div>
-                  <p className="text-2xl font-bold">{Math.round(tractor.weight / 1000)} ton</p>
-                  <p className="text-sm text-gray-600">{tractor.weight.toLocaleString()} kg</p>
-                </div>
-              )}
-            </div>
-
-            {/* Features */}
-            {tractor.features && tractor.features.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-4">Main Features</h2>
-                <ul className="space-y-2">
-                  {tractor.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <span className="text-primary-600 mr-2">✓</span>
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {/* Structured Data for Breadcrumb */}
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  '@context': 'https://schema.org',
+                  '@type': 'BreadcrumbList',
+                  itemListElement: [
+                    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tractorscompare.com' },
+                    { '@type': 'ListItem', position: 2, name: 'Tractor Data', item: 'https://tractorscompare.com/tractores' },
+                    { '@type': 'ListItem', position: 3, name: `${tractor.brand} ${tractor.model}`, item: `https://tractorscompare.com/tractores/${tractor.slug}` },
+                  ],
+                }),
+              }}
+            />
           </div>
         </div>
 
-        <AdInContent />
+        {/* Hero */}
+        <section className="bg-gradient-to-b from-primary-50 to-gray-50 py-8 lg:py-12">
+          <div className="container-custom">
+            <Link
+              href="/tractores"
+              className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-700 mb-6 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to tractors</span>
+            </Link>
 
-        {/* Specifications Table */}
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+              {/* Image */}
+              <div className="relative">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden bg-white border border-gray-200">
+                  <TractorImagePlaceholder
+                    brand={tractor.brand}
+                    model={tractor.model}
+                    imageUrl={tractor.imageUrl}
+                    width={800}
+                    height={600}
+                    className="w-full h-full"
+                  />
+                </div>
+                <span className="absolute top-4 left-4 inline-flex items-center rounded-full bg-primary-700 text-white px-3 py-1 text-xs font-semibold">
+                  {tractor.category || typeLabel}
+                </span>
+              </div>
+
+              {/* Info */}
+              <div className="flex flex-col justify-center">
+                <div className="mb-2">
+                  <Link
+                    href={`/marcas/${brandToSlug(tractor.brand)}`}
+                    className="text-primary-700 hover:text-primary-800 font-semibold"
+                  >
+                    {tractor.brand}
+                  </Link>
+                </div>
+
+                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                  {tractor.model}{tractor.year ? ` (${tractor.year})` : ''}
+                </h1>
+
+                {tractor.description && (
+                  <p className="text-gray-700 text-lg mb-6 leading-relaxed">
+                    {tractor.description}
+                  </p>
+                )}
+
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-200">
+                    <Zap className="h-5 w-5 text-primary-700" />
+                    <div>
+                      <p className="text-sm text-gray-600">Power</p>
+                      <p className="font-semibold text-gray-900">{tractor.engine.powerHP} HP</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-200">
+                    <Calendar className="h-5 w-5 text-primary-700" />
+                    <div>
+                      <p className="text-sm text-gray-600">Year</p>
+                      <p className="font-semibold text-gray-900">{tractor.year || '—'}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-200">
+                    <Fuel className="h-5 w-5 text-primary-700" />
+                    <div>
+                      <p className="text-sm text-gray-600">Fuel</p>
+                      <p className="font-semibold text-gray-900 capitalize">{tractor.engine.fuelType}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-200">
+                    <Cog className="h-5 w-5 text-primary-700" />
+                    <div>
+                      <p className="text-sm text-gray-600">Transmission</p>
+                      <p className="font-semibold text-gray-900 capitalize">{tractor.transmission.type}</p>
+                    </div>
+                  </div>
+
+                  {tractor.weight && (
+                    <div className="col-span-2 bg-primary-50 rounded-xl p-6 border border-gray-200">
+                      <p className="text-sm text-gray-600 mb-1">Weight</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {tractor.weight.toLocaleString()} kg ({Math.round(tractor.weight / 1000)} ton)
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-4">
+                  <Link href={`/comparar?tractores=${tractor.id}`} className="flex-1">
+                    <span className="btn-secondary w-full inline-flex items-center justify-center gap-2">
+                      <GitCompare className="h-4 w-4" />
+                      Compare
+                    </span>
+                  </Link>
+                  <Link href={`/marcas/${brandToSlug(tractor.brand)}`} className="flex-1">
+                    <span className="btn-primary w-full inline-flex items-center justify-center">
+                      View brand
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="container-custom py-12">
+          {/* Features */}
+          {tractor.features && tractor.features.length > 0 && (
+            <div className="mb-10 bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">Key features</h2>
+              <ul className="space-y-2">
+                {tractor.features.map((feature, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-primary-700 mr-2">✓</span>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <AdInContent />
+
+        {/* Specifications with Tabs */}
         <div className="mt-12">
-          <h2 className="text-3xl font-bold mb-8">{tractor.brand} {tractor.model} - Complete Tractor Data & Technical Specifications</h2>
+          <h2 className="text-3xl font-bold mb-8 text-gray-900">Technical specifications</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Engine */}
-            <div className="card p-6">
-              <div className="flex items-center mb-4">
-                <Settings className="w-6 h-6 text-primary-600 mr-2" />
-                <h3 className="text-xl font-bold">Engine</h3>
-              </div>
-              <dl className="space-y-3">
-                <div className="flex justify-between">
-                  <dt className="text-gray-600">Cylinders</dt>
-                  <dd className="font-semibold">{tractor.engine.cylinders}</dd>
-                </div>
-                {tractor.engine.displacement && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Displacement</dt>
-                    <dd className="font-semibold">{tractor.engine.displacement} L</dd>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <dt className="text-gray-600">Power</dt>
-                  <dd className="font-semibold">{tractor.engine.powerHP} HP</dd>
-                </div>
-                {tractor.engine.powerKW && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Power (kW)</dt>
-                    <dd className="font-semibold">{tractor.engine.powerKW} kW</dd>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <dt className="text-gray-600">Fuel Type</dt>
-                  <dd className="font-semibold capitalize">{tractor.engine.fuelType}</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="text-gray-600">Cooling</dt>
-                  <dd className="font-semibold capitalize">{tractor.engine.cooling}</dd>
-                </div>
-                {tractor.engine.turbocharged !== undefined && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Turbocharged</dt>
-                    <dd className="font-semibold">{tractor.engine.turbocharged ? 'Yes' : 'No'}</dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-
-            {/* Transmission */}
-            <div className="card p-6">
-              <div className="flex items-center mb-4">
-                <Gauge className="w-6 h-6 text-primary-600 mr-2" />
-                <h3 className="text-xl font-bold">Transmission</h3>
-              </div>
-              <dl className="space-y-3">
-                <div className="flex justify-between">
-                  <dt className="text-gray-600">Type</dt>
-                  <dd className="font-semibold capitalize">{tractor.transmission.type}</dd>
-                </div>
-                {tractor.transmission.gears && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">Gears</dt>
-                    <dd className="font-semibold">{tractor.transmission.gears}</dd>
-                  </div>
-                )}
-                {tractor.transmission.description && (
-                  <div>
-                    <dt className="text-gray-600 mb-2 block">Description</dt>
-                    <dd className="font-semibold">{tractor.transmission.description}</dd>
-                  </div>
-                )}
-                {tractor.ptoHP && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">PTO (HP)</dt>
-                    <dd className="font-semibold">{tractor.ptoHP} HP</dd>
-                  </div>
-                )}
-                {tractor.ptoRPM && (
-                  <div className="flex justify-between">
-                    <dt className="text-gray-600">PTO (RPM)</dt>
-                    <dd className="font-semibold">{tractor.ptoRPM}</dd>
-                  </div>
-                )}
-              </dl>
-            </div>
-
-            {/* Dimensions */}
-            {tractor.dimensions && (
-              <div className="card p-6">
-                <h3 className="text-xl font-bold mb-4">Dimensions</h3>
-                <dl className="space-y-3">
-                  {tractor.dimensions.length && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Length</dt>
-                      <dd className="font-semibold">{tractor.dimensions.length} mm</dd>
-                    </div>
-                  )}
-                  {tractor.dimensions.width && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Width</dt>
-                      <dd className="font-semibold">{tractor.dimensions.width} mm</dd>
-                    </div>
-                  )}
-                  {tractor.dimensions.height && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Height</dt>
-                      <dd className="font-semibold">{tractor.dimensions.height} mm</dd>
-                    </div>
-                  )}
-                  {tractor.dimensions.wheelbase && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Wheelbase</dt>
-                      <dd className="font-semibold">{tractor.dimensions.wheelbase} mm</dd>
-                    </div>
-                  )}
-                  {tractor.dimensions.groundClearance && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Ground Clearance</dt>
-                      <dd className="font-semibold">{tractor.dimensions.groundClearance} mm</dd>
-                    </div>
-                  )}
-                </dl>
-              </div>
-            )}
-
-            {/* Hydraulics */}
-            {tractor.hydraulicSystem && (
-              <div className="card p-6">
-                <h3 className="text-xl font-bold mb-4">Hydraulic System</h3>
-                <dl className="space-y-3">
-                  {tractor.hydraulicSystem.pumpFlow && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Pump Flow</dt>
-                      <dd className="font-semibold">{tractor.hydraulicSystem.pumpFlow} L/min</dd>
-                    </div>
-                  )}
-                  {tractor.hydraulicSystem.steeringFlow && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Steering Flow</dt>
-                      <dd className="font-semibold">{tractor.hydraulicSystem.steeringFlow} L/min</dd>
-                    </div>
-                  )}
-                  {tractor.hydraulicSystem.liftCapacity && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Lift Capacity</dt>
-                      <dd className="font-semibold">{tractor.hydraulicSystem.liftCapacity} kg</dd>
-                    </div>
-                  )}
-                  {tractor.hydraulicSystem.valves && (
-                    <div className="flex justify-between">
-                      <dt className="text-gray-600">Valves</dt>
-                      <dd className="font-semibold">{tractor.hydraulicSystem.valves}</dd>
-                    </div>
-                  )}
-                </dl>
-              </div>
-            )}
-            </div>
+              <TractorSpecsTabs tractor={tractor} />
             </div>
             
             {/* Sidebar con anuncios */}
@@ -436,13 +329,14 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
         </div>
 
         {/* Compare CTA */}
-        <div className="mt-12 bg-primary-50 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">Want to compare this tractor with others?</h3>
+        <div className="mt-12 bg-primary-50 rounded-xl p-8 text-center border border-gray-200">
+          <h3 className="text-2xl font-bold mb-4 text-gray-900">Want to compare it with other models?</h3>
           <Link href={`/comparar?tractores=${tractor.id}`} className="btn-primary inline-block">
-            Compare Tractors
+            Compare tractors
           </Link>
         </div>
       </div>
+    </div>
     </>
   );
 }

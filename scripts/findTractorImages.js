@@ -4,12 +4,14 @@
  * para evitar problemas de derechos de autor
  * 
  * Prioriza:
- * 1. Wikimedia Commons (todas las imágenes son libres)
- * 2. Google Images con filtro Creative Commons
- * 3. Sitios oficiales de fabricantes (uso informativo)
+ * 1. Wikimedia Commons (vía API oficial: URLs directas + metadatos)
+ * 2. (Opcional) Google Images con filtro Creative Commons (FRÁGIL)
+ * 3. (Opcional) Sitios oficiales de fabricantes (NO recomendado por licencias)
+ *
+ * Nota: Por defecto este script usa SOLO Wikimedia Commons para maximizar fiabilidad
+ * y evitar problemas de copyright / bloqueos.
  */
 
-const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -43,58 +45,205 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/**
- * Busca imagen en Wikimedia Commons (todas las imágenes son libres)
- */
-async function searchFreeLicenseSites(page, brand, model) {
-  try {
-    const searchQuery = `${brand} ${model} tractor`;
-    
-    // Intentar buscar en Wikimedia Commons (todas las imágenes son libres)
-    const wikimediaUrl = `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(searchQuery)}&title=Special:MediaSearch&go=Go&type=image`;
-    
-    await page.goto(wikimediaUrl, { waitUntil: 'networkidle2', timeout: 30000 });
-    await delay(4000);
-    
-    const imageUrl = await page.evaluate(() => {
-      // Buscar primera imagen en Wikimedia Commons
-      const img = document.querySelector('.sdms-image-result img, .mw-file-element img, .thumbimage img, .gallerybox img');
-      if (img) {
-        let src = img.getAttribute('src') || img.getAttribute('data-src') || img.src;
-        if (src) {
-          // Convertir thumbnails a URL completa
-          if (src.includes('/thumb/')) {
-            const parts = src.split('/thumb/');
-            if (parts.length > 1) {
-              const filename = parts[1].split('/').pop();
-              src = parts[0] + '/' + filename;
-            }
-          }
-          if (src.startsWith('//')) {
-            src = 'https:' + src;
-          } else if (src.startsWith('/')) {
-            src = 'https://commons.wikimedia.org' + src;
-          }
-          // Asegurar que sea una URL completa
-          if (!src.startsWith('http')) {
-            src = 'https://commons.wikimedia.org' + src;
-          }
-          return src;
-        }
-      }
-      return null;
-    });
-    
-    if (imageUrl) {
-      console.log(`  ✅ Imagen libre encontrada en Wikimedia Commons`);
-      return imageUrl;
+function parseArgs(argv) {
+  const args = {
+    limit: undefined,
+    start: undefined,
+    _startProvided: false,
+    concurrency: 3,
+    saveEvery: 25,
+    force: false,
+    retryNull: false,
+    onlyMissing: true,
+    enableGoogle: false,
+    enableBrandSites: false,
+    verbose: false,
+  };
+
+  const rest = argv.slice(2);
+  for (let i = 0; i < rest.length; i++) {
+    const a = rest[i];
+    if (a === '--force') args.force = true;
+    else if (a === '--retry-null') args.retryNull = true;
+    else if (a === '--all') args.onlyMissing = false;
+    else if (a === '--enable-google') args.enableGoogle = true;
+    else if (a === '--enable-brand-sites') args.enableBrandSites = true;
+    else if (a === '--verbose') args.verbose = true;
+    else if (a === '--limit') args.limit = Number(rest[++i]);
+    else if (a === '--start') {
+      args.start = Number(rest[++i]) || 0;
+      args._startProvided = true;
     }
-    
-    return null;
-  } catch (error) {
-    console.error(`  ❌ Error buscando en Wikimedia Commons: ${error.message}`);
-    return null;
+    else if (a === '--concurrency') args.concurrency = Math.max(1, Number(rest[++i]) || 3);
+    else if (a === '--save-every') args.saveEvery = Math.max(1, Number(rest[++i]) || 25);
   }
+
+  return args;
+}
+
+function isNonEmptyString(v) {
+  return typeof v === 'string' && v.trim() !== '' && v !== 'null' && v !== 'undefined';
+}
+
+function normalizeText(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+}
+
+function tokenize(s) {
+  const t = normalizeText(s);
+  if (!t) return [];
+  return t.split(' ').filter(Boolean);
+}
+
+function scoreCandidate({ title, description }, brand, model) {
+  const titleNorm = normalizeText(title);
+  const descNorm = normalizeText(description || '');
+  const brandTokens = tokenize(brand);
+  const modelTokens = tokenize(model);
+  const modelHasLetters = /[a-z]/i.test(normalizeText(model));
+
+  // Penalizar cosas obvias que no queremos
+  const badWords = ['logo', 'icon', 'manual', 'brochure', 'catalog', 'drawing', 'diagram'];
+  for (const w of badWords) {
+    if (titleNorm.includes(w) || descNorm.includes(w)) return -1000;
+  }
+
+  let score = 0;
+  const brandHit = brandTokens.some(tok => titleNorm.includes(tok) || descNorm.includes(tok));
+  const modelHit = modelTokens.some(tok => titleNorm.includes(tok) || descNorm.includes(tok));
+
+  // Reglas duras para evitar falsos positivos:
+  // - Siempre requerimos marca + modelo (si el modelo es solo numérico, además requerimos "tractor")
+  if (!brandHit || !modelHit) return -999;
+
+  for (const tok of brandTokens) {
+    if (titleNorm.includes(tok)) score += 3;
+    else if (descNorm.includes(tok)) score += 1;
+  }
+  for (const tok of modelTokens) {
+    if (titleNorm.includes(tok)) score += 4;
+    else if (descNorm.includes(tok)) score += 2;
+  }
+
+  // Bonus si parece foto de tractor
+  const tractorWords = ['tractor', 'traktor', 'schlepper'];
+  const tractorHit = tractorWords.some(w => titleNorm.includes(w) || descNorm.includes(w));
+  if (tractorHit) score += 6;
+  if (!modelHasLetters && !tractorHit) return -999; // si el modelo es numérico puro, exige "tractor"
+
+  // Pequeño bonus por títulos cortos (suelen ser más “File:Brand Model.jpg”)
+  score += Math.max(0, 10 - Math.floor(titleNorm.length / 10));
+
+  return score;
+}
+
+function buildWikimediaQueries(brand, model) {
+  const full = `${brand} ${model}`.replace(/\s+/g, ' ').trim();
+  const quoted = `"${full}"`;
+  const modelHasLetters = /[a-z]/i.test(normalizeText(model));
+
+  return [
+    // Para modelos numéricos, forzar "tractor" para evitar resultados irrelevantes
+    modelHasLetters ? `intitle:${quoted}` : `intitle:${quoted} tractor`,
+    `${quoted} tractor`,
+    `${full} tractor`,
+    full,
+  ];
+}
+
+async function fetchJson(url, { timeoutMs = 25000 } = {}) {
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        'user-agent': 'tractorscompare/1.0 (image-finder; +local-script)',
+        'accept': 'application/json',
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    }
+    return await res.json();
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+/**
+ * Busca imagen en Wikimedia Commons usando la API oficial (URLs directas + metadatos)
+ */
+async function searchWikimediaCommons(brand, model, { verbose = false } = {}) {
+  const queries = buildWikimediaQueries(brand, model);
+
+  for (const q of queries) {
+    try {
+      const url =
+        `https://commons.wikimedia.org/w/api.php` +
+        `?action=query&format=json&origin=*` +
+        `&generator=search` +
+        `&gsrnamespace=6` +
+        `&gsrlimit=12` +
+        `&gsrsearch=${encodeURIComponent(q)}` +
+        `&prop=imageinfo` +
+        `&iiprop=url|extmetadata`;
+
+      if (verbose) console.log(`  🧠 Wikimedia API query: ${q}`);
+      const data = await fetchJson(url, { timeoutMs: 25000 });
+      const pages = data?.query?.pages ? Object.values(data.query.pages) : [];
+      if (!pages.length) continue;
+
+      const candidates = [];
+      for (const p of pages) {
+        const title = p?.title || '';
+        const ii = Array.isArray(p?.imageinfo) ? p.imageinfo[0] : null;
+        const directUrl = ii?.url;
+        const desc = ii?.extmetadata?.ImageDescription?.value || ii?.extmetadata?.ObjectName?.value || '';
+
+        if (!isNonEmptyString(directUrl)) continue;
+        // Evitar archivos no-imagen (PDF, etc.)
+        const lower = directUrl.toLowerCase();
+        const isRaster =
+          lower.endsWith('.jpg') ||
+          lower.endsWith('.jpeg') ||
+          lower.endsWith('.png') ||
+          lower.endsWith('.webp') ||
+          lower.endsWith('.gif');
+        if (!isRaster) continue;
+        // Evitar miniaturas tipo 250px-...
+        if (/\/\d+px-/.test(directUrl)) continue;
+        candidates.push({
+          title,
+          url: directUrl,
+          description: String(desc).replace(/<[^>]+>/g, ' ').trim(),
+        });
+      }
+
+      if (!candidates.length) continue;
+
+      candidates.sort((a, b) => scoreCandidate(b, brand, model) - scoreCandidate(a, brand, model));
+      const best = candidates[0];
+      const bestScore = scoreCandidate(best, brand, model);
+      if (bestScore < 0) {
+        if (verbose) console.log(`  ⚠️  Wikimedia: candidatos pero score bajo (${bestScore}).`);
+        continue;
+      }
+
+      if (verbose) console.log(`  ✅ Wikimedia: ${best.title} (score ${bestScore})`);
+      return best.url;
+    } catch (e) {
+      if (verbose) console.log(`  ⚠️  Wikimedia API error: ${e.message}`);
+      continue;
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -237,14 +386,14 @@ async function searchBrandWebsite(page, brand, model) {
  * Función principal para buscar imagen de un tractor
  * Prioriza imágenes con licencia libre para evitar problemas de copyright
  */
-async function findTractorImage(page, tractor) {
+async function findTractorImage({ page, tractor, enableGoogle, enableBrandSites, verbose }) {
   const { brand, model } = tractor;
   
-  // 1. Primero intentar buscar en Wikimedia Commons (todas las imágenes son libres)
-  let imageUrl = await searchFreeLicenseSites(page, brand, model);
+  // 1. Primero intentar buscar en Wikimedia Commons (API oficial: más fiable)
+  let imageUrl = await searchWikimediaCommons(brand, model, { verbose });
   
   // 2. Si no encontramos, buscar en Google Images con filtro Creative Commons
-  if (!imageUrl) {
+  if (!imageUrl && enableGoogle && page) {
     console.log(`  🔍 Buscando en Google Images (Creative Commons)...`);
     imageUrl = await searchGoogleImages(page, brand, model);
   }
@@ -252,37 +401,72 @@ async function findTractorImage(page, tractor) {
   // 3. Como último recurso, buscar en sitio oficial del fabricante
   // (uso informativo, generalmente permitido para fines educativos)
   // NOTA: Esto debe usarse con precaución y solo si no hay alternativas libres
-  if (!imageUrl && BRAND_WEBSITES[brand]) {
+  if (!imageUrl && enableBrandSites && page && BRAND_WEBSITES[brand]) {
     console.log(`  🔍 Intentando buscar en web del fabricante (uso informativo)...`);
     imageUrl = await searchBrandWebsite(page, brand, model);
   }
   
   // Pausa entre búsquedas para no sobrecargar
-  await delay(2000);
+  await delay(250);
   
   return imageUrl;
+}
+
+function extractJsonArrayFromProcessedTs(tsContent) {
+  // Busca "export const scrapedTractors" y extrae el primer array [...] balanceando corchetes.
+  const exportIdx = tsContent.indexOf('export const scrapedTractors');
+  if (exportIdx === -1) {
+    throw new Error('No se encontró "export const scrapedTractors" en processed-tractors.ts');
+  }
+  const eqIdx = tsContent.indexOf('=', exportIdx);
+  if (eqIdx === -1) throw new Error('No se encontró "=" tras "export const scrapedTractors"');
+  const startIdx = tsContent.indexOf('[', eqIdx);
+  if (startIdx === -1) throw new Error('No se encontró "[" del array de tractores');
+
+  let depth = 0;
+  for (let i = startIdx; i < tsContent.length; i++) {
+    const ch = tsContent[i];
+    if (ch === '[') depth++;
+    else if (ch === ']') {
+      depth--;
+      if (depth === 0) {
+        const slice = tsContent.slice(startIdx, i + 1);
+        return slice;
+      }
+    }
+  }
+  throw new Error('No se pudo extraer el array: corchetes desbalanceados');
+}
+
+async function readTractors() {
+  const content = await fs.readFile(TRACTORS_FILE, 'utf-8');
+  const arrText = extractJsonArrayFromProcessedTs(content);
+  return JSON.parse(arrText);
+}
+
+async function writeJsonAtomic(filePath, data) {
+  const tmp = `${filePath}.tmp`;
+  await fs.writeJson(tmp, data, { spaces: 2 });
+  await fs.move(tmp, filePath, { overwrite: true });
 }
 
 /**
  * Función principal
  */
 async function main() {
+  const args = parseArgs(process.argv);
+
   console.log('🚀 Iniciando búsqueda de imágenes de tractores...');
-  console.log('⚠️  IMPORTANTE: Solo se buscarán imágenes con licencia libre (Creative Commons)\n');
+  console.log('✅ Modo por defecto: SOLO Wikimedia Commons (API oficial)');
+  if (args.enableGoogle) console.log('⚠️  Google Images activado (puede fallar/bloquearse)');
+  if (args.enableBrandSites) console.log('⚠️  Webs de fabricantes activadas (revisar licencias)');
+  console.log('⚠️  IMPORTANTE: se priorizan imágenes libres para evitar problemas de copyright\n');
   
   // Leer tractores procesados
   let tractors = [];
   try {
-    const content = await fs.readFile(TRACTORS_FILE, 'utf-8');
-    // Extraer el array de tractores del archivo TypeScript
-    const match = content.match(/export const scrapedTractors: Tractor\[\] = (\[[\s\S]*?\]);/);
-    if (match) {
-      tractors = JSON.parse(match[1]);
-      console.log(`📊 Cargados ${tractors.length} tractores`);
-    } else {
-      console.error('❌ No se pudo leer el archivo de tractores');
-      return;
-    }
+    tractors = await readTractors();
+    console.log(`📊 Cargados ${tractors.length} tractores`);
   } catch (error) {
     console.error('❌ Error leyendo tractores:', error.message);
     return;
@@ -298,6 +482,12 @@ async function main() {
     console.log('📂 Iniciando desde el principio...');
   }
   
+  // Por compatibilidad con el comportamiento anterior: si el usuario NO pasa --start,
+  // reanudamos desde progress.lastIndex.
+  if (!args._startProvided && typeof progress.lastIndex === 'number' && progress.lastIndex > 0) {
+    args.start = progress.lastIndex;
+  }
+
   // Cargar URLs de imágenes ya encontradas
   try {
     const existingImages = await fs.readJson(OUTPUT_FILE);
@@ -306,87 +496,131 @@ async function main() {
   } catch (e) {
     console.log('📂 No hay imágenes previas');
   }
-  
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-  
-  const page = await browser.newPage();
-  await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
-  await page.setViewport({ width: 1920, height: 1080 });
-  
-  try {
-    // Procesar tractores desde donde nos quedamos
-    for (let i = progress.lastIndex; i < tractors.length; i++) {
-      const tractor = tractors[i];
-      const tractorKey = `${tractor.brand}-${tractor.model}`;
-      
-      // Si ya tenemos imagen, saltar
-      if (progress.imageUrls[tractorKey]) {
-        console.log(`[${i + 1}/${tractors.length}] ⏭️  Saltando ${tractor.brand} ${tractor.model} (ya tiene imagen)`);
-        continue;
-      }
-      
-      console.log(`[${i + 1}/${tractors.length}] 🔍 Buscando imagen libre para: ${tractor.brand} ${tractor.model}`);
-      
-      try {
-        const imageUrl = await findTractorImage(page, tractor);
-        
-        if (imageUrl) {
-          progress.imageUrls[tractorKey] = imageUrl;
-          console.log(`  ✅ Imagen libre encontrada para ${tractor.brand} ${tractor.model}`);
-        } else {
-          console.log(`  ⚠️  No se encontró imagen libre para ${tractor.brand} ${tractor.model} (usará placeholder)`);
-          // Dejar como null para usar placeholder
-          progress.imageUrls[tractorKey] = null;
-        }
-        
-        // Guardar progreso cada 10 tractores
-        if ((i + 1) % 10 === 0) {
-          await fs.writeJson(OUTPUT_FILE, progress.imageUrls, { spaces: 2 });
-          progress.lastIndex = i + 1;
-          await fs.writeJson(PROGRESS_FILE, progress, { spaces: 2 });
-          console.log(`  💾 Progreso guardado: ${i + 1}/${tractors.length} tractores procesados`);
-        }
-        
-        // Pausa más larga cada 50 búsquedas
-        if ((i + 1) % 50 === 0) {
-          console.log(`  ⏸️  Pausa de 10 segundos...`);
-          await delay(10000);
-        }
-        
-      } catch (error) {
-        console.error(`  ❌ Error procesando ${tractor.brand} ${tractor.model}: ${error.message}`);
-        progress.imageUrls[tractorKey] = null;
-      }
+
+  // Si se habilita Google o webs de fabricantes, necesitamos navegador (Puppeteer).
+  // Para evitar conflictos de navegación, forzamos concurrencia=1.
+  let browser = null;
+  let page = null;
+  if (args.enableGoogle || args.enableBrandSites) {
+    if (args.concurrency !== 1) {
+      console.log('⚠️  Con --enable-google/--enable-brand-sites se fuerza --concurrency 1 (Puppeteer no soporta navegación concurrente en una sola página).');
+      args.concurrency = 1;
     }
-    
-    // Guardar resultado final
-    await fs.writeJson(OUTPUT_FILE, progress.imageUrls, { spaces: 2 });
-    progress.lastIndex = tractors.length;
-    await fs.writeJson(PROGRESS_FILE, progress, { spaces: 2 });
-    
-    const foundCount = Object.values(progress.imageUrls).filter(url => url !== null).length;
-    const totalCount = Object.keys(progress.imageUrls).length;
-    
-    console.log(`\n✅ Búsqueda completada!`);
-    console.log(`📊 Total de tractores procesados: ${totalCount}`);
-    console.log(`🖼️  Imágenes libres encontradas: ${foundCount}`);
-    console.log(`⚠️  Sin imagen (usarán placeholder): ${totalCount - foundCount}`);
-    console.log(`💾 URLs guardadas en: ${OUTPUT_FILE}`);
-    console.log(`\n📝 Siguiente paso: Ejecuta 'npm run update-images' para actualizar los datos`);
-    console.log(`\n⚠️  NOTA: Las imágenes encontradas son de licencia libre (Creative Commons).`);
-    console.log(`   Si usas imágenes de sitios oficiales, asegúrate de verificar su política de uso.`);
-    
-  } catch (error) {
-    console.error('\n❌ Error general:', error);
-    await fs.writeJson(OUTPUT_FILE, progress.imageUrls, { spaces: 2 });
-    await fs.writeJson(PROGRESS_FILE, progress, { spaces: 2 });
-    console.log(`\n💾 Progreso guardado. Puedes continuar ejecutando el script nuevamente.`);
-  } finally {
-    await browser.close();
+    const puppeteer = require('puppeteer');
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    page = await browser.newPage();
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    await page.setViewport({ width: 1600, height: 900 });
   }
+
+  // Procesar (sin navegador). Concurrencia limitada.
+  const startIndex = Math.max(0, typeof args.start === 'number' ? args.start : 0);
+  const endIndex = typeof args.limit === 'number' ? Math.min(tractors.length, startIndex + args.limit) : tractors.length;
+
+  let processed = 0;
+  let updated = 0;
+  let lastSavedProcessed = 0;
+  let saving = Promise.resolve();
+
+  async function processOne(i) {
+    const tractor = tractors[i];
+    const tractorKey = `${tractor.brand}-${tractor.model}`;
+
+    const existing = progress.imageUrls[tractorKey];
+    const alreadyHasMapping = Object.prototype.hasOwnProperty.call(progress.imageUrls, tractorKey);
+
+    const tractorAlreadyHasImage = isNonEmptyString(tractor.imageUrl);
+    if (args.onlyMissing && tractorAlreadyHasImage && !args.force) {
+      if (!alreadyHasMapping) progress.imageUrls[tractorKey] = tractor.imageUrl;
+      return;
+    }
+
+    if (!args.force) {
+      if (alreadyHasMapping && isNonEmptyString(existing)) return;
+      if (alreadyHasMapping && existing === null && !args.retryNull) return;
+    }
+
+    console.log(`[${i + 1}/${tractors.length}] 🔍 ${tractor.brand} ${tractor.model}`);
+
+    try {
+      const imageUrl = await findTractorImage({
+        page,
+        tractor,
+        enableGoogle: args.enableGoogle,
+        enableBrandSites: args.enableBrandSites,
+        verbose: args.verbose,
+      });
+
+      if (isNonEmptyString(imageUrl)) {
+        progress.imageUrls[tractorKey] = imageUrl;
+        updated++;
+        console.log(`  ✅ Imagen: ${imageUrl}`);
+      } else {
+        progress.imageUrls[tractorKey] = null;
+        console.log(`  ⚠️  Sin imagen libre (placeholder)`);
+      }
+    } catch (e) {
+      progress.imageUrls[tractorKey] = null;
+      console.log(`  ❌ Error: ${e.message}`);
+    } finally {
+      processed++;
+      progress.lastIndex = Math.max(progress.lastIndex || 0, i + 1);
+    }
+  }
+
+  const indices = [];
+  for (let i = startIndex; i < endIndex; i++) indices.push(i);
+
+  let cursor = 0;
+  async function worker() {
+    while (cursor < indices.length) {
+      const idx = indices[cursor++];
+      await processOne(idx);
+
+      // Guardado incremental por batches (serializado para evitar carreras con concurrencia)
+      if (processed - lastSavedProcessed >= args.saveEvery) {
+        lastSavedProcessed = processed;
+        saving = saving.then(async () => {
+          await writeJsonAtomic(OUTPUT_FILE, progress.imageUrls);
+          await writeJsonAtomic(PROGRESS_FILE, progress);
+          console.log(`  💾 Guardado (${processed} procesados en esta ejecución)`);
+        });
+        await saving;
+      }
+
+      // Pequeño respiro para no spamear la API
+      await delay(150);
+    }
+  }
+
+  const workers = Array.from({ length: args.concurrency }, () => worker());
+  try {
+    await Promise.all(workers);
+  } catch (e) {
+    console.error('\n❌ Error general:', e);
+  } finally {
+    await saving;
+    await writeJsonAtomic(OUTPUT_FILE, progress.imageUrls);
+    await writeJsonAtomic(PROGRESS_FILE, progress);
+    if (browser) {
+      await browser.close();
+    }
+  }
+
+  const foundCount = Object.values(progress.imageUrls).filter(url => url !== null).length;
+  const totalCount = Object.keys(progress.imageUrls).length;
+
+  console.log(`\n✅ Búsqueda completada!`);
+  console.log(`📊 Total mapeados: ${totalCount}`);
+  console.log(`🖼️  Con imagen: ${foundCount}`);
+  console.log(`⚠️  Sin imagen (placeholder): ${totalCount - foundCount}`);
+  console.log(`🧩 Procesados en esta ejecución: ${processed}`);
+  console.log(`🆕 Nuevas/actualizadas en esta ejecución: ${updated}`);
+  console.log(`💾 URLs guardadas en: ${OUTPUT_FILE}`);
+  console.log(`\n📝 Siguiente paso: Ejecuta 'npm run update-images' para actualizar processed-tractors.ts`);
 }
 
 if (require.main === module) {

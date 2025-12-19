@@ -23,19 +23,19 @@ export default function Header() {
     <>
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="container-custom">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">T</span>
-            </div>
-            <span className="text-2xl font-bold text-gray-900">TractorsCompare</span>
+        <div className="flex items-center justify-between h-20 gap-4">
+          {/* Logo - Left */}
+          <Link href="/" className="flex items-center flex-shrink-0">
+            <span className="text-2xl font-bold text-gray-900">TractorsCompare.com</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/tractores" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Tractors
+          {/* Desktop Navigation - Center */}
+          <nav className="hidden lg:flex items-center justify-center flex-1 space-x-8">
+            <Link href="/tractores-agricolas" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+              Agricultural Tractors
+            </Link>
+            <Link href="/tractores-jardin" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
+              Lawn Tractors
             </Link>
             <Link href="/marcas" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
               Brands
@@ -48,9 +48,9 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full">
+          {/* Search Bar - Right */}
+          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-shrink-0">
+            <div className="relative w-full min-w-[250px]">
               <input
                 type="text"
                 value={searchQuery}
@@ -65,7 +65,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2 text-gray-700"
+            className="lg:hidden p-2 text-gray-700 flex-shrink-0"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -89,11 +89,18 @@ export default function Header() {
                 </div>
               </form>
               <Link
-                href="/tractores"
+                href="/tractores-agricolas"
                 className="text-gray-700 hover:text-primary-600 font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Tractors
+                Agricultural Tractors
+              </Link>
+              <Link
+                href="/tractores-jardin"
+                className="text-gray-700 hover:text-primary-600 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Lawn Tractors
               </Link>
               <Link
                 href="/marcas"

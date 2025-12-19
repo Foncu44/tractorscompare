@@ -10,8 +10,12 @@ interface BuscarPageProps {
   };
 }
 
+// Forzar renderizado estático
+export const dynamic = 'force-static';
+
 export default function BuscarPage({ searchParams }: BuscarPageProps) {
-  const query = searchParams.q || '';
+  const params = searchParams;
+  const query = params.q || '';
   
   if (!query) {
     redirect('/');
@@ -23,7 +27,7 @@ export default function BuscarPage({ searchParams }: BuscarPageProps) {
     <div className="container-custom py-12">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">
-          Tractor Data Search Results: <span className="text-primary-600">"{query}"</span>
+          Search results: <span className="text-primary-600">"{query}"</span>
         </h1>
         <p className="text-gray-600">
           {results.length > 0
@@ -77,10 +81,10 @@ export default function BuscarPage({ searchParams }: BuscarPageProps) {
           <TractorIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
           <h3 className="text-2xl font-bold mb-2">No results found</h3>
           <p className="text-gray-600 mb-6">
-            Try different search terms or explore our tractors.
+            Try different search terms or explore our categories.
           </p>
-          <Link href="/tractores" className="btn-primary inline-block">
-            View All Tractors
+          <Link href="/tractores-agricolas" className="btn-primary inline-block">
+            View agricultural tractors
           </Link>
         </div>
       )}

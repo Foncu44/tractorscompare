@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { tractors, getAllBrands } from '@/data/tractors';
+import { brandToSlug, tractors, getAllBrands } from '@/data/tractors';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://tractorscompare.com';
@@ -15,7 +15,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: `${baseUrl}/tractores`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/tractores-agricolas`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tractores-jardin`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
@@ -42,7 +54,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Páginas de marcas
   const brandPages: MetadataRoute.Sitemap = getAllBrands().map((brand) => ({
-    url: `${baseUrl}/marcas/${brand.toLowerCase().replace(/\s+/g, '-')}`,
+    url: `${baseUrl}/marcas/${brandToSlug(brand)}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

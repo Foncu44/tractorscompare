@@ -22,21 +22,47 @@ export default function SVGBrandLogo({
 
   useEffect(() => {
     // Intentar cargar el SVG como texto
-    fetch(logoPath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to fetch SVG: ${response.status}`);
-        }
-        return response.text();
+    // Si es una URL externa, usar directamente; si es local, usar fetch
+    const isExternalUrl = logoPath.startsWith('http://') || logoPath.startsWith('https://');
+    
+    if (isExternalUrl) {
+      // Para URLs externas, usar fetch con CORS
+      fetch(logoPath, {
+        mode: 'cors',
+        referrerPolicy: 'no-referrer-when-downgrade'
       })
-      .then(text => {
-        setSvgContent(text);
-        setHasError(false);
-      })
-      .catch(error => {
-        console.error(`Error loading SVG from ${logoPath}:`, error);
-        setHasError(true);
-      });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch SVG: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(text => {
+          setSvgContent(text);
+          setHasError(false);
+        })
+        .catch(error => {
+          console.error(`Error loading external SVG from ${logoPath}:`, error);
+          setHasError(true);
+        });
+    } else {
+      // Para rutas locales
+      fetch(logoPath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch SVG: ${response.status}`);
+          }
+          return response.text();
+        })
+        .then(text => {
+          setSvgContent(text);
+          setHasError(false);
+        })
+        .catch(error => {
+          console.error(`Error loading SVG from ${logoPath}:`, error);
+          setHasError(true);
+        });
+    }
   }, [logoPath]);
 
   if (hasError || !svgContent) {
