@@ -28,6 +28,11 @@ export interface Transmission {
   type: TransmissionType;
   gears?: number;
   description?: string;
+  speedRange?: string; // e.g., "0.05 - 50 km/h"
+  reverser?: string; // e.g., "Electro-hydraulic Reverser"
+  clutch?: string; // e.g., "Multi-disc wet clutch"
+  superSlowSpeed?: string; // e.g., "0.05 km/h available"
+  features?: string[]; // e.g., ["Clutchless shift", "ECO Mode", "Cruise control"]
 }
 
 export interface Dimensions {
@@ -39,11 +44,16 @@ export interface Dimensions {
 }
 
 export interface Hydraulics {
+  type?: string; // e.g., "Closed center with pressure and flow compensation"
   pumpFlow?: number; // in L/min
   steeringFlow?: number; // in L/min
-  liftCapacity?: number; // in kg
-  valves?: number;
-  category?: string; // e.g., "Category I/II", "Category II"
+  maxPressure?: number; // in bar
+  rearValves?: number; // Number of rear valves
+  rearValvesMax?: number; // Maximum rear valves
+  frontValves?: number; // Number of front valves (optional)
+  liftCapacity?: number; // Rear lift capacity in kg
+  frontLiftCapacity?: number; // Front lift capacity in kg (optional)
+  category?: string; // e.g., "Category I/II", "Category II", "Category III"
 }
 
 export interface Capacities {
@@ -80,6 +90,11 @@ export interface Tractor {
   hydraulicSystem?: Hydraulics;
   ptoHP?: number; // Power take-off horsepower
   ptoRPM?: number; // Standard PTO RPM (540/1000)
+  ptoRearType?: string; // e.g., "Independent"
+  ptoRearSpeeds?: string; // e.g., "540 / 540E / 1000 / 1000E"
+  ptoFront?: string; // e.g., "1000 rpm optional"
+  ptoFrontPower?: number; // Front PTO power in HP
+  ptoActuation?: string; // e.g., "Electrohydraulic"
   capacities?: Capacities;
   
   // Documentation and external links
@@ -88,6 +103,12 @@ export interface Tractor {
   // Additional info
   description?: string;
   features?: string[];
+  
+  // Pricing
+  priceRange?: {
+    min?: number; // Minimum price in USD
+    max?: number; // Maximum price in USD
+  };
   
   // SEO
   slug: string;

@@ -31,11 +31,20 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
   const renderSpecRow = (label: string, value: string | number | undefined, unit?: string) => {
     if (value === undefined || value === null || value === '') return null;
     return (
-      <div className="flex justify-between py-2 border-b border-gray-100 last:border-b-0">
-        <dt className="text-gray-600 font-medium">{label}</dt>
+      <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+        <dt className="text-gray-700 font-medium text-sm">{label}</dt>
         <dd className="font-semibold text-gray-900 text-right">
           {typeof value === 'number' ? value.toLocaleString() : value} {unit || ''}
         </dd>
+      </div>
+    );
+  };
+
+  const renderSectionHeader = (title: string, icon: React.ReactNode) => {
+    return (
+      <div className="bg-green-50 border-b border-green-100 px-6 py-3 -mx-6 -mt-6 mb-4 flex items-center gap-2">
+        {icon}
+        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
       </div>
     );
   };
@@ -45,107 +54,152 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
     const hasData = engine.cylinders > 0 || engine.powerHP > 0;
     
     if (!hasData) {
-      return <p className="text-gray-500">No engine data available.</p>;
+      return <p className="text-gray-500 py-4">No engine data available.</p>;
     }
 
     return (
-      <div className="space-y-1">
-        {renderSpecRow('Manufacturer', engine.manufacturer)}
-        {renderSpecRow('Model', engine.model)}
-        {engine.cylinders > 0 && renderSpecRow('Cylinders', engine.cylinders)}
-        {renderSpecRow('Displacement', engine.displacement, 'L')}
-        {engine.bore && engine.stroke && renderSpecRow('Bore × Stroke', `${engine.bore} mm × ${engine.stroke} mm`)}
-        {renderSpecRow('Maximum Power', engine.powerHP, 'HP')}
-        {renderSpecRow('Maximum Power (kW)', engine.powerKW, 'kW')}
-        {engine.powerHPNominal && engine.powerRPM && renderSpecRow('Nominal Power', `${engine.powerHPNominal} HP @ ${engine.powerRPM} rpm`)}
-        {engine.torqueMax && engine.torqueRPM && renderSpecRow('Maximum Torque', `${engine.torqueMax} Nm @ ${engine.torqueRPM} rpm`)}
-        {renderSpecRow('Torque Reserve', engine.torqueReserve, '%')}
-        {renderSpecRow('Fuel System', engine.fuelSystem)}
-        {renderSpecRow('Aspiration', engine.aspiration)}
-        {renderSpecRow('Emissions Standard', engine.emissions)}
-        {renderSpecRow('Fuel Type', engine.fuelType.charAt(0).toUpperCase() + engine.fuelType.slice(1))}
-        {renderSpecRow('Cooling', engine.cooling.charAt(0).toUpperCase() + engine.cooling.slice(1))}
-        {engine.turbocharged !== undefined && renderSpecRow('Turbocharged', engine.turbocharged ? 'Yes' : 'No')}
+      <div>
+        {renderSectionHeader('Engine', <Settings className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {renderSpecRow('Manufacturer', engine.manufacturer)}
+          {renderSpecRow('Model', engine.model)}
+          {engine.cylinders > 0 && renderSpecRow('Cylinders', engine.cylinders)}
+          {engine.displacement && renderSpecRow('Displacement', `${engine.displacement} L (${(engine.displacement * 61.024).toFixed(1)} ci)`, '')}
+          {engine.bore && engine.stroke && renderSpecRow('Bore × Stroke', `${engine.bore} mm (${(engine.bore / 25.4).toFixed(2)} in) × ${engine.stroke} mm (${(engine.stroke / 25.4).toFixed(2)} in)`, '')}
+          {engine.powerHP && renderSpecRow('Maximum Power', `${engine.powerHP} HP (${engine.powerKW || Math.round(engine.powerHP * 0.746)} kW)`, '')}
+          {engine.powerHPNominal && engine.powerRPM && renderSpecRow('Nominal Power', `${engine.powerHPNominal} HP @ ${engine.powerRPM} rpm`, '')}
+          {engine.torqueMax && engine.torqueRPM && renderSpecRow('Maximum Torque', `${engine.torqueMax} Nm @ ${engine.torqueRPM} rpm`, '')}
+          {engine.torqueReserve && renderSpecRow('Torque Reserve', `${engine.torqueReserve}%`, '')}
+          {engine.fuelSystem && renderSpecRow('Fuel System', engine.fuelSystem)}
+          {engine.aspiration && renderSpecRow('Aspiration', engine.aspiration)}
+          {engine.emissions && renderSpecRow('Emissions Standard', engine.emissions)}
+          {renderSpecRow('Fuel Type', engine.fuelType.charAt(0).toUpperCase() + engine.fuelType.slice(1))}
+          {renderSpecRow('Cooling', engine.cooling.charAt(0).toUpperCase() + engine.cooling.slice(1))}
+        </dl>
       </div>
     );
   };
 
   const renderTransmissionSpecs = () => {
-    const { transmission, ptoHP, ptoRPM } = tractor;
-    const hasData = transmission.type || transmission.gears || ptoHP || ptoRPM;
+    const { transmission } = tractor;
+    const hasData = transmission.type || transmission.gears || transmission.description;
     
     if (!hasData) {
-      return <p className="text-gray-500">No transmission data available.</p>;
+      return <p className="text-gray-500 py-4">No transmission data available.</p>;
     }
 
     return (
-      <div className="space-y-1">
-        {transmission.type && renderSpecRow('Type', transmission.type.charAt(0).toUpperCase() + transmission.type.slice(1))}
-        {renderSpecRow('Gears', transmission.gears)}
-        {transmission.description && (
-          <div className="py-2 border-b border-gray-100">
-            <dt className="text-gray-600 font-medium mb-2">Description</dt>
-            <dd className="font-semibold text-gray-900">{transmission.description}</dd>
+      <div>
+        {renderSectionHeader('Transmission', <Gauge className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {transmission.type && renderSpecRow('Type', transmission.type.charAt(0).toUpperCase() + transmission.type.slice(1).replace(/([A-Z])/g, ' $1'))}
+          {transmission.gears && renderSpecRow('Gears', transmission.description || `${transmission.gears}-speed`)}
+          {transmission.description && !transmission.gears && renderSpecRow('Description', transmission.description)}
+          {transmission.speedRange && renderSpecRow('Speed Range', transmission.speedRange)}
+          {transmission.reverser && renderSpecRow('Reverser', transmission.reverser)}
+          {transmission.clutch && renderSpecRow('Clutch', transmission.clutch)}
+          {transmission.superSlowSpeed && renderSpecRow('Super Slow Speed', transmission.superSlowSpeed)}
+        </dl>
+        {transmission.features && transmission.features.length > 0 && (
+          <div className="mt-6 pt-4 border-t border-gray-200">
+            <h4 className="text-sm font-semibold text-gray-700 mb-3">Features</h4>
+            <div className="flex flex-wrap gap-2">
+              {transmission.features.map((feature, idx) => (
+                <span key={idx} className="px-3 py-1 bg-amber-50 text-amber-900 rounded-full text-sm font-medium">
+                  {feature}
+                </span>
+              ))}
+            </div>
           </div>
         )}
-        {ptoHP && renderSpecRow('PTO Power', ptoHP, 'HP')}
-        {ptoRPM && renderSpecRow('PTO Speed', `${ptoRPM} rpm`)}
       </div>
     );
   };
 
   const renderHydraulicsSpecs = () => {
     const { hydraulicSystem } = tractor;
-    if (!hydraulicSystem) return <p className="text-gray-500">No hydraulic system data available.</p>;
+    if (!hydraulicSystem) return <p className="text-gray-500 py-4">No hydraulic system data available.</p>;
     return (
-      <div className="space-y-1">
-        {renderSpecRow('Pump Flow', hydraulicSystem.pumpFlow, 'L/min')}
-        {renderSpecRow('Steering Flow', hydraulicSystem.steeringFlow, 'L/min')}
-        {renderSpecRow('Lift Capacity', hydraulicSystem.liftCapacity, 'kg')}
-        {renderSpecRow('Valves', hydraulicSystem.valves)}
-        {renderSpecRow('Category', hydraulicSystem.category)}
+      <div>
+        {renderSectionHeader('Hydraulic System', <Droplets className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {hydraulicSystem.type && renderSpecRow('Type', hydraulicSystem.type)}
+          {hydraulicSystem.pumpFlow && renderSpecRow('Pump Capacity', `${hydraulicSystem.pumpFlow} L/min`, '')}
+          {hydraulicSystem.maxPressure && renderSpecRow('Maximum Pressure', `${hydraulicSystem.maxPressure} bar`, '')}
+          {hydraulicSystem.rearValves && renderSpecRow('Rear Valves', hydraulicSystem.rearValvesMax ? `${hydraulicSystem.rearValves} standard, up to ${hydraulicSystem.rearValvesMax}` : `${hydraulicSystem.rearValves} standard`, '')}
+          {hydraulicSystem.frontValves && renderSpecRow('Front Valves', `${hydraulicSystem.frontValves} optional`, '')}
+          {hydraulicSystem.liftCapacity && renderSpecRow('Rear Lift Capacity', `${hydraulicSystem.liftCapacity.toLocaleString()} kg`, '')}
+          {hydraulicSystem.frontLiftCapacity && renderSpecRow('Front Lift Capacity', `${hydraulicSystem.frontLiftCapacity.toLocaleString()} kg optional`, '')}
+          {hydraulicSystem.category && renderSpecRow('Hitch', hydraulicSystem.category)}
+        </dl>
       </div>
     );
   };
 
   const renderPTOSpecs = () => {
-    const { ptoHP, ptoRPM } = tractor;
-    if (!ptoHP && !ptoRPM) return <p className="text-gray-500">No PTO data available.</p>;
+    const { ptoHP, ptoRPM, ptoRearType, ptoRearSpeeds, ptoFront, ptoFrontPower, ptoActuation } = tractor;
+    if (!ptoHP && !ptoRPM && !ptoRearType) return <p className="text-gray-500 py-4">No PTO data available.</p>;
     return (
-      <div className="space-y-1">
-        {renderSpecRow('PTO Power', ptoHP, 'HP')}
-        {renderSpecRow('PTO Speed', ptoRPM ? `${ptoRPM} rpm` : undefined)}
-        {ptoRPM === 540 && <p className="text-sm text-gray-500 mt-2">Standard 540 rpm PTO</p>}
-        {ptoRPM === 1000 && <p className="text-sm text-gray-500 mt-2">Standard 1000 rpm PTO</p>}
+      <div>
+        {renderSectionHeader('Power Take-Off (PTO)', <Zap className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {ptoRearType && renderSpecRow('Rear Type', ptoRearType)}
+          {ptoRearSpeeds && renderSpecRow('Rear Speeds', ptoRearSpeeds)}
+          {ptoHP && ptoRPM && renderSpecRow('Rear Power', `${ptoHP} HP (${Math.round(ptoHP * 0.746)} kW)`, '')}
+          {ptoFront && renderSpecRow('Front PTO', ptoFront)}
+          {ptoFrontPower && renderSpecRow('Front Power', `${ptoFrontPower} HP (${Math.round(ptoFrontPower * 0.746)} kW)`, '')}
+          {ptoActuation && renderSpecRow('Actuation', ptoActuation)}
+        </dl>
       </div>
     );
   };
 
   const renderDimensionsSpecs = () => {
-    const { dimensions } = tractor;
-    if (!dimensions) return <p className="text-gray-500">No dimensions data available.</p>;
+    const { dimensions, weight } = tractor;
+    if (!dimensions && !weight) return <p className="text-gray-500 py-4">No dimensions data available.</p>;
     return (
-      <div className="space-y-1">
-        {renderSpecRow('Length', dimensions.length, 'mm')}
-        {renderSpecRow('Width', dimensions.width, 'mm')}
-        {renderSpecRow('Height', dimensions.height, 'mm')}
-        {renderSpecRow('Wheelbase', dimensions.wheelbase, 'mm')}
-        {renderSpecRow('Ground Clearance', dimensions.groundClearance, 'mm')}
-        {tractor.weight && renderSpecRow('Weight', tractor.weight, 'kg')}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          {renderSectionHeader('Dimensions', <Ruler className="w-5 h-5 text-green-700" />)}
+          <dl className="space-y-0">
+            {dimensions?.length && renderSpecRow('Length', `${dimensions.length.toLocaleString()} mm`, '')}
+            {dimensions?.width && renderSpecRow('Width', `${dimensions.width.toLocaleString()} mm`, '')}
+            {dimensions?.height && renderSpecRow('Height', `${dimensions.height.toLocaleString()} mm`, '')}
+            {dimensions?.wheelbase && renderSpecRow('Wheelbase', `${dimensions.wheelbase.toLocaleString()} mm`, '')}
+            {dimensions?.groundClearance && renderSpecRow('Ground Clearance', `${dimensions.groundClearance.toLocaleString()} mm`, '')}
+            {dimensions && (dimensions.length || dimensions.width) && (
+              <div className="mt-2 pt-2 border-t border-gray-200">
+                {renderSpecRow('Turning Radius', 'N/A', '')}
+              </div>
+            )}
+          </dl>
+        </div>
+        {weight && (
+          <div>
+            {renderSectionHeader('Weight', <Container className="w-5 h-5 text-gray-700" />)}
+            <dl className="space-y-0">
+              {renderSpecRow('Unladen Weight', `${weight.toLocaleString()} kg`, '')}
+              {renderSpecRow('Maximum Permissible Weight', 'N/A', '')}
+            </dl>
+          </div>
+        )}
       </div>
     );
   };
 
   const renderCapacitiesSpecs = () => {
     const { capacities } = tractor;
-    if (!capacities) return <p className="text-gray-500">No capacities data available.</p>;
+    if (!capacities) return <p className="text-gray-500 py-4">No capacities data available.</p>;
     return (
-      <div className="space-y-1">
-        {renderSpecRow('Fuel Tank', capacities.fuelTank, 'L')}
-        {renderSpecRow('Hydraulic Reservoir', capacities.hydraulicReservoir, 'L')}
-        {renderSpecRow('Coolant', capacities.coolant, 'L')}
-        {renderSpecRow('Engine Oil', capacities.engineOil, 'L')}
-        {renderSpecRow('Transmission Oil', capacities.transmissionOil, 'L')}
+      <div>
+        {renderSectionHeader('Capacities', <Container className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {capacities.fuelTank && renderSpecRow('Fuel Tank', `${capacities.fuelTank} L`, '')}
+          {capacities.hydraulicReservoir && renderSpecRow('Hydraulic Oil', `${capacities.hydraulicReservoir} L`, '')}
+          {capacities.coolant && renderSpecRow('Cooling System', `${capacities.coolant} L`, '')}
+          {capacities.engineOil && renderSpecRow('Engine Oil', `${capacities.engineOil} L`, '')}
+          {capacities.transmissionOil && renderSpecRow('Transmission Oil', `${capacities.transmissionOil} L`, '')}
+        </dl>
       </div>
     );
   };
@@ -181,14 +235,16 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors
+                  flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all
                   ${isActive
-                    ? 'bg-primary-700 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-green-600 text-white shadow-sm'
+                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
                   }
                 `}
               >
-                {tab.icon}
+                <span className={isActive ? 'text-white' : 'text-gray-600'}>
+                  {tab.icon}
+                </span>
                 <span>{tab.label}</span>
               </button>
             );
@@ -198,9 +254,7 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
 
       {/* Tab Content */}
       <div className="p-6">
-        <dl className="space-y-0">
-          {renderTabContent()}
-        </dl>
+        {renderTabContent()}
 
         {/* Documentation Links */}
         {(tractor.documentation || tractor.brandWebsite) && (

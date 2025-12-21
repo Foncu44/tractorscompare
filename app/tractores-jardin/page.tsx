@@ -1,48 +1,56 @@
+'use client';
+
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Filter, Search } from 'lucide-react';
 import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
 import { getBrandColor } from '@/lib/brandLogos';
+import BrandLogo from '@/components/BrandLogo';
 
-export const metadata = {
-  title: 'Lawn Tractors - Brands & models',
-  description: 'Browse lawn tractor and mower specifications by brand. Filter and sort brands to access models and spec sheets.',
-};
+export default function TractoresJardinPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [q, setQ] = useState(searchParams.get('q') || '');
+  const [sort, setSort] = useState(searchParams.get('sort') || 'name');
 
-export const dynamic = 'force-static';
-
-interface PageProps {
-  searchParams?: {
-    q?: string;
-    sort?: 'name' | 'models';
-  };
-}
-
-export default function TractoresJardinPage({ searchParams = {} }: PageProps) {
-  const q = (searchParams.q || '').trim().toLowerCase();
-  const sort = searchParams.sort || 'name';
-
-  const lawnTractors = tractors.filter((t) => (t.type || 'farm') === 'lawn');
+  const lawnTractors = useMemo(() => tractors.filter((t) => (t.type || 'farm') === 'lawn'), []);
 
   // Conteo por marca (solo jardín)
-  const counts = new Map<string, number>();
-  for (const t of lawnTractors) {
-    counts.set(t.brand, (counts.get(t.brand) || 0) + 1);
-  }
+  const counts = useMemo(() => {
+    const countMap = new Map<string, number>();
+    for (const t of lawnTractors) {
+      countMap.set(t.brand, (countMap.get(t.brand) || 0) + 1);
+    }
+    return countMap;
+  }, [lawnTractors]);
 
-  const allBrands = getAllBrands();
-  const brands = allBrands
-    .map((brand) => ({
-      brand,
-      slug: brandToSlug(brand),
-      count: counts.get(brand) || 0,
-      color: getBrandColor(brand),
-    }))
-    .filter((b) => b.count > 0)
-    .filter((b) => !q || b.brand.toLowerCase().includes(q))
-    .sort((a, b) => {
-      if (sort === 'models') return b.count - a.count;
-      return a.brand.localeCompare(b.brand);
-    });
+  const allBrands = useMemo(() => getAllBrands(), []);
+
+  const brands = useMemo(() => {
+    const qLower = q.trim().toLowerCase();
+    return allBrands
+      .map((brand) => ({
+        brand,
+        slug: brandToSlug(brand),
+        count: counts.get(brand) || 0,
+        color: getBrandColor(brand),
+      }))
+      .filter((b) => b.count > 0)
+      .filter((b) => !qLower || b.brand.toLowerCase().includes(qLower))
+      .sort((a, b) => {
+        if (sort === 'models') return b.count - a.count;
+        return a.brand.localeCompare(b.brand);
+      });
+  }, [allBrands, counts, q, sort]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (q.trim()) params.set('q', q.trim());
+    if (sort !== 'name') params.set('sort', sort);
+    router.push(`/tractores-jardin${params.toString() ? '?' + params.toString() : ''}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -59,12 +67,13 @@ export default function TractoresJardinPage({ searchParams = {} }: PageProps) {
       {/* Filters */}
       <section className="border-b border-gray-200 bg-white py-4">
         <div className="container-custom">
-          <form className="flex flex-col sm:flex-row gap-4 items-center justify-between" action="/tractores-jardin" method="GET">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 items-center justify-between">
             <div className="relative flex-1 max-w-md w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
-                name="q"
-                defaultValue={searchParams.q || ''}
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
                 placeholder="Search brand..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none"
               />
@@ -72,8 +81,8 @@ export default function TractoresJardinPage({ searchParams = {} }: PageProps) {
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <Filter className="h-4 w-4 text-gray-500" />
               <select
-                name="sort"
-                defaultValue={sort}
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
                 className="w-full sm:w-56 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none bg-white"
               >
                 <option value="name">Name A-Z</option>
@@ -99,9 +108,14 @@ export default function TractoresJardinPage({ searchParams = {} }: PageProps) {
                 href={`/marcas/${slug}?tipo=lawn`}
                 className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
               >
-                <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden`}>
-                  <div className="text-white text-2xl font-bold px-3 text-center leading-tight">
-                    {brand}
+                <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden p-4`}>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <BrandLogo 
+                      brandName={brand} 
+                      width={120} 
+                      height={80}
+                      className="max-w-full max-h-full"
+                    />
                   </div>
                 </div>
                 <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
@@ -114,7 +128,7 @@ export default function TractoresJardinPage({ searchParams = {} }: PageProps) {
 
           {brands.length === 0 && (
             <div className="text-center py-12 text-gray-600">
-              No brands found matching &quot;{searchParams.q}&quot;.
+              No brands found matching &quot;{q}&quot;.
             </div>
           )}
         </div>

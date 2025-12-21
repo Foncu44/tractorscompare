@@ -21,7 +21,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white sticky top-0 z-50" style={{ boxShadow: '5px 5px 15px gray' }}>
         <div className="container-custom">
         <div className="flex items-center justify-between h-20 gap-4">
           {/* Logo - Left */}
@@ -36,9 +36,6 @@ export default function Header() {
             </Link>
             <Link href="/tractores-jardin" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
               Lawn Tractors
-            </Link>
-            <Link href="/marcas" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
-              Brands
             </Link>
             <Link href="/comparar" className="text-gray-700 hover:text-primary-600 font-medium transition-colors">
               Compare
@@ -74,7 +71,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-200 mt-4 pt-4">
+          <div className="lg:hidden pb-4 border-t border-gray-200 mt-4 pt-4">
             <nav className="flex flex-col space-y-4">
               <form onSubmit={handleSearch} className="mb-4">
                 <div className="relative">
@@ -101,13 +98,6 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Lawn Tractors
-              </Link>
-              <Link
-                href="/marcas"
-                className="text-gray-700 hover:text-primary-600 font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Brands
               </Link>
               <Link
                 href="/comparar"

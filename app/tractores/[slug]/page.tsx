@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { brandToSlug, getTractorBySlug, tractors } from '@/data/tractors';
-import { Tractor, Calendar, Weight, Gauge, Settings, Zap, ArrowLeft, GitCompare, Fuel, Cog } from 'lucide-react';
+import { Tractor, Calendar, Weight, Gauge, Settings, Zap, ArrowLeft, GitCompare, Fuel, Cog, DollarSign } from 'lucide-react';
 import type { Metadata } from 'next';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 import { AdInContent, AdSidebar } from '@/components/AdSense';
@@ -133,13 +133,21 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
       ratingValue: '4.5',
       reviewCount: '127',
     },
-    offers: {
-      '@type': 'AggregateOffer',
-      offerCount: '1',
-      lowPrice: '50000',
-      highPrice: '500000',
-      priceCurrency: 'USD',
-    },
+    ...(tractor.priceRange ? {
+      offers: {
+        '@type': 'AggregateOffer',
+        offerCount: '1',
+        lowPrice: tractor.priceRange.min?.toString() || '50000',
+        highPrice: tractor.priceRange.max?.toString() || '500000',
+        priceCurrency: 'USD',
+      },
+    } : {
+      offers: {
+        '@type': 'AggregateOffer',
+        offerCount: '1',
+        priceCurrency: 'USD',
+      },
+    }),
   };
 
   return (
@@ -264,8 +272,29 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
                     </div>
                   </div>
 
+                  {tractor.priceRange && (tractor.priceRange.min || tractor.priceRange.max) && (
+                    <div className="col-span-2 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-6 border-2 border-primary-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <DollarSign className="h-6 w-6 text-primary-700" />
+                        <p className="text-sm text-gray-600 font-medium">Estimated Price Range</p>
+                      </div>
+                      <p className="text-3xl font-bold text-gray-900">
+                        {tractor.priceRange.min && tractor.priceRange.max ? (
+                          <>
+                            ${tractor.priceRange.min.toLocaleString()} - ${tractor.priceRange.max.toLocaleString()}
+                          </>
+                        ) : tractor.priceRange.min ? (
+                          <>From ${tractor.priceRange.min.toLocaleString()}</>
+                        ) : tractor.priceRange.max ? (
+                          <>Up to ${tractor.priceRange.max.toLocaleString()}</>
+                        ) : null}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">USD • Estimated market value</p>
+                    </div>
+                  )}
+
                   {tractor.weight && (
-                    <div className="col-span-2 bg-primary-50 rounded-xl p-6 border border-gray-200">
+                    <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
                       <p className="text-sm text-gray-600 mb-1">Weight</p>
                       <p className="text-2xl font-bold text-gray-900">
                         {tractor.weight.toLocaleString()} kg ({Math.round(tractor.weight / 1000)} ton)

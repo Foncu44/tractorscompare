@@ -1,24 +1,25 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Tractor as TractorIcon } from 'lucide-react';
 import { searchTractors } from '@/data/tractors';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 
-interface BuscarPageProps {
-  searchParams: {
-    q?: string;
-  };
-}
-
-// Forzar renderizado estático
-export const dynamic = 'force-static';
-
-export default function BuscarPage({ searchParams }: BuscarPageProps) {
-  const params = searchParams;
-  const query = params.q || '';
+export default function BuscarPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const query = searchParams.get('q') || '';
+  
+  useEffect(() => {
+    if (!query) {
+      router.push('/');
+    }
+  }, [query, router]);
   
   if (!query) {
-    redirect('/');
+    return null; // Evitar renderizar mientras redirige
   }
 
   const results = searchTractors(query);

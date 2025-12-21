@@ -26,11 +26,11 @@ export default function BrandLogo({
 
   if (!logoPath || hasError) {
     // Calcular tamaño de fuente basado en el ancho disponible
-    const fontSize = Math.min(width / (brandName.length * 0.6), height / 2, 14);
+    const fontSize = Math.min(width / (brandName.length * 0.6), height / 2, 20);
     
     return (
       <div 
-        className={`font-bold ${className}`} 
+        className={`font-bold text-white ${className}`} 
         style={{ 
           width: `${width}px`, 
           height: `${height}px`, 
@@ -43,7 +43,6 @@ export default function BrandLogo({
           padding: '4px',
           wordBreak: 'break-word',
           overflow: 'hidden',
-          color: '#000000',
           fontFamily: "'Times New Roman', Times, serif"
         }}
       >

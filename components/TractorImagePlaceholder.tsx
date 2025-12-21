@@ -74,26 +74,18 @@ export default function TractorImagePlaceholder({
     setImageLoading(true);
     setShouldTryLoad(false);
     
-    // Limpiar timeout anterior si existe
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      setTimeoutId(null);
-    }
+    let currentTimeout: NodeJS.Timeout | null = null;
     
     // Validar y preparar para cargar
     if (imageUrl && imageUrl.trim() !== '' && imageUrl !== 'null' && imageUrl !== 'undefined') {
       if (isValidImageUrl(imageUrl)) {
         setShouldTryLoad(true);
         // Timeout corto (1.5 segundos) - si la imagen no carga en este tiempo, mostrar placeholder
-        const timeout = setTimeout(() => {
+        currentTimeout = setTimeout(() => {
           setImageError(true);
           setImageLoading(false);
         }, 1500);
-        setTimeoutId(timeout);
-        
-        return () => {
-          clearTimeout(timeout);
-        };
+        setTimeoutId(currentTimeout);
       } else {
         // URL no válida, mostrar placeholder inmediatamente
         setImageError(true);
@@ -106,7 +98,17 @@ export default function TractorImagePlaceholder({
       setImageLoading(false);
       setShouldTryLoad(false);
     }
-  }, [imageUrl]);
+    
+    // Cleanup: siempre limpiar timeout anterior y actual
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (currentTimeout) {
+        clearTimeout(currentTimeout);
+      }
+    };
+  }, [imageUrl, timeoutId]);
   
   // Si hay imageUrl válida y no hay error, mostrar la imagen
   if (imageUrl && shouldTryLoad && !imageError && imageUrl.trim() !== '' && imageUrl !== 'null' && imageUrl !== 'undefined') {
