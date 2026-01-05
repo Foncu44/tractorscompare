@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface TractorImagePlaceholderProps {
   brand?: string;
@@ -62,30 +62,34 @@ export default function TractorImagePlaceholder({
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [shouldTryLoad, setShouldTryLoad] = useState(false);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const centerX = width / 2;
   const centerY = height / 2;
   
   // Validar URL y decidir si intentar cargar
   useEffect(() => {
+    // Limpiar timeout anterior si existe
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    
     // Resetear estados cuando cambia la URL
     setImageError(false);
     setImageLoading(true);
     setShouldTryLoad(false);
-    
-    let currentTimeout: NodeJS.Timeout | null = null;
     
     // Validar y preparar para cargar
     if (imageUrl && imageUrl.trim() !== '' && imageUrl !== 'null' && imageUrl !== 'undefined') {
       if (isValidImageUrl(imageUrl)) {
         setShouldTryLoad(true);
         // Timeout corto (1.5 segundos) - si la imagen no carga en este tiempo, mostrar placeholder
-        currentTimeout = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
           setImageError(true);
           setImageLoading(false);
+          timeoutRef.current = null;
         }, 1500);
-        setTimeoutId(currentTimeout);
       } else {
         // URL no válida, mostrar placeholder inmediatamente
         setImageError(true);
@@ -99,16 +103,14 @@ export default function TractorImagePlaceholder({
       setShouldTryLoad(false);
     }
     
-    // Cleanup: siempre limpiar timeout anterior y actual
+    // Cleanup: limpiar timeout al desmontar o cuando cambia imageUrl
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      if (currentTimeout) {
-        clearTimeout(currentTimeout);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
-  }, [imageUrl, timeoutId]);
+  }, [imageUrl]);
   
   // Si hay imageUrl válida y no hay error, mostrar la imagen
   if (imageUrl && shouldTryLoad && !imageError && imageUrl.trim() !== '' && imageUrl !== 'null' && imageUrl !== 'undefined') {
@@ -137,18 +139,18 @@ export default function TractorImagePlaceholder({
           referrerPolicy="no-referrer"
           onLoad={() => {
             // Limpiar timeout si la imagen carga exitosamente
-            if (timeoutId) {
-              clearTimeout(timeoutId);
-              setTimeoutId(null);
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
             }
             setImageLoading(false);
             setImageError(false);
           }}
           onError={() => {
             // Limpiar timeout en caso de error
-            if (timeoutId) {
-              clearTimeout(timeoutId);
-              setTimeoutId(null);
+            if (timeoutRef.current) {
+              clearTimeout(timeoutRef.current);
+              timeoutRef.current = null;
             }
             // Manejar error inmediatamente - mostrar placeholder sin esperar timeout
             setImageError(true);

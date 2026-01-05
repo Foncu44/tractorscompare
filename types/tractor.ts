@@ -48,6 +48,7 @@ export interface Hydraulics {
   pumpFlow?: number; // in L/min
   steeringFlow?: number; // in L/min
   maxPressure?: number; // in bar
+  valves?: number; // Total number of valves (generic)
   rearValves?: number; // Number of rear valves
   rearValvesMax?: number; // Maximum rear valves
   frontValves?: number; // Number of front valves (optional)

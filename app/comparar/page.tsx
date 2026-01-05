@@ -69,9 +69,9 @@ export default function CompararPage() {
   return (
     <div className="container-custom py-12">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">Compare Tractor Data & Specifications</h1>
+        <h1 className="text-4xl font-bold mb-4">Tractor Comparison</h1>
         <p className="text-gray-600 text-lg">
-          Compare up to 4 tractors side by side using our comprehensive tractor data. Compare specifications, performance data, and technical details to find the best tractor for your needs.
+          Compare up to 4 tractors side by side with all their technical specifications. Compare engine, power, transmission, PTO and more to find the best tractor for your needs.
         </p>
       </div>
 

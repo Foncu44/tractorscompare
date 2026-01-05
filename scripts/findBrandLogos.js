@@ -10,6 +10,129 @@ const path = require('path');
 const BRAND_LOGOS_FILE = path.join(__dirname, '..', 'data', 'brand-logos.json');
 const PROGRESS_FILE = path.join(__dirname, '..', 'data', 'brand-logo-progress.json');
 
+// Dominios que DEBEN ser excluidos (logos de terceros, servicios, etc.)
+const EXCLUDED_DOMAINS = [
+  'google.com',
+  'googleapis.com',
+  'gstatic.com',
+  'youtube.com',
+  'ytimg.com',
+  'googletagmanager.com',
+  'google-analytics.com',
+  'doubleclick.net',
+  'cookielaw.org',
+  'onetrust.com',
+  'trustarc.com',
+  'cookiebot.com',
+  'facebook.com',
+  'facebook.net',
+  'twitter.com',
+  'instagram.com',
+  'linkedin.com',
+  'pinterest.com',
+  'cdn-cgi.com',
+  'cloudflare.com',
+  'amazonaws.com',
+  'azureedge.net',
+  'adservice.google',
+  'googlesyndication.com',
+  'advertising.com',
+  'adsystem.com',
+  'adtech.com',
+  'atom.com',
+  'giant.cz',
+  'clvaw-cdnwnd.com',
+  'ctfassets.net',
+  'scene7.com',
+  'squarespace-cdn.com',
+  'wix.com',
+  'shopify.com',
+  'wordpress.com',
+  'tumblr.com',
+  'medium.com',
+  'reddit.com',
+  'quora.com',
+  'stackoverflow.com',
+  'github.com',
+  'wikipedia.org',
+  'wikimedia.org',
+];
+
+/**
+ * Verifica si una URL debe ser excluida
+ */
+function isExcludedUrl(url) {
+  if (!url) return true;
+  
+  try {
+    const urlObj = new URL(url);
+    const hostname = urlObj.hostname.toLowerCase();
+    
+    // Verificar si el dominio está en la lista negra
+    for (const excludedDomain of EXCLUDED_DOMAINS) {
+      if (hostname.includes(excludedDomain.toLowerCase())) {
+        return true;
+      }
+    }
+    
+    // Excluir URLs que contengan palabras clave problemáticas
+    const problematicKeywords = [
+      'cookie',
+      'privacy',
+      'policy',
+      'terms',
+      'analytics',
+      'tracking',
+      'pixel',
+      'beacon',
+      'advertisement',
+      'ad-',
+      'banner',
+      'social',
+      'share',
+      'icon-',
+      'favicon',
+      'thumbnail',
+      'preview',
+      'placeholder',
+      'default',
+      'no-image',
+      'no-logo',
+    ];
+    
+    const urlLower = url.toLowerCase();
+    for (const keyword of problematicKeywords) {
+      if (urlLower.includes(keyword) && !urlLower.includes('logo')) {
+        return true;
+      }
+    }
+    
+    return false;
+  } catch (e) {
+    return true; // Si no se puede parsear, excluir
+  }
+}
+
+/**
+ * Verifica si una URL pertenece al dominio del sitio oficial
+ */
+function belongsToOfficialDomain(url, officialDomain) {
+  if (!url || !officialDomain) return false;
+  
+  try {
+    const urlObj = new URL(url);
+    const urlHostname = urlObj.hostname.toLowerCase();
+    const officialHostname = new URL(officialDomain).hostname.toLowerCase();
+    
+    // Verificar si el dominio coincide o es un subdominio
+    return urlHostname === officialHostname || 
+           urlHostname.endsWith('.' + officialHostname) ||
+           officialHostname.endsWith('.' + urlHostname);
+  } catch (e) {
+    return false;
+  }
+}
+
 // Mapeo de marcas a sus URLs oficiales conocidas
 const BRAND_WEBSITES = {
   'John Deere': ['https://www.deere.com', 'https://www.johndeere.com'],
@@ -125,10 +248,17 @@ async function findBrandLogo(page, brand, websiteUrls) {
         const ogImage = await page.$('meta[property="og:image"]');
         if (ogImage) {
           const content = await ogImage.evaluate(el => el.getAttribute('content'));
-          if (content && (content.includes('logo') || content.includes('brand'))) {
-            foundLogoUrl = content.startsWith('http') ? content : new URL(content, websiteUrl).href;
-            console.log(`  ✅ Logo encontrado en meta og:image: ${foundLogoUrl}`);
-            return foundLogoUrl;
+          if (content) {
+            let ogUrl = content.startsWith('http') ? content : new URL(content, websiteUrl).href;
+            
+            // Validar que sea un logo válido y no esté excluido
+            if (!isExcludedUrl(ogUrl) && 
+                belongsToOfficialDomain(ogUrl, websiteUrl) &&
+                (ogUrl.toLowerCase().includes('logo') || ogUrl.match(/\.(svg|png|jpg|jpeg|webp)$/i))) {
+              foundLogoUrl = ogUrl;
+              console.log(`  ✅ Logo encontrado en meta og:image: ${foundLogoUrl}`);
+              return foundLogoUrl;
+            }
           }
         }
       } catch (e) {}
@@ -209,8 +339,11 @@ async function findBrandLogo(page, brand, websiteUrls) {
                 imgUrl = urlObj.origin + '/' + src;
               }
 
-              // Validar que sea una imagen válida (extensión o contiene 'logo')
-              if (imgUrl && (imgUrl.match(/\.(jpg|jpeg|png|gif|svg|webp|ico)$/i) || imgUrl.toLowerCase().includes('logo'))) {
+              // Validar que sea una imagen válida y no esté excluida
+              if (imgUrl && 
+                  !isExcludedUrl(imgUrl) &&
+                  belongsToOfficialDomain(imgUrl, websiteUrl) &&
+                  (imgUrl.match(/\.(jpg|jpeg|png|gif|svg|webp|ico)$/i) || imgUrl.toLowerCase().includes('logo'))) {
                 // Verificar que no sea demasiado pequeño (probablemente no es el logo principal)
                 try {
                   const width = await logoElement.evaluate(el => el.naturalWidth || el.width || 0);
@@ -310,7 +443,11 @@ async function findBrandLogo(page, brand, websiteUrls) {
                 foundUrl = urlObj.origin + '/' + foundUrl;
               }
 
-              if (foundUrl && (foundUrl.match(/\.(jpg|jpeg|png|gif|svg|webp|ico)$/i) || foundUrl.toLowerCase().includes('logo'))) {
+              // Validar que no esté excluida y pertenezca al dominio oficial
+              if (foundUrl && 
+                  !isExcludedUrl(foundUrl) &&
+                  belongsToOfficialDomain(foundUrl, websiteUrl) &&
+                  (foundUrl.match(/\.(jpg|jpeg|png|gif|svg|webp|ico)$/i) || foundUrl.toLowerCase().includes('logo'))) {
                 foundLogoUrl = foundUrl;
                 console.log(`  ✅ Logo encontrado en HTML: ${foundLogoUrl}`);
                 return foundLogoUrl;
@@ -477,9 +614,9 @@ async function main() {
             return links
               .map(link => link.href)
               .filter(href => {
-                // Filtrar URLs de Google y redes sociales
-                const excludeDomains = ['google.com', 'youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'linkedin.com', 'wikipedia.org'];
-                return !excludeDomains.some(domain => href.includes(domain));
+                // Filtrar URLs usando la lista de dominios excluidos
+                const excludeDomains = ['google.com', 'youtube.com', 'facebook.com', 'twitter.com', 'instagram.com', 'linkedin.com', 'wikipedia.org', 'gstatic.com', 'googletagmanager.com', 'cookielaw.org', 'onetrust.com', 'trustarc.com'];
+                return !excludeDomains.some(domain => href.toLowerCase().includes(domain));
               })
               .slice(0, 3); // Primeros 3 resultados
           });
@@ -504,7 +641,8 @@ async function main() {
       // Buscar el logo
       const logoUrl = await findBrandLogo(page, brand, websiteUrls);
 
-      if (logoUrl) {
+      // Validación final: asegurarse de que el logo no esté excluido
+      if (logoUrl && !isExcludedUrl(logoUrl)) {
         brandLogos[brand] = logoUrl;
         
         // Remover de la lista de fallidos si estaba ahí
@@ -521,6 +659,9 @@ async function main() {
         found++;
         console.log(`  ✅ Logo guardado para ${brand}: ${logoUrl}`);
       } else {
+        if (logoUrl && isExcludedUrl(logoUrl)) {
+          console.log(`  ⚠️  Logo encontrado pero excluido (dominio no permitido): ${logoUrl}`);
+        }
         console.log(`  ❌ No se encontró logo para ${brand}`);
         
         // Solo agregar a fallidos si no está ya procesado

@@ -1,74 +1,92 @@
 import Link from 'next/link';
 import { TrendingUp, Search, GitCompare } from 'lucide-react';
-import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
+import { getAllBrands, tractors } from '@/data/tractors';
 import { AdInContent } from '@/components/AdSense';
-import { getBrandColor, getBrandLogo } from '@/lib/brandLogos';
 import NewsSections from '@/components/NewsSections';
 import newsData from '@/data/news.json';
-import BrandLogo from '@/components/BrandLogo';
+import PopularTractorsSection from '@/components/PopularTractorsSection';
+import TractorsSection from '@/components/TractorsSection';
 
 export const metadata = {
-  title: 'Tractor Data - Complete Tractor Specifications Database',
-  description: 'Comprehensive tractor data and specifications database. Access detailed technical information for over 18,000 tractors from John Deere, Kubota, New Holland, Case IH and more. Compare specs, find tractor data, and make informed decisions.',
-  keywords: ['tractor data', 'tractor specifications', 'tractor database', 'tractor data database', 'tractor specs', 'tractor information', 'tractor compare', 'agricultural tractors', 'john deere', 'kubota', 'new holland'],
+  title: 'Compare Tractors – Specifications, Comparisons & Technical Data | TractorsCompare',
+  description: 'Compare agricultural tractor specifications by brand, power, price and features. Complete database with over 18,000 tractors. Compare John Deere, Kubota, New Holland, Case IH and more.',
+  keywords: ['compare tractors', 'tractor specifications', 'tractor specs', 'best agricultural tractors', 'tractor comparison', 'tractor comparisons', 'tractor technical data', 'tractor database', 'tractor specifications', 'compare tractor specifications'],
 };
 
 export default function HomePage() {
   const brands = getAllBrands();
 
-  // Top marcas por categoría (una sola pasada)
-  const farmCounts = new Map<string, number>();
-  const lawnCounts = new Map<string, number>();
-  for (const t of tractors) {
-    const type = (t.type || 'farm');
-    if (type === 'farm') farmCounts.set(t.brand, (farmCounts.get(t.brand) || 0) + 1);
-    if (type === 'lawn') lawnCounts.set(t.brand, (lawnCounts.get(t.brand) || 0) + 1);
-  }
-
-  const topFarmBrands = Array.from(farmCounts.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12)
-    .map(([brand, count]) => ({ brand, count, slug: brandToSlug(brand), color: getBrandColor(brand) }));
-
-  const topLawnBrands = Array.from(lawnCounts.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12)
-    .map(([brand, count]) => ({ brand, count, slug: brandToSlug(brand), color: getBrandColor(brand) }));
+  // Tractores más populares (por potencia y disponibilidad de imagen)
+  const popularTractors = tractors
+    .filter(t => t.type === 'farm' && (t.engine?.powerHP || 0) > 100)
+    .sort((a, b) => {
+      // Priorizar tractores con imagen
+      const aHasImage = a.imageUrl ? 1 : 0;
+      const bHasImage = b.imageUrl ? 1 : 0;
+      if (bHasImage !== aHasImage) return bHasImage - aHasImage;
+      // Luego por potencia
+      return (b.engine?.powerHP || 0) - (a.engine?.powerHP || 0);
+    })
+    .slice(0, 5); // Top 5 tractores populares
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative text-white py-20 md:py-32 overflow-hidden" style={{
-        backgroundImage: 'url(https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }}>
-        {/* Dark overlay for better text readability */}
-        <div className="absolute inset-0 bg-black/50" />
+      {/* Hero Section with Banner Image */}
+      <section className="relative text-white py-20 md:py-32 overflow-hidden min-h-[600px] md:min-h-[700px]">
+        {/* Background Image with Effects */}
+        <div className="absolute inset-0 z-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/banner.jpg"
+            alt="John Deere tractor in agricultural field"
+            className="w-full h-full object-cover transition-all duration-700 ease-out"
+            style={{
+              filter: 'brightness(0.65) saturate(1.2) contrast(1.15)',
+              transform: 'scale(1.05)',
+            }}
+          />
+          {/* Animated gradient overlay with depth */}
+          <div 
+            className="absolute inset-0 transition-opacity duration-500"
+            style={{
+              background: 'linear-gradient(135deg, rgba(20, 83, 45, 0.75) 0%, rgba(22, 101, 52, 0.65) 50%, rgba(21, 128, 61, 0.75) 100%)',
+            }}
+          />
+          {/* Additional depth overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          {/* Subtle animated shimmer effect */}
+          <div 
+            className="absolute inset-0 opacity-0 md:opacity-10"
+            style={{
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%)',
+              animation: 'shimmer 6s ease-in-out infinite',
+              width: '200%',
+            }}
+          />
+        </div>
         
         <div className="container-custom relative z-10">
           <div className="max-w-3xl">
             {/* Text Content */}
             <div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                The Most Complete Tractor Database
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl">
+                Agricultural Tractor Comparison
               </h1>
-              <p className="text-lg md:text-xl mb-8 text-white/90 leading-relaxed">
-                Detailed specifications for over 18,000 agricultural, garden, and industrial tractors. 
-                Your definitive resource for machinery information.
+              <p className="text-lg md:text-xl mb-8 text-white/95 leading-relaxed drop-shadow-lg">
+                Compare specifications of over 18,000 agricultural, lawn and industrial tractors. 
+                Find the perfect tractor by comparing power, engine, transmission and technical features.
               </p>
 
               {/* Statistics */}
-              <div className="flex flex-wrap gap-8">
-                <div style={{ backgroundColor: 'lightgray', padding: '30px' }}>
-                  <div className="text-3xl md:text-4xl font-bold text-orange-500">
+              <div className="flex flex-wrap gap-6 md:gap-8">
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl px-6 py-5 shadow-xl border border-white/20">
+                  <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-1">
                     {tractors.length.toLocaleString()}
                   </div>
                   <div className="text-gray-800 text-sm md:text-base font-semibold">Tractors</div>
                 </div>
-                <div style={{ backgroundColor: 'lightgray', padding: '30px' }}>
-                  <div className="text-3xl md:text-4xl font-bold text-orange-500">
+                <div className="bg-white/95 backdrop-blur-sm rounded-xl px-6 py-5 shadow-xl border border-white/20">
+                  <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-1">
                     {brands.length}+
                   </div>
                   <div className="text-gray-800 text-sm md:text-base font-semibold">Brands</div>
@@ -77,37 +95,65 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+
+        {/* Decorative bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0 z-10">
+          <svg
+            className="w-full h-20 md:h-28"
+            viewBox="0 0 1200 120"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0,60 C300,100 600,20 900,60 C1050,80 1150,40 1200,60 L1200,120 L0,120 Z"
+              fill="white"
+              className="transition-all duration-300"
+            />
+          </svg>
+        </div>
       </section>
 
+      {/* Los Más Populares Section */}
+      <PopularTractorsSection tractors={popularTractors} />
+
       {/* Features Section */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="container-custom">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Why Choose TractorsCompare?
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              The most comprehensive tractor database with powerful comparison tools
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Search className="w-8 h-8 text-primary-600" />
+            <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <Search className="w-10 h-10 text-primary-600" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Advanced Search</h3>
-              <p className="text-gray-600">
-                Find tractors by brand, model, power, type or any specification.
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Search by Brand and Model</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Find tractors by brand, model, power, type or any technical specification with our advanced search.
               </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <GitCompare className="w-8 h-8 text-primary-600" />
+            <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <GitCompare className="w-10 h-10 text-primary-600" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Detailed Comparison</h3>
-              <p className="text-gray-600">
-                Compare multiple tractors side by side with all their technical specifications.
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Compare Technical Specifications</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Compare multiple tractors side by side: HP, engine, PTO, transmission and all technical features.
               </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-primary-600" />
+            <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+              <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                <TrendingUp className="w-10 h-10 text-primary-600" />
               </div>
-              <h3 className="text-xl font-bold mb-2">Updated Information</h3>
-              <p className="text-gray-600">
-                Accurate and up-to-date data on all available tractor models.
+              <h3 className="text-xl font-bold mb-3 text-gray-900">Best Tractors 2026 by Category</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Accurate and up-to-date information on all available tractor models with detailed specifications.
               </p>
             </div>
           </div>
@@ -121,100 +167,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Tractores Agrícolas (como tu diseño) */}
-      <section className="py-16 bg-[#fbf7f1]">
-        <div className="container-custom">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Agricultural Tractors</h2>
-            <Link href="/tractores-agricolas" className="text-gray-700 hover:text-primary-700 font-semibold">
-              View all →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {topFarmBrands.map(({ brand, count, slug, color }) => {
-              const brandLogo = getBrandLogo(brand);
-              return (
-                <Link
-                  key={brand}
-                  href={`/marcas/${slug}?tipo=farm`}
-                  className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
-                >
-                  <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden p-4`}>
-                    <div className="w-full h-full flex items-center justify-center">
-                      <BrandLogo 
-                        brandName={brand} 
-                        width={120} 
-                        height={80}
-                        className="max-w-full max-h-full"
-                      />
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
-                    {brand}
-                  </h3>
-                  <p className="text-sm text-gray-500">{count} models</p>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Tractores de Jardín (como tu diseño) */}
-      <section className="py-16 bg-[#fbf7f1]">
-        <div className="container-custom">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold">Lawn Tractors</h2>
-            <Link href="/tractores-jardin" className="text-gray-700 hover:text-primary-700 font-semibold">
-              View all →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {topLawnBrands.map(({ brand, count, slug, color }) => {
-              const brandLogo = getBrandLogo(brand);
-              return (
-                <Link
-                  key={brand}
-                  href={`/marcas/${slug}?tipo=lawn`}
-                  className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
-                >
-                  <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden p-4`}>
-                    <div className="w-full h-full flex items-center justify-center">
-                      <BrandLogo 
-                        brandName={brand} 
-                        width={120} 
-                        height={80}
-                        className="max-w-full max-h-full"
-                      />
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
-                    {brand}
-                  </h3>
-                  <p className="text-sm text-gray-500">{count} models</p>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      {/* Tractores por Marca - Nuevo Layout con Sidebar */}
+      <TractorsSection />
 
       {/* Noticias (antes del footer) */}
       <NewsSections items={(newsData as any).items || []} />
 
       {/* CTA Section */}
-      <section className="py-16 bg-primary-600 text-white">
-        <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <section className="py-20 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-1/2 translate-y-1/2"></div>
+        </div>
+        <div className="container-custom text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
             Ready to find your ideal tractor?
           </h2>
-          <p className="text-xl mb-8 text-primary-100">
+          <p className="text-xl md:text-2xl mb-10 text-primary-100 max-w-2xl mx-auto leading-relaxed">
             Explore our complete database and compare models to make the best decision.
           </p>
-          <Link href="/tractores-agricolas" className="btn-primary bg-white text-primary-600 hover:bg-gray-100 inline-block">
-            Empezar
+          <Link 
+            href="/tractores-agricolas" 
+            className="inline-flex items-center px-8 py-4 bg-white text-primary-600 hover:bg-gray-50 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          >
+            Get Started
+            <span className="ml-2">→</span>
           </Link>
         </div>
       </section>

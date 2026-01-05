@@ -51,8 +51,31 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://tractorscompare.com" />
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-5WVZHK0232"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-5WVZHK0232');
+          `}
+        </Script>
+        {/* AdSense script - usando script normal para evitar data-nscript */}
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="font-serif" suppressHydrationWarning>
+        {/* JSON-LD - suppressHydrationWarning evita el warning de hidratación */}
         <script
           type="application/ld+json"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
@@ -67,15 +90,6 @@ export default function RootLayout({
               },
             }),
           }}
-        />
-      </head>
-      <body className="font-serif">
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-          id="adsbygoogle-init"
         />
         <Header />
         <main className="min-h-screen">{children}</main>

@@ -52,9 +52,18 @@ export async function generateMetadata({ params }: TractorDetailPageProps): Prom
   ].filter(Boolean) as string[];
 
   return {
-    title: `${fullName}${yearText} - Tractor Data & Specifications`,
+    title: `${fullName}${yearText} – Technical Specifications | TractorsCompare`,
     description: optimizedDescription,
-    keywords: [...optimizedKeywords, ...(tractor.metaKeywords || [])],
+    keywords: [
+      `${fullName} specifications`,
+      `${fullName} technical data`,
+      `${fullName} specs`,
+      `${tractor.brand} ${tractor.model} tractor specifications`,
+      'tractor specs',
+      'tractor technical data',
+      ...optimizedKeywords,
+      ...(tractor.metaKeywords || []),
+    ],
     openGraph: {
       title: `${fullName}${yearText} - Tractor Data`,
       description: optimizedDescription,
@@ -109,23 +118,33 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
     additionalProperty: [
       {
         '@type': 'PropertyValue',
-        name: 'Engine Power',
+        name: 'Potencia del Motor',
         value: `${tractor.engine.powerHP} HP`,
       },
       {
         '@type': 'PropertyValue',
-        name: 'Engine Type',
-        value: `${tractor.engine.cylinders} cylinder ${tractor.engine.fuelType}`,
+        name: 'Tipo de Motor',
+        value: `${tractor.engine.cylinders} cilindros ${tractor.engine.fuelType}`,
       },
       {
         '@type': 'PropertyValue',
-        name: 'Transmission Type',
+        name: 'Tipo de Transmisión',
         value: tractor.transmission.type,
       },
       ...(tractor.weight ? [{
         '@type': 'PropertyValue',
-        name: 'Weight',
-        value: `${Math.round(tractor.weight / 1000)} tons`,
+        name: 'Peso',
+        value: `${Math.round(tractor.weight / 1000)} toneladas`,
+      }] : []),
+      ...(tractor.ptoHP ? [{
+        '@type': 'PropertyValue',
+        name: 'Potencia PTO',
+        value: `${tractor.ptoHP} HP`,
+      }] : []),
+      ...(tractor.hydraulicSystem?.liftCapacity ? [{
+        '@type': 'PropertyValue',
+        name: 'Capacidad de Elevación',
+        value: `${tractor.hydraulicSystem.liftCapacity} kg`,
       }] : []),
     ],
     aggregateRating: {
@@ -230,7 +249,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
                 </div>
 
                 <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                  {tractor.model}{tractor.year ? ` (${tractor.year})` : ''}
+                  {tractor.brand} {tractor.model}{tractor.year ? ` ${tractor.year}` : ''} Specifications
                 </h1>
 
                 {tractor.description && (
@@ -239,6 +258,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
                   </p>
                 )}
 
+                <h2 className="text-2xl font-bold mb-4 text-gray-900">Engine Features</h2>
                 <div className="grid grid-cols-2 gap-4 mb-8">
                   <div className="flex items-center gap-3 bg-white rounded-lg p-4 border border-gray-200">
                     <Zap className="h-5 w-5 text-primary-700" />
@@ -295,9 +315,10 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
 
                   {tractor.weight && (
                     <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
+                      <h3 className="text-lg font-bold text-gray-900 mb-2">Weight and Dimensions</h3>
                       <p className="text-sm text-gray-600 mb-1">Weight</p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {tractor.weight.toLocaleString()} kg ({Math.round(tractor.weight / 1000)} ton)
+                        {tractor.weight.toLocaleString()} kg ({Math.round(tractor.weight / 1000)} tons)
                       </p>
                     </div>
                   )}
@@ -325,7 +346,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
           {/* Features */}
           {tractor.features && tractor.features.length > 0 && (
             <div className="mb-10 bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">Key features</h2>
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">Main Features</h2>
               <ul className="space-y-2">
                 {tractor.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
@@ -341,7 +362,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
 
         {/* Specifications with Tabs */}
         <div className="mt-12">
-          <h2 className="text-3xl font-bold mb-8 text-gray-900">Technical specifications</h2>
+          <h2 className="text-3xl font-bold mb-8 text-gray-900">Technical Specifications</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
@@ -359,7 +380,7 @@ export default function TractorDetailPage({ params }: TractorDetailPageProps) {
 
         {/* Compare CTA */}
         <div className="mt-12 bg-primary-50 rounded-xl p-8 text-center border border-gray-200">
-          <h3 className="text-2xl font-bold mb-4 text-gray-900">Want to compare it with other models?</h3>
+          <h2 className="text-2xl font-bold mb-4 text-gray-900">Want to compare it with other models?</h2>
           <Link href={`/comparar?tractores=${tractor.id}`} className="btn-primary inline-block">
             Compare tractors
           </Link>

@@ -34,9 +34,16 @@ export default function AdSense({
 
   useEffect(() => {
     // Solo inicializar una vez
-    if (initializedRef.current || !adRef.current) {
+    if (initializedRef.current || !adRef.current || !mounted) {
       return;
     }
+
+    // Función para verificar si el script de AdSense está cargado
+    const isAdSenseLoaded = () => {
+      return typeof window !== 'undefined' && 
+             window.adsbygoogle && 
+             (Array.isArray(window.adsbygoogle) || typeof window.adsbygoogle.push === 'function');
+    };
 
     // Función para inicializar el anuncio
     const initializeAd = () => {
@@ -50,49 +57,84 @@ export default function AdSense({
           return;
         }
 
-        // Verificar si ya tiene un anuncio asociado (atributo interno de AdSense)
-        if (adRef.current.hasAttribute('data-adsbygoogle-status')) {
+        // Verificar si ya tiene un anuncio asociado
+        if (status) {
           initializedRef.current = true;
           return;
         }
 
         // Asegurar que adsbygoogle esté disponible
-        if (typeof window === 'undefined' || !window.adsbygoogle) {
-          // Esperar a que el script se cargue
-          setTimeout(initializeAd, 100);
+        if (!isAdSenseLoaded()) {
+          // Esperar más tiempo y reintentar
+          let retries = 0;
+          const maxRetries = 50; // 5 segundos máximo
+          
+          const checkAndRetry = () => {
+            if (retries >= maxRetries) {
+              console.warn('AdSense script not loaded after maximum retries');
+              return;
+            }
+            
+            if (isAdSenseLoaded()) {
+              initializeAd();
+            } else {
+              retries++;
+              setTimeout(checkAndRetry, 100);
+            }
+          };
+          
+          setTimeout(checkAndRetry, 100);
           return;
         }
 
-        // Inicializar adsbygoogle si no existe
-        if (!window.adsbygoogle) {
+        // Inicializar adsbygoogle si no existe como array
+        if (!Array.isArray(window.adsbygoogle)) {
           window.adsbygoogle = [];
         }
         
-        // Inicializar el anuncio solo si el elemento aún no ha sido inicializado
-        if (Array.isArray(window.adsbygoogle)) {
-          window.adsbygoogle.push({});
-        } else if (window.adsbygoogle && typeof window.adsbygoogle.push === 'function') {
-          window.adsbygoogle.push({});
+        // Inicializar el anuncio usando el método correcto de AdSense
+        try {
+          // Después de verificar/crear el array, siempre será un array
+          const adsbygoogle = window.adsbygoogle as any[];
+          adsbygoogle.push({});
+          
+          // Forzar la inicialización si es necesario
+          if (typeof (window as any).adsbygoogle?.loaded === 'undefined') {
+            (window as any).adsbygoogle.loaded = true;
+          }
+        } catch (pushError) {
+          // Si push falla, intentar inicialización manual
+          if (adRef.current && typeof (window as any).adsbygoogle?.requestNonPersonalizedAds === 'function') {
+            (window as any).adsbygoogle.requestNonPersonalizedAds = 1;
+          }
         }
         
         initializedRef.current = true;
       } catch (err) {
         // Ignorar errores de múltiples inicializaciones
-        if (err instanceof Error && err.message.includes('already have ads')) {
+        if (err instanceof Error && (
+          err.message.includes('already have ads') || 
+          err.message.includes('adsbygoogle') ||
+          err.message.includes('duplicate')
+        )) {
           initializedRef.current = true;
           return;
         }
-        console.error('AdSense error:', err);
+        // Solo loggear errores críticos
+        if (err instanceof Error && !err.message.includes('adsbygoogle')) {
+          console.error('AdSense error:', err);
+        }
       }
     };
 
-    // Esperar un poco para asegurar que el DOM está listo
-    const timer = setTimeout(initializeAd, 50);
+    // Esperar a que el DOM y el script estén listos
+    // Aumentar el tiempo de espera para asegurar que el script se cargue
+    const timer = setTimeout(initializeAd, 500);
     
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [mounted]);
 
   // No renderizar hasta que esté montado en el cliente
   if (!mounted) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Filter, Search } from 'lucide-react';
@@ -8,7 +8,7 @@ import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
 import { getBrandColor } from '@/lib/brandLogos';
 import BrandLogo from '@/components/BrandLogo';
 
-export default function TractoresJardinPage() {
+function TractoresJardinContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [q, setQ] = useState(searchParams.get('q') || '');
@@ -59,7 +59,7 @@ export default function TractoresJardinPage() {
         <div className="container-custom">
           <h1 className="text-4xl font-bold mb-4">Lawn Tractors</h1>
           <p className="text-white/80 text-lg max-w-3xl">
-            Find specifications for {lawnTractors.length.toLocaleString()} lawn tractors and mowers from {brands.length} brands.
+            Find specifications of {lawnTractors.length.toLocaleString()} lawn tractors and mowers from {brands.length} brands. Compare technical features and find the best model.
           </p>
         </div>
       </section>
@@ -134,6 +134,21 @@ export default function TractoresJardinPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+export default function TractoresJardinPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <TractoresJardinContent />
+    </Suspense>
   );
 }
 

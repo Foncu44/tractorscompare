@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Tractor as TractorIcon } from 'lucide-react';
 import { searchTractors } from '@/data/tractors';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 
-export default function BuscarPage() {
+function BuscarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -90,6 +90,21 @@ export default function BuscarPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BuscarPage() {
+  return (
+    <Suspense fallback={
+      <div className="container-custom py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading search results...</p>
+        </div>
+      </div>
+    }>
+      <BuscarContent />
+    </Suspense>
   );
 }
 

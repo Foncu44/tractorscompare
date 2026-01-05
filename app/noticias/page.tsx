@@ -1,7 +1,8 @@
 import NewsSections from '@/components/NewsSections';
 import newsData from '@/data/news.json';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Industry News - Agriculture & Tractors',
   description: 'Recent news about agriculture, tractors and agricultural machinery (last 6 months).',
 };
@@ -9,6 +10,10 @@ export const metadata = {
 export const dynamic = 'force-static';
 
 export default function NoticiasPage() {
-  return <NewsSections items={(newsData as any).items || []} />;
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#fbf7f1] to-white">
+      <NewsSections items={(newsData as any).items || []} showAll={true} />
+    </div>
+  );
 }
 
