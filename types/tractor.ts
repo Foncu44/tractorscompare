@@ -7,7 +7,8 @@ export interface Engine {
   model?: string;
   cylinders: number;
   displacement?: number; // in liters
-  powerHP: number; // Horsepower
+  powerHP: number; // Horsepower (gross)
+  powerHPNet?: number; // Net horsepower
   powerKW?: number; // Kilowatts
   powerHPNominal?: number; // Nominal power in HP
   powerRPM?: number; // RPM at which power is measured
@@ -16,12 +17,14 @@ export interface Engine {
   torqueReserve?: number; // Torque reserve percentage
   bore?: number; // Cylinder bore in mm
   stroke?: number; // Piston stroke in mm
+  compression?: number; // Compression ratio (e.g., 16:1)
   fuelSystem?: string; // e.g., "Common Rail", "Direct Injection"
   aspiration?: string; // e.g., "Turbocharged with Intercooler", "Naturally Aspirated"
   emissions?: string; // e.g., "Tier 4 Final / Stage V", "Tier 3"
   fuelType: 'diesel' | 'gasoline' | 'electric' | 'methane' | 'hybrid';
   cooling: 'liquid' | 'air';
   turbocharged?: boolean;
+  starterVolts?: number; // Starter voltage (e.g., 12V)
 }
 
 export interface Transmission {
@@ -41,6 +44,8 @@ export interface Dimensions {
   height?: number; // in mm
   wheelbase?: number; // in mm
   groundClearance?: number; // in mm
+  frontTread?: { min?: number; max?: number }; // Front tread width in mm
+  rearTread?: { min?: number; max?: number }; // Rear tread width in mm
 }
 
 export interface Hydraulics {
@@ -73,11 +78,22 @@ export interface DocumentationLinks {
   manufacturerPage?: string; // URL to manufacturer's product page
 }
 
+export interface Tires {
+  front?: string[]; // Front tire sizes (e.g., ["5.50-16", "6.00-16"])
+  rear?: string[]; // Rear tire sizes (e.g., ["11.2/10-28", "9-32"])
+}
+
+export interface ProductionYears {
+  start?: number; // Production start year
+  end?: number; // Production end year
+}
+
 export interface Tractor {
   id: string;
   brand: string;
   model: string;
-  year?: number;
+  year?: number; // Single year (for backward compatibility)
+  productionYears?: ProductionYears; // Production years range
   type: TractorType;
   category?: string;
   imageUrl?: string;
@@ -97,6 +113,7 @@ export interface Tractor {
   ptoFrontPower?: number; // Front PTO power in HP
   ptoActuation?: string; // e.g., "Electrohydraulic"
   capacities?: Capacities;
+  tires?: Tires; // Tire sizes
   
   // Documentation and external links
   documentation?: DocumentationLinks;
@@ -104,6 +121,7 @@ export interface Tractor {
   // Additional info
   description?: string;
   features?: string[];
+  seoContent?: string; // Rich SEO content for the tractor page
   
   // Pricing
   priceRange?: {

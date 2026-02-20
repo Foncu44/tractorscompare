@@ -62,7 +62,7 @@ export default function NewsSections({ items, showAll = false }: { items: NewsIt
   const featured = sectorItems[0];
   const latest = recentItems.slice(0, 3);
   
-  // Para la página completa: paginación de 6 noticias
+  // For full page: pagination of 6 news items
   const itemsPerPage = 6;
   const totalPages = Math.ceil(sectorItems.length / itemsPerPage);
   const startIndex = currentPage * itemsPerPage;
@@ -77,7 +77,7 @@ export default function NewsSections({ items, showAll = false }: { items: NewsIt
     setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
   };
 
-  // Resetear página cuando cambia la categoría
+  // Reset page when category changes
   useEffect(() => {
     setCurrentPage(0);
   }, [active]);
@@ -318,7 +318,7 @@ export default function NewsSections({ items, showAll = false }: { items: NewsIt
             </div>
           </div>
 
-          {/* All News Grid - Solo en página completa */}
+          {/* All News Grid - Only on full page */}
           {showAll && (
             <div className="mt-20">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">

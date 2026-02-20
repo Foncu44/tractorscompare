@@ -1,0 +1,13 @@
+{
+  "id": "john-deere-850",
+  "slug": "john-deere-850",
+  "brand": "John",
+  "model": "Deere 850",
+  "normalized": {
+    "brandSlug": "john-deere",
+    "brandName": "John Deere",
+    "modelSlug": "850",
+    "modelName": "850",
+    "fullName": "John Deere 850"
+  }
+}

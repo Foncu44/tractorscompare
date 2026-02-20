@@ -1,14 +1,8 @@
 # Habilitar reescritura de URLs
+# NOTA: Las redirecciones HTTPS deben configurarse en el servidor (Nginx), no aquí
+# Este archivo .htaccess es para Apache, pero si el servidor es Nginx, este archivo se ignora
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  
-  # Redirigir www a no-www (opcional, descomenta si lo necesitas)
-  # RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
-  # RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
-  
-  # Forzar HTTPS (opcional, descomenta si lo necesitas)
-  # RewriteCond %{HTTPS} off
-  # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
   
   # Si la solicitud es para un archivo o directorio que existe, servir directamente
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -28,22 +22,62 @@
   RewriteRule ^(.*)$ /404.html [L]
 </IfModule>
 
-# Habilitar compresión
+# Habilitar compresión - Optimizado para PageSpeed
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+  # Comprimir HTML, CSS, JavaScript, JSON, XML
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/atom+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
 
-# Cache de archivos estáticos
+# Cache de archivos estáticos - Optimizado para PageSpeed
 <IfModule mod_expires.c>
   ExpiresActive On
+  # Imágenes - caché largo
   ExpiresByType image/jpg "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/gif "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  # CSS y JavaScript - caché medio
   ExpiresByType text/css "access plus 1 month"
   ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  # Fuentes
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType application/font-woff "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
+  # JSON y otros
   ExpiresByType application/json "access plus 1 month"
+  ExpiresByType application/xml "access plus 1 month"
+  ExpiresByType text/xml "access plus 1 month"
+</IfModule>
+
+# Headers de caché adicionales
+<IfModule mod_headers.c>
+  # Cache-Control para imágenes
+  <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Cache-Control para CSS y JS
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  # Cache-Control para fuentes
+  <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
 </IfModule>
 
 # Seguridad - Prevenir acceso a archivos ocultos

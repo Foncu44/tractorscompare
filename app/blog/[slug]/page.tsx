@@ -1,3 +1,4 @@
+import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import blogData from '@/data/blog.json';
@@ -40,8 +41,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const article = getArticle(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const article = getArticle(slug);
   
   if (!article) {
     return {
@@ -70,8 +72,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default function BlogArticlePage({ params }: { params: { slug: string } }) {
-  const article = getArticle(params.slug);
+export default async function BlogArticlePage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const article = getArticle(slug);
 
   if (!article) {
     notFound();
@@ -134,7 +137,7 @@ export default function BlogArticlePage({ params }: { params: { slug: string } }
             <div className="prose prose-lg max-w-none">
               {article.content.map((block, index) => {
                 if (block.type === 'heading') {
-                  const HeadingTag = `h${block.level || 2}` as keyof JSX.IntrinsicElements;
+                  const HeadingTag = `h${block.level || 2}` as keyof React.JSX.IntrinsicElements;
                   return (
                     <HeadingTag
                       key={index}

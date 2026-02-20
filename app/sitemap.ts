@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next';
 import { brandToSlug, tractors, getAllBrands } from '@/data/tractors';
 import blogData from '@/data/blog.json';
+import { BEST_CATEGORIES } from '@/lib/tractorIntelligence/seo/bestCategory';
+
+export const dynamic = 'force-static';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://tractorscompare.com';
@@ -79,7 +82,62 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily',
       priority: 0.7,
     },
+    {
+      url: `${baseUrl}/specs`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/used`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/offers`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/guides`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
   ];
+
+  // Best category pages (Tractor Intelligence)
+  const bestPages: MetadataRoute.Sitemap = BEST_CATEGORIES.map((c) => ({
+    url: `${baseUrl}/best/${c.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  // Compare pages (subset generated at build)
+  const compareSlugs = tractors
+    .filter((t) => t.slug && t.engine?.powerHP != null && t.transmission?.type)
+    .map((t) => t.slug)
+    .slice(0, 40);
+  const comparePages: MetadataRoute.Sitemap = [];
+  for (let i = 0; i < compareSlugs.length - 1 && comparePages.length < 25; i += 2) {
+    comparePages.push({
+      url: `${baseUrl}/compare/${compareSlugs[i]}-vs-${compareSlugs[i + 1]}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    });
+  }
+
+  // Type pages
+  const typePages: MetadataRoute.Sitemap = ['compact', 'utility', 'lawn', 'mower'].map((type) => ({
+    url: `${baseUrl}/type/${type}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }));
 
   // Páginas de tractores
   const tractorPages: MetadataRoute.Sitemap = tractors.map((tractor) => ({
@@ -105,6 +163,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...tractorPages, ...brandPages, ...blogPages];
+  return [...staticPages, ...bestPages, ...comparePages, ...typePages, ...tractorPages, ...brandPages, ...blogPages];
 }
 

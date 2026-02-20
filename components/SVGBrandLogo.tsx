@@ -10,6 +10,27 @@ interface SVGBrandLogoProps {
   className?: string;
 }
 
+function Placeholder({ brandName, width, height }: { brandName: string; width: number; height: number }) {
+  const fontSize = Math.min(width / (brandName.length * 0.6), height / 2, 20);
+  return (
+    <div
+      className="font-bold text-white flex items-center justify-center text-center"
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        fontSize: `${fontSize}px`,
+        lineHeight: 1.2,
+        padding: '4px',
+        wordBreak: 'break-word' as const,
+        overflow: 'hidden',
+        fontFamily: "'Times New Roman', Times, serif",
+      }}
+    >
+      {brandName}
+    </div>
+  );
+}
+
 export default function SVGBrandLogo({
   logoPath,
   brandName,
@@ -20,53 +41,23 @@ export default function SVGBrandLogo({
   const [svgContent, setSvgContent] = useState<string | null>(null);
   const [hasError, setHasError] = useState(false);
 
-  useEffect(() => {
-    // Intentar cargar el SVG como texto
-    // Si es una URL externa, usar directamente; si es local, usar fetch
-    const isExternalUrl = logoPath.startsWith('http://') || logoPath.startsWith('https://');
-    
-    if (isExternalUrl) {
-      // Para URLs externas, usar fetch con CORS
-      fetch(logoPath, {
-        mode: 'cors',
-        referrerPolicy: 'no-referrer-when-downgrade'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch SVG: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then(text => {
-          setSvgContent(text);
-          setHasError(false);
-        })
-        .catch(error => {
-          console.error(`Error loading external SVG from ${logoPath}:`, error);
-          setHasError(true);
-        });
-    } else {
-      // Para rutas locales
-      fetch(logoPath)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch SVG: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then(text => {
-          setSvgContent(text);
-          setHasError(false);
-        })
-        .catch(error => {
-          console.error(`Error loading SVG from ${logoPath}:`, error);
-          setHasError(true);
-        });
-    }
-  }, [logoPath]);
+  const isExternalUrl = logoPath.startsWith('http://') || logoPath.startsWith('https://');
 
-  if (hasError || !svgContent) {
-    // Fallback a img tag si fetch falla
+  // External URLs: use <img> only; on error show placeholder (no fetch = no CORS/404 in console)
+  useEffect(() => {
+    if (isExternalUrl) return;
+    fetch(logoPath)
+      .then((res) => {
+        if (!res.ok) throw new Error(String(res.status));
+        return res.text();
+      })
+      .then((text) => setSvgContent(text))
+      .catch(() => setHasError(true));
+  }, [logoPath, isExternalUrl]);
+
+  // External SVG: single <img> attempt; on error show placeholder (no retry)
+  if (isExternalUrl) {
+    if (hasError) return <Placeholder brandName={brandName} width={width} height={height} />;
     return (
       <img
         src={logoPath}
@@ -74,15 +65,21 @@ export default function SVGBrandLogo({
         className={`object-contain ${className}`}
         width={width}
         height={height}
-        style={{ 
-          width: `${width}px`, 
-          height: `${height}px`, 
-          maxWidth: '100%', 
+        style={{
+          width: `${width}px`,
+          height: `${height}px`,
+          maxWidth: '100%',
           maxHeight: '100%',
-          display: 'block'
+          display: 'block',
         }}
+        loading="lazy"
+        onError={() => setHasError(true)}
       />
     );
+  }
+
+  if (hasError || !svgContent) {
+    return <Placeholder brandName={brandName} width={width} height={height} />;
   }
 
   // Renderizar SVG como HTML directamente

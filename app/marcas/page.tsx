@@ -10,17 +10,14 @@ export const metadata = {
 };
 
 interface MarcasPageProps {
-  searchParams?: {
-    q?: string;
-    sort?: 'name' | 'models';
-  };
+  searchParams?: Promise<{ q?: string; sort?: 'name' | 'models' }>;
 }
 
 // Forzar renderizado estático (evita errores con searchParams)
 export const dynamic = 'force-static';
 
-export default function MarcasPage({ searchParams = {} }: MarcasPageProps) {
-  const params = searchParams;
+export default async function MarcasPage({ searchParams }: MarcasPageProps) {
+  const params = searchParams ? await searchParams : {};
   const q = (params.q || '').trim().toLowerCase();
   const sort = params.sort || 'name';
 
@@ -129,6 +126,45 @@ export default function MarcasPage({ searchParams = {} }: MarcasPageProps) {
               No brands found matching &quot;{params.q}&quot;.
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Comprehensive Content Section */}
+      <section className="py-12 md:py-16 bg-white border-t border-gray-200">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto prose prose-lg prose-sm md:prose-lg">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
+              Complete Tractor Brand Database
+            </h2>
+            
+            <p className="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
+              TractorsCompare provides comprehensive tractor data for {allBrands.length} major tractor manufacturers, covering over {tractors.length.toLocaleString()} tractor models with detailed technical specifications. Our extensive brand database includes leading manufacturers such as John Deere, Kubota, New Holland, Case IH, Massey Ferguson, Fendt, Claas, Deutz-Fahr, McCormick, Mahindra, Yanmar, Zetor, and many others.
+            </p>
+
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mt-6 md:mt-8 mb-3 md:mb-4">
+              Finding Tractor Information by Brand
+            </h3>
+            
+            <p className="text-base md:text-lg text-gray-700 mb-3 md:mb-4 leading-relaxed">
+              Each brand page provides access to all tractor models from that manufacturer, complete with detailed specifications including engine data, transmission options, PTO specifications, hydraulic systems, dimensions, weight, and performance data. Use our brand pages to filter models by type (agricultural, lawn, industrial), search by model name, sort by power or year, and compare specifications across different models from the same manufacturer.
+            </p>
+
+            <p className="text-base md:text-lg text-gray-700 mb-3 md:mb-4 leading-relaxed">
+              Brand-specific information helps you understand the unique characteristics and strengths of each manufacturer. Different brands often specialize in specific tractor categories or offer distinct features, transmission options, and technology. Comparing tractors within the same brand can help you identify the best model for your needs, while comparing across brands helps you evaluate different manufacturer approaches and value propositions.
+            </p>
+
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mt-6 md:mt-8 mb-3 md:mb-4">
+              Using Brand Pages for Tractor Selection
+            </h3>
+            
+            <p className="text-base md:text-lg text-gray-700 mb-3 md:mb-4 leading-relaxed">
+              Our brand database enables you to explore tractors systematically by manufacturer, making it easier to research models from specific brands or compare offerings across different manufacturers. Each brand page includes statistics such as total model count, available tractor types, and power range, helping you quickly assess the scope of each manufacturer's product lineup.
+            </p>
+
+            <p className="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
+              Whether you're researching specifications for purchasing decisions, comparing models from different brands, or seeking detailed information about specific manufacturers, our comprehensive brand database provides extensive tractor data to support your research and decision-making process.
+            </p>
+          </div>
         </div>
       </section>
     </div>

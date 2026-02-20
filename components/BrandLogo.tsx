@@ -51,7 +51,7 @@ export default function BrandLogo({
     );
   }
 
-  // Estilos específicos por marca
+  // Brand-specific styles
   const getBrandSpecificStyles = () => {
     const normalizedBrand = brandName.toLowerCase();
     
@@ -130,14 +130,8 @@ export default function BrandLogo({
             ...brandSpecificStyles
           }}
           loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          onError={() => {
-            console.error(`Error loading external logo: ${logoPath} for brand: ${brandName}`);
-            setHasError(true);
-          }}
-          onLoad={() => {
-            console.log(`Successfully loaded external logo: ${logoPath} for brand: ${brandName}`);
-          }}
+          referrerPolicy="no-referrer"
+          onError={() => setHasError(true)}
         />
       </div>
     );
@@ -170,13 +164,7 @@ export default function BrandLogo({
           ...brandSpecificStyles
         }}
         unoptimized
-        onError={() => {
-          console.error(`Error loading image: ${logoPath} for brand: ${brandName}`);
-          setHasError(true);
-        }}
-        onLoad={() => {
-          console.log(`Successfully loaded image: ${logoPath} for brand: ${brandName}`);
-        }}
+        onError={() => setHasError(true)}
       />
     </div>
   );

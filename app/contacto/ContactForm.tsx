@@ -54,7 +54,7 @@ export default function ContactForm() {
         if (response.ok) {
           setSubmitStatus({
             type: 'success',
-            message: 'Mensaje enviado exitosamente. Te responderemos pronto.',
+            message: 'Message sent successfully. We will respond soon.',
           });
           setFormData({
             name: '',
@@ -63,7 +63,7 @@ export default function ContactForm() {
             message: '',
           });
         } else {
-          throw new Error('Error al enviar el mensaje');
+          throw new Error('Error sending message');
         }
       } else {
         // Fallback: Intentar API route (solo funciona en desarrollo con servidor)
@@ -80,7 +80,7 @@ export default function ContactForm() {
         if (response.ok) {
           setSubmitStatus({
             type: 'success',
-            message: data.message || 'Mensaje enviado exitosamente. Te responderemos pronto.',
+            message: data.message || 'Message sent successfully. We will respond soon.',
           });
           setFormData({
             name: '',
@@ -89,14 +89,14 @@ export default function ContactForm() {
             message: '',
           });
         } else {
-          throw new Error(data.error || 'Error al enviar el mensaje');
+          throw new Error(data.error || 'Error sending message');
         }
       }
     } catch (error) {
       // Si falla todo, mostrar opción de mailto
       setSubmitStatus({
         type: 'error',
-        message: 'Error al enviar el mensaje. Por favor, envía un correo directamente a contact@tractorscompare.com o intenta de nuevo más tarde.',
+        message: 'Error sending message. Please send an email directly to contact@tractorscompare.com or try again later.',
       });
     } finally {
       setIsSubmitting(false);
@@ -104,9 +104,9 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-8">
-      <h2 className="text-2xl font-bold mb-4">Contact Form</h2>
-      <p className="text-gray-600 mb-6">
+    <div className="bg-white rounded-lg shadow-md p-4 md:p-8">
+      <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Contact Form</h2>
+      <p className="text-sm md:text-base text-gray-600 mb-4 md:mb-6">
         Fill out the form below and we'll get back to you as soon as possible.
       </p>
 
@@ -192,13 +192,13 @@ export default function ContactForm() {
           className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Enviando...' : 'Send Message'}
+          {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
       </form>
 
       <div className="mt-4 text-sm text-gray-500">
         <p>
-          O envía un correo directamente a:{' '}
+          Or send an email directly to:{' '}
           <a
             href="mailto:contact@tractorscompare.com"
             className="text-primary-600 hover:underline"

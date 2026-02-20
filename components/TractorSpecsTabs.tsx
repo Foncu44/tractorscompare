@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { Tractor } from '@/types/tractor';
-import { Settings, Gauge, Droplets, Zap, Ruler, Container, ExternalLink, FileText, BookOpen, Wrench, Package } from 'lucide-react';
+import { Settings, Gauge, Droplets, Zap, Ruler, Container, ExternalLink, FileText, BookOpen, Wrench, Package, Circle } from 'lucide-react';
 
 interface TractorSpecsTabsProps {
   tractor: Tractor;
 }
 
-type TabId = 'engine' | 'transmission' | 'hydraulics' | 'pto' | 'dimensions' | 'capacities';
+type TabId = 'engine' | 'transmission' | 'hydraulics' | 'pto' | 'dimensions' | 'capacities' | 'tires';
 
 interface Tab {
   id: TabId;
@@ -22,6 +22,7 @@ const tabs: Tab[] = [
   { id: 'hydraulics', label: 'Hydraulics', icon: <Droplets className="w-5 h-5" /> },
   { id: 'pto', label: 'PTO', icon: <Zap className="w-5 h-5" /> },
   { id: 'dimensions', label: 'Dimensions', icon: <Ruler className="w-5 h-5" /> },
+  { id: 'tires', label: 'Tires', icon: <Circle className="w-5 h-5" /> },
   { id: 'capacities', label: 'Capacities', icon: <Container className="w-5 h-5" /> },
 ];
 
@@ -31,9 +32,9 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
   const renderSpecRow = (label: string, value: string | number | undefined, unit?: string) => {
     if (value === undefined || value === null || value === '') return null;
     return (
-      <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-0 py-3 border-b border-gray-100 last:border-b-0">
         <dt className="text-gray-700 font-medium text-sm">{label}</dt>
-        <dd className="font-semibold text-gray-900 text-right">
+        <dd className="font-semibold text-gray-900 text-left sm:text-right">
           {typeof value === 'number' ? value.toLocaleString() : value} {unit || ''}
         </dd>
       </div>
@@ -42,9 +43,9 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
 
   const renderSectionHeader = (title: string, icon: React.ReactNode) => {
     return (
-      <div className="bg-green-50 border-b border-green-100 px-6 py-3 -mx-6 -mt-6 mb-4 flex items-center gap-2">
+      <div className="bg-green-50 border-b border-green-100 px-4 md:px-6 py-3 -mx-4 md:-mx-6 -mt-4 md:-mt-6 mb-4 flex items-center gap-2">
         {icon}
-        <h3 className="text-lg font-bold text-gray-900">{title}</h3>
+        <h3 className="text-base md:text-lg font-bold text-gray-900">{title}</h3>
       </div>
     );
   };
@@ -66,13 +67,16 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
           {engine.cylinders > 0 && renderSpecRow('Cylinders', engine.cylinders)}
           {engine.displacement && renderSpecRow('Displacement', `${engine.displacement} L (${(engine.displacement * 61.024).toFixed(1)} ci)`, '')}
           {engine.bore && engine.stroke && renderSpecRow('Bore × Stroke', `${engine.bore} mm (${(engine.bore / 25.4).toFixed(2)} in) × ${engine.stroke} mm (${(engine.stroke / 25.4).toFixed(2)} in)`, '')}
-          {engine.powerHP && renderSpecRow('Maximum Power', `${engine.powerHP} HP (${engine.powerKW || Math.round(engine.powerHP * 0.746)} kW)`, '')}
+          {engine.powerHP && renderSpecRow('Maximum Power (Gross)', `${engine.powerHP} HP (${engine.powerKW || Math.round(engine.powerHP * 0.746)} kW)`, '')}
+          {engine.powerHPNet && renderSpecRow('Net Power', `${engine.powerHPNet} HP (${Math.round(engine.powerHPNet * 0.746)} kW)`, '')}
           {engine.powerHPNominal && engine.powerRPM && renderSpecRow('Nominal Power', `${engine.powerHPNominal} HP @ ${engine.powerRPM} rpm`, '')}
-          {engine.torqueMax && engine.torqueRPM && renderSpecRow('Maximum Torque', `${engine.torqueMax} Nm @ ${engine.torqueRPM} rpm`, '')}
+          {engine.torqueMax && engine.torqueRPM && renderSpecRow('Maximum Torque', `${engine.torqueMax} Nm (${Math.round(engine.torqueMax * 0.737562)} lb-ft) @ ${engine.torqueRPM} rpm`, '')}
           {engine.torqueReserve && renderSpecRow('Torque Reserve', `${engine.torqueReserve}%`, '')}
+          {engine.compression && renderSpecRow('Compression Ratio', `${engine.compression}:1`, '')}
           {engine.fuelSystem && renderSpecRow('Fuel System', engine.fuelSystem)}
           {engine.aspiration && renderSpecRow('Aspiration', engine.aspiration)}
           {engine.emissions && renderSpecRow('Emissions Standard', engine.emissions)}
+          {engine.starterVolts && renderSpecRow('Starter Voltage', `${engine.starterVolts}V`, '')}
           {renderSpecRow('Fuel Type', engine.fuelType.charAt(0).toUpperCase() + engine.fuelType.slice(1))}
           {renderSpecRow('Cooling', engine.cooling.charAt(0).toUpperCase() + engine.cooling.slice(1))}
         </dl>
@@ -158,15 +162,17 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
     const { dimensions, weight } = tractor;
     if (!dimensions && !weight) return <p className="text-gray-500 py-4">No dimensions data available.</p>;
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div>
           {renderSectionHeader('Dimensions', <Ruler className="w-5 h-5 text-green-700" />)}
           <dl className="space-y-0">
-            {dimensions?.length && renderSpecRow('Length', `${dimensions.length.toLocaleString()} mm`, '')}
-            {dimensions?.width && renderSpecRow('Width', `${dimensions.width.toLocaleString()} mm`, '')}
-            {dimensions?.height && renderSpecRow('Height', `${dimensions.height.toLocaleString()} mm`, '')}
-            {dimensions?.wheelbase && renderSpecRow('Wheelbase', `${dimensions.wheelbase.toLocaleString()} mm`, '')}
-            {dimensions?.groundClearance && renderSpecRow('Ground Clearance', `${dimensions.groundClearance.toLocaleString()} mm`, '')}
+            {dimensions?.length && renderSpecRow('Length', `${dimensions.length.toLocaleString()} mm (${(dimensions.length / 25.4).toFixed(1)} in)`, '')}
+            {dimensions?.width && renderSpecRow('Width', `${dimensions.width.toLocaleString()} mm (${(dimensions.width / 25.4).toFixed(1)} in)`, '')}
+            {dimensions?.height && renderSpecRow('Height', `${dimensions.height.toLocaleString()} mm (${(dimensions.height / 25.4).toFixed(1)} in)`, '')}
+            {dimensions?.wheelbase && renderSpecRow('Wheelbase', `${dimensions.wheelbase.toLocaleString()} mm (${(dimensions.wheelbase / 25.4).toFixed(1)} in)`, '')}
+            {dimensions?.groundClearance && renderSpecRow('Ground Clearance', `${dimensions.groundClearance.toLocaleString()} mm (${(dimensions.groundClearance / 25.4).toFixed(1)} in)`, '')}
+            {dimensions?.frontTread && (dimensions.frontTread.min || dimensions.frontTread.max) && renderSpecRow('Front Tread', dimensions.frontTread.min && dimensions.frontTread.max ? `${dimensions.frontTread.min.toLocaleString()} - ${dimensions.frontTread.max.toLocaleString()} mm` : dimensions.frontTread.min ? `${dimensions.frontTread.min.toLocaleString()} mm` : `${dimensions.frontTread.max?.toLocaleString()} mm`, '')}
+            {dimensions?.rearTread && (dimensions.rearTread.min || dimensions.rearTread.max) && renderSpecRow('Rear Tread', dimensions.rearTread.min && dimensions.rearTread.max ? `${dimensions.rearTread.min.toLocaleString()} - ${dimensions.rearTread.max.toLocaleString()} mm` : dimensions.rearTread.min ? `${dimensions.rearTread.min.toLocaleString()} mm` : `${dimensions.rearTread.max?.toLocaleString()} mm`, '')}
             {dimensions && (dimensions.length || dimensions.width) && (
               <div className="mt-2 pt-2 border-t border-gray-200">
                 {renderSpecRow('Turning Radius', 'N/A', '')}
@@ -194,11 +200,47 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
       <div>
         {renderSectionHeader('Capacities', <Container className="w-5 h-5 text-green-700" />)}
         <dl className="space-y-0">
-          {capacities.fuelTank && renderSpecRow('Fuel Tank', `${capacities.fuelTank} L`, '')}
-          {capacities.hydraulicReservoir && renderSpecRow('Hydraulic Oil', `${capacities.hydraulicReservoir} L`, '')}
-          {capacities.coolant && renderSpecRow('Cooling System', `${capacities.coolant} L`, '')}
-          {capacities.engineOil && renderSpecRow('Engine Oil', `${capacities.engineOil} L`, '')}
-          {capacities.transmissionOil && renderSpecRow('Transmission Oil', `${capacities.transmissionOil} L`, '')}
+          {capacities.fuelTank && renderSpecRow('Fuel Tank', `${capacities.fuelTank} L (${(capacities.fuelTank * 0.264172).toFixed(1)} gal)`, '')}
+          {capacities.hydraulicReservoir && renderSpecRow('Hydraulic Oil', `${capacities.hydraulicReservoir} L (${(capacities.hydraulicReservoir * 0.264172).toFixed(1)} gal)`, '')}
+          {capacities.coolant && renderSpecRow('Cooling System', `${capacities.coolant} L (${(capacities.coolant * 1.05669).toFixed(1)} qts)`, '')}
+          {capacities.engineOil && renderSpecRow('Engine Oil', `${capacities.engineOil} L (${(capacities.engineOil * 1.05669).toFixed(1)} qts)`, '')}
+          {capacities.transmissionOil && renderSpecRow('Transmission Oil', `${capacities.transmissionOil} L (${(capacities.transmissionOil * 1.05669).toFixed(1)} qts)`, '')}
+        </dl>
+      </div>
+    );
+  };
+
+  const renderTiresSpecs = () => {
+    const { tires } = tractor;
+    if (!tires || (!tires.front && !tires.rear)) return <p className="text-gray-500 py-4">No tire data available.</p>;
+    return (
+      <div>
+        {renderSectionHeader('Tires', <Container className="w-5 h-5 text-green-700" />)}
+        <dl className="space-y-0">
+          {tires.front && tires.front.length > 0 && (
+            <div className="py-3 border-b border-gray-100">
+              <dt className="text-gray-700 font-medium text-sm mb-2">Front Tires</dt>
+              <dd className="flex flex-wrap gap-2">
+                {tires.front.map((tire, idx) => (
+                  <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-900 rounded-full text-sm font-medium">
+                    {tire}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )}
+          {tires.rear && tires.rear.length > 0 && (
+            <div className="py-3 border-b border-gray-100 last:border-b-0">
+              <dt className="text-gray-700 font-medium text-sm mb-2">Rear Tires</dt>
+              <dd className="flex flex-wrap gap-2">
+                {tires.rear.map((tire, idx) => (
+                  <span key={idx} className="px-3 py-1 bg-green-50 text-green-900 rounded-full text-sm font-medium">
+                    {tire}
+                  </span>
+                ))}
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     );
@@ -216,6 +258,8 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
         return renderPTOSpecs();
       case 'dimensions':
         return renderDimensionsSpecs();
+      case 'tires':
+        return renderTiresSpecs();
       case 'capacities':
         return renderCapacitiesSpecs();
       default:
@@ -227,33 +271,35 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
       {/* Tabs Navigation */}
       <div className="border-b border-gray-200">
-        <div className="flex flex-wrap gap-2 px-6 pt-4">
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`
-                  flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all
-                  ${isActive
-                    ? 'bg-green-600 text-white shadow-sm'
-                    : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-                  }
-                `}
-              >
-                <span className={isActive ? 'text-white' : 'text-gray-600'}>
-                  {tab.icon}
-                </span>
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+        <div className="px-4 md:px-6 pt-4 pb-3">
+          <div className="flex flex-wrap gap-2 md:gap-3">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`
+                    flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-lg font-medium transition-all whitespace-nowrap
+                    ${isActive
+                      ? 'bg-green-600 text-white shadow-sm'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+                    }
+                  `}
+                >
+                  <span className={isActive ? 'text-white' : 'text-gray-600'} style={{ display: 'flex', alignItems: 'center' }}>
+                    {tab.icon}
+                  </span>
+                  <span className="text-xs md:text-sm lg:text-base">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
       {/* Tab Content */}
-      <div className="p-6">
+      <div className="p-4 md:p-6">
         {renderTabContent()}
 
         {/* Documentation Links */}

@@ -23,16 +23,23 @@ export default function Header() {
     <>
       <header className="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-gray-200/50 shadow-sm transition-all duration-300">
         <div className="container-custom">
-        <div className="flex items-center justify-between h-20 gap-4">
+        <div className="flex items-center justify-between h-16 md:h-20 gap-4">
           {/* Logo - Left */}
-          <Link href="/" className="flex items-center flex-shrink-0 group">
-            <span className="text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-200">
+          <Link href="/" className="flex items-center flex-shrink-0 group min-w-0">
+            <span className="text-lg md:text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-200 truncate">
               TractorsCompare.com
             </span>
           </Link>
 
           {/* Desktop Navigation - Center */}
           <nav className="hidden lg:flex items-center justify-center flex-1 space-x-1">
+            <Link 
+              href="/" 
+              className="text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 px-4 py-2 rounded-lg hover:bg-primary-50 relative group"
+            >
+              Home
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
             <Link 
               href="/tractores-agricolas" 
               className="text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 px-4 py-2 rounded-lg hover:bg-primary-50 relative group"
@@ -111,6 +118,13 @@ export default function Header() {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 </div>
               </form>
+              <Link
+                href="/"
+                className="text-gray-700 hover:text-primary-600 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Home
+              </Link>
               <Link
                 href="/tractores-agricolas"
                 className="text-gray-700 hover:text-primary-600 font-medium"

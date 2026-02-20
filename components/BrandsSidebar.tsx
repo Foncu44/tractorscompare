@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
-import { tractors, brandToSlug } from '@/data/tractors';
+import { loadTractors, brandToSlug } from '@/lib/tractorsLoader';
 
 interface BrandsSidebarProps {
   type?: 'farm' | 'lawn' | 'all';
@@ -16,25 +16,52 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
   const router = useRouter();
   const selectedBrand = searchParams.get('marca') || null;
   const [searchQuery, setSearchQuery] = useState('');
+  const [tractors, setTractors] = useState<any[]>([]);
 
-  // Contar tractores por marca
+  // Cargar datos de tractores de forma asíncrona - Defer para no bloquear
+  useEffect(() => {
+    // Usar requestIdleCallback para cargar cuando el navegador esté libre
+    const loadData = () => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          loadTractors().then(setTractors).catch(console.error);
+        }, { timeout: 1000 });
+      } else {
+        // Fallback: usar setTimeout para no bloquear
+        setTimeout(() => {
+          loadTractors().then(setTractors).catch(console.error);
+        }, 100);
+      }
+    };
+    
+    loadData();
+  }, []);
+
+  // Count tractors by brand - Optimized for large arrays
   const brandCounts = useMemo(() => {
+    if (tractors.length === 0) return new Map<string, number>();
+    
     const counts = new Map<string, number>();
     
-    for (const tractor of tractors) {
-      const tractorType = tractor.type || 'farm';
-      
-      // Filtrar por tipo si es necesario
-      if (type === 'all' || tractorType === type) {
-        const count = counts.get(tractor.brand) || 0;
-        counts.set(tractor.brand, count + 1);
+    // Process in chunks to avoid blocking main thread with very large arrays
+    const CHUNK_SIZE = 1000;
+    for (let i = 0; i < tractors.length; i += CHUNK_SIZE) {
+      const chunk = tractors.slice(i, i + CHUNK_SIZE);
+      for (const tractor of chunk) {
+        const tractorType = tractor.type || 'farm';
+        
+        // Filter by type if necessary
+        if (type === 'all' || tractorType === type) {
+          const count = counts.get(tractor.brand) || 0;
+          counts.set(tractor.brand, count + 1);
+        }
       }
     }
     
     return counts;
-  }, [type]);
+  }, [tractors, type]);
 
-  // Convertir a array, filtrar por búsqueda y ordenar alfabéticamente
+  // Convert to array, filter by search and sort alphabetically
   const brands = useMemo(() => {
     let brandList = Array.from(brandCounts.entries())
       .map(([brand, count]) => ({
@@ -43,7 +70,7 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
         slug: brandToSlug(brand),
       }));
 
-    // Filtrar por búsqueda
+    // Filter by search
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
       brandList = brandList.filter(({ brand }) => 
@@ -51,7 +78,7 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
       );
     }
 
-    // Ordenar alfabéticamente
+    // Sort alphabetically
     return brandList.sort((a, b) => a.brand.localeCompare(b.brand));
   }, [brandCounts, searchQuery]);
 
@@ -110,7 +137,7 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
         </div>
       </div>
 
-      {/* Botón "Todas las marcas" */}
+      {/* "All brands" Button */}
       <a
         href={buildUrl(null)}
         onClick={(e) => handleBrandChange(e, null)}
@@ -120,13 +147,13 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         }`}
       >
-        Todas las marcas
+        All brands
       </a>
 
       {/* Lista de marcas */}
       <div className="space-y-1 max-h-[400px] overflow-y-auto">
         {brands.length === 0 ? (
-          <div className="text-center py-8 text-gray-500 text-sm">
+          <div className="text-center py-8 text-gray-600 text-sm">
             {searchQuery ? `No se encontraron marcas que coincidan con "${searchQuery}"` : 'No hay marcas disponibles'}
           </div>
         ) : (

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     // Validar campos requeridos
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
-        { error: 'Todos los campos son requeridos' },
+        { error: 'All fields are required' },
         { status: 400 }
       );
     }
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'El formato del email no es válido' },
+        { error: 'Invalid email format' },
         { status: 400 }
       );
     }
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
       console.error('SMTP credentials not configured');
       return NextResponse.json(
-        { error: 'Error de configuración del servidor. Por favor, contacte al administrador.' },
+        { error: 'Server configuration error. Please contact the administrator.' },
         { status: 500 }
       );
     }
@@ -71,36 +71,36 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333; border-bottom: 2px solid #4CAF50; padding-bottom: 10px;">
-            Nuevo mensaje de contacto
+            New contact message
           </h2>
           <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <p><strong>Nombre:</strong> ${safeName}</p>
+            <p><strong>Name:</strong> ${safeName}</p>
             <p><strong>Email:</strong> ${safeEmail}</p>
-            <p><strong>Asunto:</strong> ${safeSubject}</p>
+            <p><strong>Subject:</strong> ${safeSubject}</p>
           </div>
           <div style="background-color: #fff; padding: 20px; border-left: 4px solid #4CAF50; margin: 20px 0;">
-            <h3 style="color: #333; margin-top: 0;">Mensaje:</h3>
+            <h3 style="color: #333; margin-top: 0;">Message:</h3>
             <p style="color: #666; line-height: 1.6; white-space: pre-wrap;">${safeMessage}</p>
           </div>
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 12px;">
-            <p>Este mensaje fue enviado desde el formulario de contacto de TractorsCompare.</p>
-            <p>Puedes responder directamente a este correo para contactar a ${safeName} (${safeEmail}).</p>
+            <p>This message was sent from the TractorsCompare contact form.</p>
+            <p>You can reply directly to this email to contact ${safeName} (${safeEmail}).</p>
           </div>
         </div>
       `,
       text: `
-Nuevo mensaje de contacto desde TractorsCompare
+New contact message from TractorsCompare
 
-Nombre: ${name}
+Name: ${name}
 Email: ${email}
-Asunto: ${subject}
+Subject: ${subject}
 
-Mensaje:
+Message:
 ${message}
 
 ---
-Este mensaje fue enviado desde el formulario de contacto de TractorsCompare.
-Puedes responder directamente a este correo para contactar a ${name} (${email}).
+This message was sent from the TractorsCompare contact form.
+You can reply directly to this email to contact ${name} (${email}).
       `,
     };
 
@@ -108,13 +108,13 @@ Puedes responder directamente a este correo para contactar a ${name} (${email}).
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
-      { message: 'Mensaje enviado exitosamente. Te responderemos pronto.' },
+      { message: 'Message sent successfully. We will respond soon.' },
       { status: 200 }
     );
   } catch (error) {
     console.error('Error sending email:', error);
     return NextResponse.json(
-      { error: 'Error al enviar el mensaje. Por favor, intenta de nuevo más tarde.' },
+      { error: 'Error sending message. Please try again later.' },
       { status: 500 }
     );
   }

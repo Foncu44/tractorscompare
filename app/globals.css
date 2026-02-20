@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; /* fallback; Next.js prefers data-scroll-behavior on html */
   }
   
   body {
@@ -39,6 +39,196 @@
   
   .btn-secondary {
     @apply bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200;
+  }
+
+  /* SEO Content Section Styles */
+  .seo-content-wrapper h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  
+  .seo-content-wrapper h1:first-child {
+    margin-top: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper h1 {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .seo-content-wrapper h1 {
+      font-size: 3rem;
+      line-height: 1;
+    }
+  }
+  
+  .seo-content-wrapper h2 {
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .seo-content-wrapper h2:first-of-type {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper h2 {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+      margin-bottom: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .seo-content-wrapper h2 {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
+  }
+  
+  .seo-content-wrapper h3 {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+    margin-top: 1.75rem;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper h3 {
+      font-size: 1.5rem;
+      line-height: 2rem;
+      margin-bottom: 1.25rem;
+      margin-top: 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .seo-content-wrapper h3 {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+  }
+  
+  .seo-content-wrapper p {
+    color: #374151;
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+    font-size: 1rem;
+    text-align: justify;
+    word-break: break-word;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper p {
+      margin-bottom: 1.5rem;
+      font-size: 1.125rem;
+    }
+  }
+  
+  .seo-content-wrapper ul {
+    list-style: none;
+    margin-bottom: 2rem;
+    background: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 1.5rem 1rem;
+    border: 1px solid #e5e7eb;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper ul {
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+  }
+  
+  .seo-content-wrapper ul li {
+    color: #374151;
+    line-height: 1.75;
+    font-size: 1rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    background: white;
+    border-radius: 0.5rem;
+    border-left: 4px solid #10b981;
+    position: relative;
+    padding-left: 3rem;
+  }
+  
+  .seo-content-wrapper ul li:last-child {
+    margin-bottom: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper ul li {
+      font-size: 1.125rem;
+      padding: 1.25rem;
+      padding-left: 3.5rem;
+    }
+  }
+  
+  .seo-content-wrapper ul li::before {
+    content: '•';
+    position: absolute;
+    left: 1.25rem;
+    color: #059669;
+    font-weight: bold;
+    font-size: 1.25rem;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper ul li::before {
+      left: 1.5rem;
+    }
+  }
+  
+  .seo-content-wrapper ul li strong {
+    color: #059669;
+    font-weight: 700;
+    display: inline-block;
+    min-width: 140px;
+  }
+  
+  @media (min-width: 768px) {
+    .seo-content-wrapper ul li strong {
+      min-width: 200px;
+    }
+  }
+  
+  .seo-content-wrapper strong {
+    color: #111827;
+    font-weight: 600;
+  }
+  
+  .seo-content-wrapper a {
+    color: #1d4ed8;
+    text-decoration: none;
+    font-weight: 500;
+    word-break: break-all;
+  }
+  
+  .seo-content-wrapper a:hover {
+    text-decoration: underline;
   }
 }
 
@@ -81,5 +271,39 @@
 .animate-fadeInUp {
   animation: fadeInUp 0.5s ease-out forwards;
   opacity: 0;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Thin scrollbar for mobile tabs */
+.tabs-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #9ca3af #f3f4f6;
+}
+
+.tabs-scrollable::-webkit-scrollbar {
+  height: 6px;
+}
+
+.tabs-scrollable::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.tabs-scrollable::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 3px;
+}
+
+.tabs-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 
