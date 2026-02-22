@@ -37,7 +37,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/best/loader-work" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                <Link href="/best" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
                   Best Tractors
                 </Link>
               </li>
@@ -69,7 +69,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/best/loader-work" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                <Link href="/best" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
                   Best Tractors
                 </Link>
               </li>

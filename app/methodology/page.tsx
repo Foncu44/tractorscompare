@@ -120,7 +120,7 @@ export default function MethodologyPage() {
           {' · '}
           <Link href="/tractores" className="text-primary-600 hover:underline">Tractor database</Link>
           {' · '}
-          <Link href="/best/loader-work" className="text-primary-600 hover:underline">Best by category</Link>
+          <Link href="/best" className="text-primary-600 hover:underline">Best by category</Link>
         </p>
       </main>
     </div>
