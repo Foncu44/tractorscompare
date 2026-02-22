@@ -6,7 +6,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig = {
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
-  output: 'export', // Habilita export estático
+  // output: 'export' — Desactivado: /api/listings requiere servidor. Para export estático, elimina app/api/listings y la UI usará solo enlaces de búsqueda.
+  // output: 'export',
   images: {
     unoptimized: true, // Necesario para export estático
     remotePatterns: [

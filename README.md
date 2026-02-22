@@ -98,6 +98,7 @@ El proyecto incluye endpoints API que puedes usar o extender:
 - `GET /api/tractors/slug/[slug]` - Obtiene un tractor por slug
 - `GET /api/tractors/brand/[brand]` - Obtiene tractores por marca
 - `GET /api/brands` - Obtiene todas las marcas
+- `GET /api/listings?q=...` - Listados de ocasión por marketplace (caché 24h). Requiere despliegue con servidor (no export estático).
 
 ## 🔍 Fuentes de Datos para Tractores
 
@@ -137,6 +138,25 @@ Aunque no existe una API pública universal, puedes obtener datos de:
 5. **Rendimiento**: Next.js SSR/SSG para mejor velocidad
 6. **Experiencia móvil**: Diseño totalmente responsive
 7. **API flexible**: Fácil integración con fuentes de datos externas
+
+## 🚜 Listados de Ocasión (Used Listings)
+
+La sección "Find Used Listings (International)" en cada ficha de tractor muestra tarjetas por marketplace (Agriaffaires, Mascus, MachineryTrader, TractorHouse, Facebook Marketplace). Cada tarjeta puede mostrar el **primer resultado real** (título, imagen, precio, ubicación) o un **enlace de búsqueda** si no hay API disponible.
+
+- **API**: `GET /api/listings?q=...` — devuelve `{ query, items: Listing[] }`. Resultados cacheados 24h (en `/tmp` en Vercel o en `.next/cache/listings` en local).
+- **Despliegue**:
+  - Por defecto el proyecto **no** usa `output: 'export'` para que `/api/listings` funcione en Vercel (u otro host Node). Así la API corre en servidor y se usa la caché de 24h.
+  - Si quieres **export estático**: activa `output: 'export'` en `next.config.js` y **elimina** la carpeta `app/api/listings` (o el build fallará). La UI seguirá mostrando tarjetas de “buscar en {marketplace}” (fallback) al no existir la API.
+
+### Cómo añadir proveedores reales (APIs / feeds)
+
+Los proveedores están en `lib/listings/providers/`. Ahora son stubs que devuelven `null`; el orquestador usa entonces el fallback (enlace de búsqueda) por marketplace.
+
+1. **Implementar la API/feed oficial** en el provider correspondiente:
+   - `AgriaffairesProvider.ts`, `MascusProvider.ts`, `MachineryTraderProvider.ts`, `TractorHouseProvider.ts`, `FacebookMarketplaceProvider.ts`
+2. En cada uno, hacer que `search(query: string)` devuelva un `Listing | null` con al menos: `marketplaceId`, `marketplaceName`, `title`, `listingUrl`, y opcionalmente `imageUrl`, `priceText`, `locationText`.
+3. **No hacer scraping** de HTML salvo que esté explícitamente permitido por feature flag y políticas del sitio.
+4. El orquestador (`lib/listings/index.ts`) ya llama a cada provider y, si devuelve `null` o lanza, usa el fallback para ese marketplace. No hace falta tocar la API route ni el componente para añadir un provider ya registrado en `PROVIDERS`.
 
 ## 🚀 Despliegue
 
