@@ -55,6 +55,13 @@ export default function Header() {
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link 
+              href="/best/loader-work" 
+              className="text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 px-4 py-2 rounded-lg hover:bg-primary-50 relative group"
+            >
+              Best Tractors
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 transition-all duration-300 group-hover:w-full"></span>
+            </Link>
+            <Link 
               href="/comparar" 
               className="text-gray-700 hover:text-primary-600 font-medium transition-all duration-200 px-4 py-2 rounded-lg hover:bg-primary-50 relative group"
             >
@@ -138,6 +145,13 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Lawn Tractors
+              </Link>
+              <Link
+                href="/best/loader-work"
+                className="text-gray-700 hover:text-primary-600 font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Best Tractors
               </Link>
               <Link
                 href="/comparar"

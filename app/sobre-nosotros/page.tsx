@@ -67,6 +67,14 @@ export default function SobreNosotrosPage() {
             <li className="flex items-start">
               <span className="font-semibold mr-2">•</span>
               <span>
+                <strong>Best Tractors by Category:</strong> Data-driven rankings for loader work, small farms, 
+                utility tractors, horsepower bands (e.g. under 25 HP, 90–120 HP), and transmission types. Each list 
+                uses our TractorFit™ scoring so rankings are consistent and reproducible.
+              </span>
+            </li>
+            <li className="flex items-start">
+              <span className="font-semibold mr-2">•</span>
+              <span>
                 <strong>Industry News:</strong> Stay updated with the latest news and developments in the agricultural 
                 and tractor industry.
               </span>

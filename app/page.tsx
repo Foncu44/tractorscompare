@@ -168,6 +168,26 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Editorial intro: what the site is and how to use it */}
+      <section className="py-10 md:py-14 bg-white">
+        <div className="container-custom">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+              What is TractorsCompare?
+            </h2>
+            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+              TractorsCompare is a free tractor specifications database that helps farmers, landowners, and buyers compare thousands of tractor models by engine power, transmission, PTO, hydraulics, weight, and dimensions. We aggregate official manufacturer data so you can search by brand, filter by horsepower or type, and compare side-by-side before you buy or maintain equipment.
+            </p>
+            <p className="text-gray-700 text-lg leading-relaxed mb-4">
+              Use the search above to find a specific model, browse by <Link href="/marcas" className="text-primary-600 hover:text-primary-700 font-semibold underline">brand</Link> or <Link href="/tractores" className="text-primary-600 hover:text-primary-700 font-semibold underline">category</Link>, or head to our <Link href="/best/loader-work" className="text-primary-600 hover:text-primary-700 font-semibold underline">Best Tractors</Link> section for data-driven rankings by use case—loader work, small farms, utility, horsepower bands, and more. Each &quot;Best&quot; list is built from our TractorFit™ scoring so rankings are consistent and reproducible.
+            </p>
+            <p className="text-gray-700 text-lg leading-relaxed">
+              All data is for reference; for critical decisions we recommend checking the manufacturer&apos;s official specs. Our <Link href="/methodology" className="text-primary-600 hover:text-primary-700 font-semibold underline">methodology</Link> page explains how we compute scores and rankings.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Most Popular Section */}
       <PopularTractorsSection />
 
@@ -311,7 +331,10 @@ export default function HomePage() {
                 Browse our extensive database of tractor specifications, compare models, explore by brand or type, and access detailed technical data. Visit our <Link href="/specs" className="text-primary-600 hover:text-primary-700 font-semibold underline">specifications glossary</Link> to understand technical terms, check our <Link href="/news" className="text-primary-600 hover:text-primary-700 font-semibold underline">news and guides</Link> section for helpful articles, or <Link href="/contacto" className="text-primary-600 hover:text-primary-700 font-semibold underline">contact us</Link> with questions about specific tractor models or specifications. For additional resources, visit the <a href="https://www.asabe.org" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-semibold underline">American Society of Agricultural and Biological Engineers</a> for industry standards, or explore <a href="https://www.fao.org" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-semibold underline">FAO agricultural machinery resources</a> for global tractor information.
               </p>
               <div className="flex flex-wrap gap-2 md:gap-3 mt-3 md:mt-4">
-                <Link href="/comparar" className="inline-flex items-center px-3 md:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs md:text-sm font-semibold">
+                <Link href="/best/loader-work" className="inline-flex items-center px-3 md:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs md:text-sm font-semibold">
+                  Best Tractors
+                </Link>
+                <Link href="/comparar" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">
                   Compare Models
                 </Link>
                 <Link href="/marcas" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">

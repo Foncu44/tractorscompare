@@ -37,6 +37,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/best/loader-work" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                  Best Tractors
+                </Link>
+              </li>
+              <li>
                 <Link href="/comparar" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
                   Compare
                 </Link>
@@ -61,6 +66,11 @@ export default function Footer() {
               <li>
                 <Link href="/tractores" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
                   Tractors (categories)
+                </Link>
+              </li>
+              <li>
+                <Link href="/best/loader-work" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                  Best Tractors
                 </Link>
               </li>
               <li>
@@ -98,6 +108,11 @@ export default function Footer() {
               <li>
                 <Link href="/terminos" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
                   Terms of Use
+                </Link>
+              </li>
+              <li>
+                <Link href="/methodology" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                  Methodology
                 </Link>
               </li>
             </ul>

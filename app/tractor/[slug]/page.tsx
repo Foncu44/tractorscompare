@@ -207,6 +207,8 @@ export default async function TractorFitPage({
         <p className="mt-8 text-sm text-gray-500">
           <Link href="/methodology" className="text-primary-600 hover:underline">TractorFit™ methodology</Link>
           {' · '}
+          <Link href="/best/loader-work" className="text-primary-600 hover:underline">Best Tractors by category</Link>
+          {' · '}
           <Link href="/tractores" className="text-primary-600 hover:underline">Full tractor database</Link>
         </p>
       </main>
