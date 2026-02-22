@@ -8,6 +8,7 @@ import { AdSidebar } from '@/components/AdSense';
 import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 import SEOContentSection from '@/components/SEOContentSection';
 import TractorSuitabilitySection from '@/components/TractorSuitabilitySection';
+import UsedListingsInternational from '@/components/UsedListingsInternational';
 import { specsFromTractor, computeSuitability } from '@/lib/tractorSuitability';
 import { buildPerformanceProfile } from '@/lib/tractorIntelligence/profile';
 
@@ -507,6 +508,13 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             Compare tractors
           </Link>
         </div>
+
+        {/* Find Used Listings (International) */}
+        <UsedListingsInternational
+          brandName={tractor.brand}
+          modelName={tractor.model}
+          fullName={fullName}
+        />
       </div>
     </div>
     </>
