@@ -97,8 +97,6 @@ export function buildSearchUrl(
     case 'mascus':
       // Comma in path is encoded as %2C
       return `https://www.mascus.com/agriculture/tractors/${brandSlug}%2C${modelToken}%2C1%2Crelevance%2Csearch.html`;
-    case 'facebook-marketplace':
-      return `https://www.facebook.com/marketplace/search/?query=${encodedQuery}`;
     case 'agriaffaires':
     case 'machinerytrader':
       return `https://www.google.com/search?q=${encodeURIComponent(`site:${domain} ${query}`)}`;

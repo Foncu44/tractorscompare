@@ -4,7 +4,6 @@ import { AgriaffairesProvider } from './providers/AgriaffairesProvider';
 import { MascusProvider } from './providers/MascusProvider';
 import { MachineryTraderProvider } from './providers/MachineryTraderProvider';
 import { TractorHouseProvider } from './providers/TractorHouseProvider';
-import { FacebookMarketplaceProvider } from './providers/FacebookMarketplaceProvider';
 import { runWithConcurrencyLimit } from './utils';
 import { slugify } from '@/lib/buildMarketplaceLinks';
 
@@ -13,7 +12,6 @@ const PROVIDERS: ListingProvider[] = [
   MascusProvider,
   MachineryTraderProvider,
   TractorHouseProvider,
-  FacebookMarketplaceProvider,
 ];
 
 const CONCURRENCY = 2;

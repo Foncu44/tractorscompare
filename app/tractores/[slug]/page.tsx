@@ -9,6 +9,7 @@ import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 import SEOContentSection from '@/components/SEOContentSection';
 import TractorSuitabilitySection from '@/components/TractorSuitabilitySection';
 import UsedListingsInternational from '@/components/UsedListingsInternational';
+import UsedPriceEstimateBox from '@/components/UsedPriceEstimateBox';
 import { specsFromTractor, computeSuitability } from '@/lib/tractorSuitability';
 import { buildPerformanceProfile } from '@/lib/tractorIntelligence/profile';
 
@@ -507,6 +508,15 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
           <Link href={`/comparar?tractores=${tractor.id}`} className="btn-primary inline-block text-sm md:text-base">
             Compare tractors
           </Link>
+        </div>
+
+        {/* Estimated Used Price - always shown when estimable */}
+        <div className="mt-8 md:mt-12">
+          <UsedPriceEstimateBox
+            category={tractor.type}
+            powerHP={tractor.engine.powerHP}
+            priceRange={tractor.priceRange}
+          />
         </div>
 
         {/* Find Used Listings (International) */}

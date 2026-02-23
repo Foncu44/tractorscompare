@@ -50,15 +50,6 @@ export const MARKETPLACES: MarketplaceConfig[] = [
     regionLabel: 'US',
     priority: 4,
   },
-  {
-    id: 'facebook-marketplace',
-    name: 'Facebook Marketplace',
-    domain: 'facebook.com',
-    logoPath: '/marketplaces/facebook-marketplace.svg',
-    skipUtm: true,
-    regionLabel: 'Global',
-    priority: 5,
-  },
 ].sort((a, b) => a.priority - b.priority);
 
 export function getMarketplaceById(id: string): MarketplaceConfig | undefined {

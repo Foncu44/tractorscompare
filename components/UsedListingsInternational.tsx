@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Listing } from '@/types/listings';
+import { buildMarketplaceLinks } from '@/lib/buildMarketplaceLinks';
+import { getMarketplaceById } from '@/lib/marketplaces';
 
 export interface UsedListingsInternationalProps {
   /** Search query, e.g. "Claas Axion 820" */
@@ -124,7 +126,37 @@ export default function UsedListingsInternational({
   }
 
   if (displayItems.length === 0) {
-    return null;
+    const input = {
+      brandName: brandName ?? '',
+      modelName: modelName ?? '',
+      fullName: query,
+      slug: query.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+    };
+    const searchLinks = buildMarketplaceLinks(input);
+
+    return (
+      <section className="mt-10 md:mt-12 pt-8 border-t border-gray-200" aria-labelledby="used-listings-heading">
+        <h2 id="used-listings-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
+          Find Used Listings (International)
+        </h2>
+        <p className="text-sm text-gray-600 mb-3">
+          Search used listings on{' '}
+          {searchLinks.map((link, i) => (
+            <span key={link.marketplaceId}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="nofollow sponsored noopener noreferrer"
+                className="text-primary-600 hover:underline font-medium"
+              >
+                {getMarketplaceById(link.marketplaceId)?.name ?? link.marketplaceId}
+              </a>
+              {i < searchLinks.length - 1 ? ', ' : ''}
+            </span>
+          ))}
+        </p>
+      </section>
+    );
   }
 
   return (
