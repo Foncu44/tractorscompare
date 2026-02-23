@@ -32,7 +32,8 @@
     "update-news": "node scripts/updateNews.js",
     "test": "vitest run",
     "test:watch": "vitest",
-    "normalize-tractors": "npx tsx scripts/normalizeProcessedTractors.ts"
+    "normalize-tractors": "npx tsx scripts/normalizeProcessedTractors.ts",
+    "prune-old-tractors": "npx tsx scripts/pruneOldTractors.ts"
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.4",
