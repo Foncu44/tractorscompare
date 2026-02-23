@@ -104,13 +104,13 @@ export default function UsedListingsInternational({
         if (Array.isArray(data.items) && data.items.length > 0) {
           setItems(data.items);
         } else {
-          setItems(getFallbackListings(query));
+          setItems(getFallbackListings(query, brandName, modelName));
         }
       })
       .catch(() => {
         if (!cancelled) {
           setError(true);
-          setItems(getFallbackListings(query));
+          setItems(getFallbackListings(query, brandName, modelName));
         }
       })
       .finally(() => {
@@ -119,7 +119,7 @@ export default function UsedListingsInternational({
     return () => {
       cancelled = true;
     };
-  }, [query]);
+  }, [query, brandName, modelName]);
 
   const displayItems = items ?? [];
 
@@ -157,7 +157,7 @@ export default function UsedListingsInternational({
 
       {broader && (
         <p className="text-sm text-gray-600 mb-4">
-          Broader search:{' '}
+          Try broader search:{' '}
           <a
             href={broader.url}
             target="_blank"

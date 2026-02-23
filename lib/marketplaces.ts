@@ -1,6 +1,6 @@
 /**
  * International used-tractor marketplaces: config for search links only.
- * No scraping; no embedded content. Local logos only.
+ * URL building is in buildMarketplaceLinks (TractorHouse path, Mascus path, Facebook query, Google site search).
  */
 
 export interface MarketplaceConfig {
@@ -9,8 +9,6 @@ export interface MarketplaceConfig {
   domain: string;
   /** Path to local asset under public, e.g. /marketplaces/agriaffaires.svg */
   logoPath: string;
-  /** Builds the search URL for a given query. Must encode the query internally. */
-  searchUrlTemplate: (query: string) => string;
   /** If true, we do not append UTM params (e.g. site may strip or break). */
   skipUtm?: boolean;
   /** Optional region label for display. */
@@ -19,16 +17,12 @@ export interface MarketplaceConfig {
   priority: number;
 }
 
-const encode = (q: string) => encodeURIComponent(q);
-
 export const MARKETPLACES: MarketplaceConfig[] = [
   {
     id: 'agriaffaires',
     name: 'Agriaffaires',
     domain: 'agriaffaires.com',
     logoPath: '/marketplaces/agriaffaires.svg',
-    searchUrlTemplate: (query: string) =>
-      `https://www.agriaffaires.com/used/farm-tractors/?Keywords=${encode(query)}`,
     regionLabel: 'EU / Global',
     priority: 1,
   },
@@ -37,8 +31,6 @@ export const MARKETPLACES: MarketplaceConfig[] = [
     name: 'Mascus',
     domain: 'mascus.com',
     logoPath: '/marketplaces/mascus.svg',
-    searchUrlTemplate: (query: string) =>
-      `https://www.mascus.com/search?searchterm=${encode(query)}`,
     regionLabel: 'Global',
     priority: 2,
   },
@@ -47,8 +39,6 @@ export const MARKETPLACES: MarketplaceConfig[] = [
     name: 'MachineryTrader',
     domain: 'machinerytrader.com',
     logoPath: '/marketplaces/machinerytrader.svg',
-    searchUrlTemplate: (query: string) =>
-      `https://www.machinerytrader.com/listings/search?Keyword=${encode(query)}`,
     regionLabel: 'US',
     priority: 3,
   },
@@ -57,8 +47,6 @@ export const MARKETPLACES: MarketplaceConfig[] = [
     name: 'TractorHouse',
     domain: 'tractorhouse.com',
     logoPath: '/marketplaces/tractorhouse.svg',
-    searchUrlTemplate: (query: string) =>
-      `https://www.tractorhouse.com/listings/search?Keyword=${encode(query)}`,
     regionLabel: 'US',
     priority: 4,
   },
@@ -67,8 +55,6 @@ export const MARKETPLACES: MarketplaceConfig[] = [
     name: 'Facebook Marketplace',
     domain: 'facebook.com',
     logoPath: '/marketplaces/facebook-marketplace.svg',
-    searchUrlTemplate: (query: string) =>
-      `https://www.facebook.com/marketplace/search/?query=${encode(query)}`,
     skipUtm: true,
     regionLabel: 'Global',
     priority: 5,

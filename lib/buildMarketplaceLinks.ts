@@ -1,14 +1,7 @@
 /**
  * Build outbound used-listings links for marketplaces. No API calls; static URLs only.
- * Adds UTM params where supported for referral tracking.
- *
- * Example for tractor "John Deere 850" (brandName: "John Deere", modelName: "850"):
- * - Agriaffaires: .../used/farm-tractors/?Keywords=John%20Deere%20850&utm_source=tractorscompare&...
- * - Mascus: .../search?searchterm=John%20Deere%20850&utm_source=tractorscompare&...
- * - MachineryTrader: .../listings/search?Keyword=John%20Deere%20850&utm_source=tractorscompare&...
- * - TractorHouse: .../listings/search?Keyword=John%20Deere%20850&utm_source=tractorscompare&...
- * - Facebook Marketplace: .../marketplace/search/?query=John%20Deere%20850 (no UTM)
- * Broader query: "John Deere tractor"
+ * URLs open real search results: TractorHouse path, Mascus path, Facebook query, Google site search for Agriaffaires/MachineryTrader.
+ * Query always = normalized.brandName + ' ' + normalized.modelName; encode with encodeURIComponent where needed.
  */
 
 import { MARKETPLACES } from './marketplaces';
@@ -33,25 +26,73 @@ export interface MarketplaceLink {
   label: string;
 }
 
-/**
- * Best search query for exact model: "Brand Model" (e.g. "John Deere 850").
- */
-function buildExactQuery(input: MarketplaceLinkInput): string {
+/** Slug for URL path: lowercase, spaces to hyphens, alphanumeric and hyphens only. */
+export function slugify(s: string): string {
+  return (s || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '');
+}
+
+/** Mascus modelToken: up to 2 tokens from modelSlug (split by '-'), join with '+', lowercase. */
+export function modelTokenFromSlug(modelSlug: string): string {
+  const tokens = (modelSlug || '').split('-').filter(Boolean).slice(0, 2);
+  return tokens.join('+').toLowerCase() || 'tractor';
+}
+
+export interface SearchContext {
+  query: string;
+  encodedQuery: string;
+  brandSlug: string;
+  modelSlug: string;
+  modelToken: string;
+}
+
+/** Build query = normalized.brandName + ' ' + normalized.modelName and slugs. */
+export function buildSearchContext(
+  input: MarketplaceLinkInput,
+  broader: boolean = false
+): SearchContext {
   const brand = (input.brandName || '').trim();
   const model = (input.modelName || '').trim();
-  if (brand && model) return `${brand} ${model}`.trim();
-  return (input.fullName || '').trim() || input.slug.replace(/-/g, ' ');
+  const normalizedBrand = brand || (input.fullName || '').trim() || input.slug.replace(/-/g, ' ');
+  const normalizedModel = broader ? 'tractor' : (model || 'tractor');
+  const query = `${normalizedBrand} ${normalizedModel}`.trim() || 'tractor';
+  const encodedQuery = encodeURIComponent(query);
+  const brandSlug = slugify(normalizedBrand) || 'tractor';
+  const modelSlug = slugify(normalizedModel) || 'tractor';
+  const modelToken = modelTokenFromSlug(modelSlug);
+  return { query, encodedQuery, brandSlug, modelSlug, modelToken };
 }
 
 /**
- * Broader query for "few results" fallback: brand only or "Brand tractor".
+ * Build search URL for a marketplace. Uses real search formats:
+ * - TractorHouse: /listings/for-sale/{brandSlug}/{modelSlug}/farm-equipment
+ * - Mascus: /agriculture/tractors/{brandSlug},{modelToken},1,relevance,search.html
+ * - Facebook: /marketplace/search/?query={encodedQuery}
+ * - Agriaffaires / MachineryTrader: Google site search (site:domain query)
  */
-function buildBroaderQuery(input: MarketplaceLinkInput): string {
-  const brand = (input.brandName || '').trim();
-  if (brand) return `${brand} tractor`;
-  const full = (input.fullName || '').trim();
-  if (full) return `${full} tractor`;
-  return 'tractor';
+export function buildSearchUrl(
+  marketplaceId: string,
+  context: SearchContext,
+  domain: string
+): string {
+  const { query, encodedQuery, brandSlug, modelSlug, modelToken } = context;
+  switch (marketplaceId) {
+    case 'tractorhouse':
+      return `https://www.tractorhouse.com/listings/for-sale/${brandSlug}/${modelSlug}/farm-equipment`;
+    case 'mascus':
+      // Comma in path is encoded as %2C
+      return `https://www.mascus.com/agriculture/tractors/${brandSlug}%2C${modelToken}%2C1%2Crelevance%2Csearch.html`;
+    case 'facebook-marketplace':
+      return `https://www.facebook.com/marketplace/search/?query=${encodedQuery}`;
+    case 'agriaffaires':
+    case 'machinerytrader':
+      return `https://www.google.com/search?q=${encodeURIComponent(`site:${domain} ${query}`)}`;
+    default:
+      return `https://www.google.com/search?q=${encodeURIComponent(`site:${domain} ${query}`)}`;
+  }
 }
 
 function appendUtm(url: string, marketplaceId: string): string {
@@ -68,16 +109,17 @@ function appendUtm(url: string, marketplaceId: string): string {
 }
 
 /**
- * Returns a list of outbound links for each marketplace: exact search query.
+ * Returns a list of outbound links for each marketplace. Query = normalized.brandName + ' ' + normalized.modelName.
+ * Each link is a real <a href> to a search results page.
  */
 export function buildMarketplaceLinks(input: MarketplaceLinkInput): MarketplaceLink[] {
-  const exactQuery = buildExactQuery(input);
+  const context = buildSearchContext(input, false);
   return MARKETPLACES.map((m) => {
-    let url = m.searchUrlTemplate(exactQuery);
+    let url = buildSearchUrl(m.id, context, m.domain);
     if (!m.skipUtm) url = appendUtm(url, m.id);
     return {
       marketplaceId: m.id,
-      title: `Search ${m.name} for ${exactQuery}`,
+      title: `Search ${m.name} for ${context.query}`,
       url,
       label: m.regionLabel || 'Global',
     };
@@ -85,19 +127,23 @@ export function buildMarketplaceLinks(input: MarketplaceLinkInput): MarketplaceL
 }
 
 /**
- * Returns the single "broader query" link (e.g. first marketplace with broader search).
- * Used for "Search broader query" secondary CTA.
+ * "Try broader search" link using brandName + ' tractor'.
  */
 export function buildBroaderSearchLink(input: MarketplaceLinkInput): {
   query: string;
   url: string;
   marketplaceId: string;
 } | null {
-  const broaderQuery = buildBroaderQuery(input);
   const first = MARKETPLACES[0];
   if (!first) return null;
-  let url = first.searchUrlTemplate(broaderQuery);
+  const context = buildSearchContext(
+    { ...input, modelName: 'tractor' },
+    true
+  );
+  let url = buildSearchUrl(first.id, context, first.domain);
   if (!first.skipUtm) url = appendUtm(url, first.id);
+  const brand = (input.brandName || '').trim();
+  const broaderQuery = brand ? `${brand} tractor` : 'tractor';
   return {
     query: broaderQuery,
     url,
