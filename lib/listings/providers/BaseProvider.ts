@@ -3,6 +3,8 @@ import type { Listing } from '@/types/listings';
 export interface ListingProvider {
   id: string;
   name: string;
-  /** Returns first search result listing or null if unavailable / no API. */
-  searchFirst(query: string): Promise<Listing | null>;
+  searchFirst(
+    query: string,
+    meta?: { brandSlug?: string; modelSlug?: string }
+  ): Promise<Listing | null>;
 }

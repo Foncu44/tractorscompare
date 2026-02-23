@@ -1,28 +1,32 @@
 import type { ListingProvider } from './BaseProvider';
 import type { Listing } from '@/types/listings';
 import { isScrapeEnabled } from '@/lib/listings/featureFlag';
-import { fetchHtml } from '@/lib/listings/fetchHtml';
+import { fetchHtml } from '@/lib/listings/utils';
 import { slugsFromQuery } from '@/lib/buildMarketplaceLinks';
 import * as cheerio from 'cheerio';
 
-/**
- * Mascus (global) listing provider.
- * When LISTINGS_SCRAPE_ENABLED=true: fetches search page, parses first listing.
- * Otherwise returns null.
- * TODO: Integrate official API or partner feed when available.
- */
+function buildSearchUrl(query: string, meta?: { brandSlug?: string; modelSlug?: string }): string {
+  const slugs = meta?.brandSlug && meta?.modelSlug
+    ? { brandSlug: meta.brandSlug, modelToken: meta.modelSlug.split('-').slice(0, 2).join('+').toLowerCase() }
+    : slugsFromQuery(query);
+  return `https://www.mascus.com/agriculture/tractors/${slugs.brandSlug}%2C${slugs.modelToken}%2C1%2Crelevance%2Csearch.html`;
+}
 
-function buildSearchUrl(query: string): string {
-  const { brandSlug, modelToken } = slugsFromQuery(query);
-  return `https://www.mascus.com/agriculture/tractors/${brandSlug}%2C${modelToken}%2C1%2Crelevance%2Csearch.html`;
+function toAbsoluteUrl(href: string, baseOrigin: string): string {
+  if (href.startsWith('http')) return href;
+  try {
+    return new URL(href, baseOrigin).toString();
+  } catch {
+    return href;
+  }
 }
 
 function parseFirstListing(html: string, baseUrl: string): Listing | null {
   try {
     const $ = cheerio.load(html);
     const base = new URL(baseUrl);
+    const origin = base.origin;
 
-    // Try common listing card selectors
     const selectors = [
       'a[href*="/listing/"]',
       'a[href*="/ad/"]',
@@ -33,8 +37,7 @@ function parseFirstListing(html: string, baseUrl: string): Listing | null {
       '[data-listing-id] a',
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let linkEl: any = null;
+    let linkEl: ReturnType<typeof $> | null = null;
     for (const sel of selectors) {
       const el = $(sel).first();
       if (el.length) {
@@ -51,8 +54,8 @@ function parseFirstListing(html: string, baseUrl: string): Listing | null {
     const href = linkEl.attr('href');
     if (!href) return null;
 
-    const listingUrl = href.startsWith('http') ? href : new URL(href, base.origin).toString();
-    const title = linkEl.attr('title') || linkEl.text().trim() || 'Listing';
+    const listingUrl = toAbsoluteUrl(href, origin);
+    const title = linkEl.attr('title') || linkEl.text().trim();
     if (!title || title.length < 3) return null;
 
     const card = linkEl.closest('article, .listing-item, .search-result, [data-listing-id], tr, .listing');
@@ -60,26 +63,25 @@ function parseFirstListing(html: string, baseUrl: string): Listing | null {
     const img = card.length ? card.find('img').first() : linkEl.find('img').first();
     if (img.length) {
       const src = img.attr('src') || img.attr('data-src');
-      if (src && src.startsWith('http')) imageUrl = src;
+      if (src) imageUrl = toAbsoluteUrl(src, origin);
     }
 
     let priceText: string | undefined;
     const priceEl = card.length ? card.find('[class*="price"], [class*="Price"]').first() : $('[class*="price"]').first();
-    if (priceEl.length) priceText = priceEl.text().trim().replace(/\s+/g, ' ');
+    if (priceEl.length) priceText = priceEl.text().trim().replace(/\s+/g, ' ').slice(0, 50);
 
     let locationText: string | undefined;
     const locEl = card.length ? card.find('[class*="location"], [class*="country"], [class*="Location"]').first() : $('[class*="location"]').first();
-    if (locEl.length) locationText = locEl.text().trim().replace(/\s+/g, ' ');
+    if (locEl.length) locationText = locEl.text().trim().replace(/\s+/g, ' ').slice(0, 80);
 
     return {
       marketplaceId: 'mascus',
       marketplaceName: 'Mascus',
       title: title.slice(0, 200),
-      priceText: priceText?.slice(0, 50),
-      locationText: locationText?.slice(0, 80),
-      imageUrl,
       listingUrl,
-      isRealListing: true,
+      imageUrl,
+      priceText,
+      locationText,
     };
   } catch {
     return null;
@@ -89,10 +91,10 @@ function parseFirstListing(html: string, baseUrl: string): Listing | null {
 export const MascusProvider: ListingProvider = {
   id: 'mascus',
   name: 'Mascus',
-  async searchFirst(query: string): Promise<Listing | null> {
+  async searchFirst(query: string, meta?: { brandSlug?: string; modelSlug?: string }): Promise<Listing | null> {
     if (!isScrapeEnabled()) return null;
     try {
-      const url = buildSearchUrl(query);
+      const url = buildSearchUrl(query, meta);
       const html = await fetchHtml(url);
       return parseFirstListing(html, url);
     } catch (e) {

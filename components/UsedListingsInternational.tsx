@@ -2,15 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import type { Listing } from '@/types/listings';
-import { buildMarketplaceLinks, buildBroaderSearchLink } from '@/lib/buildMarketplaceLinks';
-import { getMarketplaceById } from '@/lib/marketplaces';
 
 export interface UsedListingsInternationalProps {
   /** Search query, e.g. "Claas Axion 820" */
   query: string;
-  /** Optional: for fallback "Try broader search" link */
+  /** Optional: for more accurate search URLs (passed to API as brand/model) */
   brandName?: string;
   modelName?: string;
 }
@@ -29,9 +26,7 @@ function ListingCardSkeleton() {
 }
 
 function ListingCard({ item }: { item: Listing }) {
-  const imageSrc = item.imageUrl?.startsWith('http')
-    ? item.imageUrl
-    : item.imageUrl ?? '/marketplaces/placeholder.svg';
+  const imageSrc = item.imageUrl ?? '/marketplaces/placeholder.svg';
 
   return (
     <li>
@@ -69,21 +64,11 @@ function ListingCard({ item }: { item: Listing }) {
 
 export default function UsedListingsInternational({
   query,
-  brandName = '',
-  modelName = '',
+  brandName,
+  modelName,
 }: UsedListingsInternationalProps) {
   const [items, setItems] = useState<Listing[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  const input = {
-    brandName,
-    modelName,
-    fullName: query,
-    slug: query.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-  };
-  const broader = buildBroaderSearchLink(input);
-  const searchLinks = buildMarketplaceLinks(input);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +80,6 @@ export default function UsedListingsInternational({
     }
 
     setLoading(true);
-    setError(false);
     const params = new URLSearchParams({ q });
     if (brandName) params.set('brand', brandName);
     if (modelName) params.set('model', modelName);
@@ -112,10 +96,7 @@ export default function UsedListingsInternational({
         setItems(Array.isArray(data.items) ? data.items : []);
       })
       .catch(() => {
-        if (!cancelled) {
-          setError(true);
-          setItems([]);
-        }
+        if (!cancelled) setItems([]);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -143,49 +124,7 @@ export default function UsedListingsInternational({
   }
 
   if (displayItems.length === 0) {
-    return (
-      <section className="mt-10 md:mt-12 pt-8 border-t border-gray-200" aria-labelledby="used-listings-heading">
-        <h2 id="used-listings-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-          Find Used Listings (International)
-        </h2>
-        <p className="text-gray-600 text-sm mb-4">
-          No listings found. Search on marketplaces:
-        </p>
-        <ul className="flex flex-wrap gap-2 mb-4">
-          {searchLinks.map((link, i) => (
-            <li key={link.marketplaceId} className="inline">
-              <a
-                href={link.url}
-                target="_blank"
-                rel="nofollow sponsored noopener noreferrer"
-                className="text-primary-600 hover:underline text-sm font-medium"
-              >
-                {getMarketplaceById(link.marketplaceId)?.name ?? link.marketplaceId}
-              </a>
-              {i < searchLinks.length - 1 && <span className="text-gray-400 mx-1">·</span>}
-            </li>
-          ))}
-        </ul>
-        {broader && (
-          <p className="text-sm text-gray-600 mb-4">
-            Try broader search:{' '}
-            <a
-              href={broader.url}
-              target="_blank"
-              rel="nofollow sponsored noopener noreferrer"
-              className="text-primary-600 hover:underline font-medium"
-            >
-              &quot;{broader.query}&quot;
-            </a>
-          </p>
-        )}
-        <p className="text-xs text-gray-500">
-          <Link href="/data-sources" className="text-primary-600 hover:underline">
-            Data sources
-          </Link>
-        </p>
-      </section>
-    );
+    return null;
   }
 
   return (
@@ -194,40 +133,14 @@ export default function UsedListingsInternational({
         Find Used Listings (International)
       </h2>
       <p className="text-gray-600 text-sm mb-6 max-w-2xl">
-        First listing found per marketplace. Listings are provided by third parties.
+        Listings are provided by third parties.
       </p>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {displayItems.map((item) => (
           <ListingCard key={`${item.marketplaceId}-${item.listingUrl}`} item={item} />
         ))}
       </ul>
-
-      {error && (
-        <p className="text-sm text-amber-700 mb-4">
-          Some listings may be unavailable. Try the search links below.
-        </p>
-      )}
-
-      {broader && (
-        <p className="text-sm text-gray-600 mb-4">
-          Try broader search:{' '}
-          <a
-            href={broader.url}
-            target="_blank"
-            rel="nofollow sponsored noopener noreferrer"
-            className="text-primary-600 hover:underline font-medium"
-          >
-            &quot;{broader.query}&quot;
-          </a>
-        </p>
-      )}
-
-      <p className="text-xs text-gray-500">
-        <Link href="/data-sources" className="text-primary-600 hover:underline">
-          Data sources
-        </Link>
-      </p>
     </section>
   );
 }

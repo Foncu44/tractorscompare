@@ -1,16 +1,14 @@
 /**
  * Listing card data for used-tractor marketplaces.
- * Used by API and UI; imageUrl may be listing thumbnail or marketplace logo.
- * isRealListing: true = from provider/scrape; false = fallback search link.
+ * Server-side fetched; only real listings (no fallback links).
  */
 
 export type Listing = {
   marketplaceId: string;
   marketplaceName: string;
   title: string;
+  listingUrl: string;
+  imageUrl?: string;
   priceText?: string;
   locationText?: string;
-  imageUrl?: string;
-  listingUrl: string;
-  isRealListing: boolean;
 };

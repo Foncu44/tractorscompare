@@ -18,6 +18,7 @@
     "scrape-all": "node scripts/scrapeAllTractors.js",
     "process-scraped": "node scripts/processScrapedData.js",
     "check-data": "npx tsx scripts/checkData.ts",
+    "test-listings": "npx tsx scripts/testListings.ts",
     "find-images": "node scripts/findTractorImages.js",
     "update-images": "node scripts/updateTractorImages.js",
     "convert-wikimedia-urls": "node scripts/convertToFullWikimediaUrls.js",

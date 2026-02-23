@@ -3,8 +3,9 @@ import { existsSync } from 'fs';
 import path from 'path';
 import os from 'os';
 import { createHash } from 'crypto';
+import { normalizeQuery } from './utils';
 
-const TTL_SECONDS = 24 * 60 * 60; // 24 hours
+const TTL_SECONDS = 86400; // 24 hours
 
 function getCacheDir(): string {
   if (process.env.VERCEL) {
@@ -18,22 +19,19 @@ function cacheFilePath(key: string): string {
   return path.join(getCacheDir(), `${hash}.json`);
 }
 
-export interface CacheEntry<T> {
-  value: T;
-  expiresAt: number;
+export function buildCacheKey(normalizedQuery: string): string {
+  return `listings:v2:${normalizedQuery}`;
 }
 
 /**
- * Get cached value. Returns null if not found or expired.
- * Uses /tmp JSON file cache (Vercel) or .next/cache/listings (local).
- * To use Vercel KV: install @vercel/kv, set KV_REST_API_URL, and add KV logic in getCache/setCache.
+ * Get cached value as JSON string. Returns null if not found or expired.
  */
-export async function getCache<T>(key: string): Promise<T | null> {
+export async function getCached(key: string): Promise<string | null> {
   const filePath = cacheFilePath(key);
   try {
     if (!existsSync(filePath)) return null;
     const raw = await readFile(filePath, 'utf-8');
-    const data = JSON.parse(raw) as CacheEntry<T>;
+    const data = JSON.parse(raw) as { value: string; expiresAt: number };
     if (Date.now() > data.expiresAt) return null;
     return data.value;
   } catch {
@@ -42,26 +40,26 @@ export async function getCache<T>(key: string): Promise<T | null> {
 }
 
 /**
- * Set cached value with TTL in seconds.
+ * Set cached value (JSON string) with TTL in seconds.
  */
-export async function setCache<T>(key: string, value: T, ttlSeconds: number = TTL_SECONDS): Promise<void> {
+export async function setCached(
+  key: string,
+  value: string,
+  ttlSeconds: number = TTL_SECONDS
+): Promise<void> {
   const expiresAt = Date.now() + ttlSeconds * 1000;
-  const entry: CacheEntry<T> = { value, expiresAt };
-
   const dir = getCacheDir();
   const filePath = cacheFilePath(key);
   try {
     await mkdir(dir, { recursive: true });
-    await writeFile(filePath, JSON.stringify(entry), 'utf-8');
+    await writeFile(
+      filePath,
+      JSON.stringify({ value, expiresAt }),
+      'utf-8'
+    );
   } catch {
     // ignore write errors
   }
 }
 
-export function normalizeQuery(q: string): string {
-  return (q || '').trim().toLowerCase().replace(/\s+/g, ' ') || 'tractor';
-}
-
-export function buildCacheKey(normalizedQuery: string): string {
-  return `listings:v1:${normalizedQuery}`;
-}
+export { normalizeQuery };

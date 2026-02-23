@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getListings } from '@/lib/listings';
-import { getCache, setCache, normalizeQuery, buildCacheKey } from '@/lib/listings/cache';
+import { getCached, setCached, normalizeQuery, buildCacheKey } from '@/lib/listings/cache';
 import { checkRateLimit } from '@/lib/listings/rateLimit';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 const MIN_QUERY_LENGTH = 3;
-const MAX_QUERY_LENGTH = 60;
+const MAX_QUERY_LENGTH = 80;
+const TTL_SECONDS = 86400;
 
 function validateAndNormalize(q: string): { valid: boolean; normalized: string; displayQuery: string } {
   const trimmed = (q || '').trim();
@@ -42,16 +43,26 @@ export async function GET(request: NextRequest) {
 
     const cacheKey = buildCacheKey(normalized);
 
-    const cached = await getCache<{ query: string; items: import('@/types/listings').Listing[] }>(cacheKey);
+    const cached = await getCached(cacheKey);
     if (cached) {
-      return NextResponse.json({ query: cached.query, items: cached.items });
+      try {
+        const parsed = JSON.parse(cached) as { query: string; items: import('@/types/listings').Listing[] };
+        return NextResponse.json({ query: parsed.query, items: parsed.items });
+      } catch {
+        // invalid cache, continue
+      }
+    }
+
+    if (process.env.LISTINGS_SCRAPE_ENABLED !== 'true') {
+      return NextResponse.json({ query: displayQuery, items: [] });
     }
 
     const brandName = request.nextUrl.searchParams.get('brand') ?? undefined;
     const modelName = request.nextUrl.searchParams.get('model') ?? undefined;
 
     const items = await getListings(displayQuery, brandName, modelName);
-    await setCache(cacheKey, { query: displayQuery, items });
+    const payload = JSON.stringify({ query: displayQuery, items });
+    await setCached(cacheKey, payload, TTL_SECONDS);
 
     return NextResponse.json({ query: displayQuery, items });
   } catch (e) {

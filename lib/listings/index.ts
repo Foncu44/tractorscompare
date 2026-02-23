@@ -5,8 +5,8 @@ import { MascusProvider } from './providers/MascusProvider';
 import { MachineryTraderProvider } from './providers/MachineryTraderProvider';
 import { TractorHouseProvider } from './providers/TractorHouseProvider';
 import { FacebookMarketplaceProvider } from './providers/FacebookMarketplaceProvider';
-import { getFallbackListings } from './providers/FallbackSearchLinkProvider';
-import { isFallbackSearchLinksEnabled } from './featureFlag';
+import { runWithConcurrencyLimit } from './utils';
+import { slugify } from '@/lib/buildMarketplaceLinks';
 
 const PROVIDERS: ListingProvider[] = [
   AgriaffairesProvider,
@@ -18,17 +18,9 @@ const PROVIDERS: ListingProvider[] = [
 
 const CONCURRENCY = 2;
 
-function chunk<T>(arr: T[], size: number): T[][] {
-  const out: T[][] = [];
-  for (let i = 0; i < arr.length; i += size) {
-    out.push(arr.slice(i, i + size));
-  }
-  return out;
-}
-
 /**
- * Run providers with concurrency limit 2. Collect only non-null (real) listings.
- * If no real listings and fallback enabled, return search link cards.
+ * Run providers with concurrency limit 2. Collect only non-null results.
+ * When LISTINGS_SCRAPE_ENABLED=false, all providers return null -> empty array.
  */
 export async function getListings(
   query: string,
@@ -36,33 +28,28 @@ export async function getListings(
   modelName?: string
 ): Promise<Listing[]> {
   const q = (query || '').trim() || 'tractor';
-  const results: Listing[] = [];
+  const meta =
+    brandName && modelName
+      ? { brandSlug: slugify(brandName), modelSlug: slugify(modelName) }
+      : undefined;
 
-  const chunks = chunk(PROVIDERS, CONCURRENCY);
-  for (const providerChunk of chunks) {
-    const chunkResults = await Promise.all(
-      providerChunk.map(async (provider) => {
-        try {
-          return await provider.searchFirst(q);
-        } catch (e) {
-          console.error(`[listings] ${provider.id}:`, e);
-          return null;
-        }
-      })
-    );
-    for (const listing of chunkResults) {
-      if (listing && listing.isRealListing) {
-        results.push(listing);
+  const providerResults = await runWithConcurrencyLimit(
+    PROVIDERS,
+    async (provider) => {
+      try {
+        return await provider.searchFirst(q, meta);
+      } catch (e) {
+        console.error(`[listings] ${provider.id}:`, e);
+        return null;
       }
-    }
-  }
+    },
+    CONCURRENCY
+  );
+
+  const results = providerResults.filter((l): l is Listing => l !== null);
 
   const order = new Map(PROVIDERS.map((p, i) => [p.id, i]));
   results.sort((a, b) => (order.get(a.marketplaceId) ?? 99) - (order.get(b.marketplaceId) ?? 99));
-
-  if (results.length === 0 && isFallbackSearchLinksEnabled()) {
-    return getFallbackListings(q, brandName, modelName);
-  }
 
   return results;
 }

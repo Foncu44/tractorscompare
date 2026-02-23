@@ -1,11 +1,10 @@
 /**
- * Simple in-memory rate limit by IP.
- * Window: 15 seconds. Max requests per window: 10.
- * Returns true if allowed, false if rate limited (caller should return 429).
+ * Rate limit by IP: 30 requests per 10 minutes.
+ * Keys by x-forwarded-for or x-real-ip.
  */
 
-const WINDOW_MS = 15 * 1000;
-const MAX_REQUESTS = 10;
+const WINDOW_MS = 10 * 60 * 1000; // 10 minutes
+const MAX_REQUESTS = 30;
 
 interface WindowEntry {
   count: number;
