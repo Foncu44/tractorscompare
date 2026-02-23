@@ -75,6 +75,7 @@ export function getFallbackListings(
       title: `Search ${q} on ${m.name}`,
       imageUrl: m.logoPath,
       listingUrl: url,
+      isRealListing: false,
     };
   });
 }
@@ -111,5 +112,6 @@ export function getFallbackListingForMarketplace(
     title: `Search ${q} on ${m.name}`,
     imageUrl: m.logoPath,
     listingUrl: url,
+    isRealListing: false,
   };
 }

@@ -511,9 +511,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
 
         {/* Find Used Listings (International) */}
         <UsedListingsInternational
+          query={fullName.trim() || 'tractor'}
           brandName={tractor.brand}
           modelName={tractor.model}
-          fullName={fullName}
         />
       </div>
     </div>

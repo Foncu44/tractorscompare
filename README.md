@@ -141,22 +141,48 @@ Aunque no existe una API pública universal, puedes obtener datos de:
 
 ## 🚜 Listados de Ocasión (Used Listings)
 
-La sección "Find Used Listings (International)" en cada ficha de tractor muestra tarjetas por marketplace (Agriaffaires, Mascus, MachineryTrader, TractorHouse, Facebook Marketplace). Cada tarjeta puede mostrar el **primer resultado real** (título, imagen, precio, ubicación) o un **enlace de búsqueda** si no hay API disponible.
+La sección "Find Used Listings (International)" en cada ficha de tractor muestra el **primer listado real** encontrado por marketplace (Mascus, TractorHouse, etc.). Si no hay listados reales, se muestran enlaces de búsqueda como fallback.
 
-- **API**: `GET /api/listings?q=...` — devuelve `{ query, items: Listing[] }`. Resultados cacheados 24h (en `/tmp` en Vercel o en `.next/cache/listings` en local).
-- **Despliegue**:
-  - Por defecto el proyecto **no** usa `output: 'export'` para que `/api/listings` funcione en Vercel (u otro host Node). Así la API corre en servidor y se usa la caché de 24h.
-  - Si quieres **export estático**: activa `output: 'export'` en `next.config.js` y **elimina** la carpeta `app/api/listings` (o el build fallará). La UI seguirá mostrando tarjetas de “buscar en {marketplace}” (fallback) al no existir la API.
+### Habilitar scraping (LISTINGS_SCRAPE_ENABLED)
 
-### Cómo añadir proveedores reales (APIs / feeds)
+Por defecto el scraping está **desactivado** (`LISTINGS_SCRAPE_ENABLED=false`). Los providers Mascus y TractorHouse devuelven `null` y solo se muestran enlaces de búsqueda.
 
-Los proveedores están en `lib/listings/providers/`. Ahora son stubs que devuelven `null`; el orquestador usa entonces el fallback (enlace de búsqueda) por marketplace.
+Para activar el scraping (revisa los ToS de cada marketplace antes):
 
-1. **Implementar la API/feed oficial** en el provider correspondiente:
-   - `AgriaffairesProvider.ts`, `MascusProvider.ts`, `MachineryTraderProvider.ts`, `TractorHouseProvider.ts`, `FacebookMarketplaceProvider.ts`
-2. En cada uno, hacer que `search(query: string)` devuelva un `Listing | null` con al menos: `marketplaceId`, `marketplaceName`, `title`, `listingUrl`, y opcionalmente `imageUrl`, `priceText`, `locationText`.
-3. **No hacer scraping** de HTML salvo que esté explícitamente permitido por feature flag y políticas del sitio.
-4. El orquestador (`lib/listings/index.ts`) ya llama a cada provider y, si devuelve `null` o lanza, usa el fallback para ese marketplace. No hace falta tocar la API route ni el componente para añadir un provider ya registrado en `PROVIDERS`.
+```env
+LISTINGS_SCRAPE_ENABLED=true
+```
+
+Con esto, MascusProvider y TractorHouseProvider intentan obtener el primer resultado mediante fetch HTML. El scraping puede violar ToS; úsalo bajo tu responsabilidad.
+
+### Fallback a enlaces de búsqueda
+
+Cuando no hay listados reales:
+
+- `LISTINGS_FALLBACK_SEARCH_LINKS=true` (por defecto si scrape está desactivado): se muestran enlaces de búsqueda por marketplace.
+- `LISTINGS_FALLBACK_SEARCH_LINKS=false`: no se muestra nada si no hay listados reales.
+
+### Caché
+
+- **Clave**: `listings:v1:{queryNormalizada}`
+- **TTL**: 24 horas
+- **Almacenamiento**: Archivo JSON en `/tmp` (Vercel) o `.next/cache/listings` (local). Para usar Vercel KV: instala `@vercel/kv`, configura `KV_REST_API_URL` y añade la lógica en `lib/listings/cache.ts`.
+
+### Rate limiting
+
+Límite en memoria: 10 peticiones por IP en una ventana de 15 segundos. Si se supera, la API responde 429.
+
+### API
+
+- `GET /api/listings?q=...` — Parámetros: `q` (3–60 caracteres), opcionales `brand`, `model`. Devuelve `{ query, items: Listing[] }`.
+
+### Cómo añadir APIs oficiales
+
+Los providers están en `lib/listings/providers/`. Para integrar una API o feed oficial:
+
+1. Implementa `searchFirst(query: string): Promise<Listing | null>` en el provider correspondiente.
+2. Devuelve un `Listing` con `isRealListing: true` y los campos: `marketplaceId`, `marketplaceName`, `title`, `listingUrl`, y opcionalmente `imageUrl`, `priceText`, `locationText`.
+3. El orquestador (`lib/listings/index.ts`) ya llama a cada provider con concurrencia 2; no hace falta modificar la API route.
 
 ## 🚀 Despliegue
 

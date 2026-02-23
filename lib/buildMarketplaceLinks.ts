@@ -49,6 +49,18 @@ export interface SearchContext {
   modelToken: string;
 }
 
+/** Derive slugs from query string (e.g. "Claas Axion 820" -> brandSlug, modelSlug, modelToken). */
+export function slugsFromQuery(query: string): { brandSlug: string; modelSlug: string; modelToken: string } {
+  const q = (query || '').trim() || 'tractor';
+  const parts = q.split(/\s+/).filter(Boolean);
+  const model = parts.length > 1 ? parts.pop()! : q;
+  const brand = parts.length ? parts.join(' ') : q;
+  const brandSlug = slugify(brand) || 'tractor';
+  const modelSlug = slugify(model) || 'tractor';
+  const modelToken = modelTokenFromSlug(modelSlug);
+  return { brandSlug, modelSlug, modelToken };
+}
+
 /** Build query = normalized.brandName + ' ' + normalized.modelName and slugs. */
 export function buildSearchContext(
   input: MarketplaceLinkInput,
