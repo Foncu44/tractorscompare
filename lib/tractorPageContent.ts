@@ -3,7 +3,6 @@
  * No AI; stable seed (FNV-1a from slug) for phrase variation.
  */
 
-import type { Tractor } from '@/types/tractor';
 
 export type SimilarTractorItem = { slug: string; brand: string; model: string };
 
@@ -69,9 +68,9 @@ export function getBestForSubheading(
   entries.sort((a, b) => b.value - a.value);
   return entries.slice(0, limit).map((e) => e.label);
 }
+import type { Tractor } from '@/types/tractor';
 import type { TractorNarrative } from '@/lib/tractorNarrative';
 import type { TractorSuitabilityResult } from '@/lib/tractorSuitability';
-import type { TractorNarrative } from '@/lib/tractorNarrative';
 import type { UsedPriceEstimate } from '@/lib/usedPriceEstimate';
 
 export type TractorInsights = {
