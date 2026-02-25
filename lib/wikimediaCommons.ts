@@ -56,12 +56,18 @@ function getExtMetadataValue(ext: Record<string, { value?: string }> | undefined
   return stripped;
 }
 
+/** Wikimedia API query response shape (query.pages). */
+interface CommonsQueryResponse {
+  query?: { pages?: Record<string, unknown> };
+}
+
 /** Parse API response into candidates with license/author. */
 export function parseSearchImageInfo(
-  query: Record<string, unknown>,
+  data: Record<string, unknown>,
   options: { minWidth?: number } = {}
 ): CommonsCandidate[] {
-  const pages = query?.query?.pages as Record<string, unknown> | undefined;
+  const response = data as CommonsQueryResponse;
+  const pages = response?.query?.pages;
   if (!pages || typeof pages !== 'object') return [];
 
   const minWidth = options.minWidth ?? 200;
