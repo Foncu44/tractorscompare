@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { Tractor } from '@/types/tractor';
 import { Settings, Gauge, Droplets, Zap, Ruler, Container, ExternalLink, FileText, BookOpen, Wrench, Package, Circle } from 'lucide-react';
 
-interface TractorSpecsTabsProps {
-  tractor: Tractor;
-}
-
 type TabId = 'engine' | 'transmission' | 'hydraulics' | 'pto' | 'dimensions' | 'capacities' | 'tires';
+
+export interface TractorSpecsTabsProps {
+  tractor: Tractor;
+  /** Optional "What this means" note per tab (deterministic from tractorPageContent.buildTabMeaningNotes) */
+  tabMeaningNotes?: Partial<Record<TabId, string>>;
+}
 
 interface Tab {
   id: TabId;
@@ -26,8 +28,9 @@ const tabs: Tab[] = [
   { id: 'capacities', label: 'Capacities', icon: <Container className="w-5 h-5" /> },
 ];
 
-export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
+export default function TractorSpecsTabs({ tractor, tabMeaningNotes }: TractorSpecsTabsProps) {
   const [activeTab, setActiveTab] = useState<TabId>('engine');
+  const meaningNote = tabMeaningNotes?.[activeTab];
 
   const renderSpecRow = (label: string, value: string | number | undefined, unit?: string) => {
     if (value === undefined || value === null || value === '') return null;
@@ -300,6 +303,11 @@ export default function TractorSpecsTabs({ tractor }: TractorSpecsTabsProps) {
 
       {/* Tab Content */}
       <div className="p-4 md:p-6">
+        {meaningNote && (
+          <p className="text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2 mb-4 border border-gray-100" role="note">
+            <strong className="text-gray-700">What this means:</strong> {meaningNote}
+          </p>
+        )}
         {renderTabContent()}
 
         {/* Documentation Links */}
