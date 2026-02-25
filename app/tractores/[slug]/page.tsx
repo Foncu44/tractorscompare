@@ -30,6 +30,7 @@ import UsedMarketInsights from '@/components/UsedMarketInsights';
 import SimilarTractors from '@/components/SimilarTractors';
 import TractorFaq from '@/components/TractorFaq';
 import DataSourcesLinks from '@/components/DataSourcesLinks';
+import { getTractorImage } from '@/lib/tractorImages';
 
 interface TractorDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -257,6 +258,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   const bestForLabels = getBestForSubheading(suitabilityResult);
   const subheadingParts = [typeLabel, tractor.engine.powerHP ? `${tractor.engine.powerHP} HP` : null, bestForLabels.length ? `Best for ${bestForLabels.join(' and ')}` : null].filter(Boolean);
 
+  const tractorImage = tractor.image ?? getTractorImage(tractor.slug);
+  const displayImageUrl = tractorImage?.url ?? tractor.imageUrl;
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -361,7 +365,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                   <TractorImagePlaceholder
                     brand={tractor.brand}
                     model={tractor.model}
-                    imageUrl={tractor.imageUrl}
+                    imageUrl={displayImageUrl}
                     width={800}
                     height={600}
                     className="w-full h-full"
@@ -370,6 +374,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                 <span className="absolute top-2 left-2 md:top-4 md:left-4 inline-flex items-center rounded-full bg-primary-700 text-white px-2 md:px-3 py-1 text-xs font-semibold z-10">
                   {tractor.category || typeLabel}
                 </span>
+                {tractorImage && (
+                  <p className="mt-2 text-xs text-gray-500 [&_a]:text-primary-600 [&_a]:hover:underline" dangerouslySetInnerHTML={{ __html: tractorImage.attributionHtml }} />
+                )}
               </div>
 
               <div className="flex flex-col justify-center">

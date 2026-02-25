@@ -20,6 +20,7 @@
     "process-scraped": "node scripts/processScrapedData.js",
     "check-data": "npx tsx scripts/checkData.ts",
     "test-listings": "npx tsx scripts/testListings.ts",
+    "fetch:tractor-images": "tsx scripts/fetchTractorImages.ts",
     "find-images": "node scripts/findTractorImages.js",
     "update-images": "node scripts/updateTractorImages.js",
     "convert-wikimedia-urls": "node scripts/convertToFullWikimediaUrls.js",
