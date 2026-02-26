@@ -205,6 +205,13 @@ El proyecto está listo para desplegar en:
 
 No olvides configurar las variables de entorno según tu fuente de datos.
 
+### Variables de entorno para AdSense y depuración
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_ADSENSE_CLIENT` | ID de cliente de Google AdSense (obligatorio en producción para mostrar anuncios). | `ca-pub-1428727998918616` |
+| `NEXT_PUBLIC_DEBUG_ERRORS` | Si es `true`, registra en consola errores de cliente (`window.onerror`, `unhandledrejection`) con prefijo `[TractorsCompare Error]`. Útil para depurar excepciones en preview/producción (p. ej. AdSense/CSP). | `true` o `false` |
+
 ## 📄 Licencia
 
 MIT

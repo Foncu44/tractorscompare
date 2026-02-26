@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ClientErrorLogger from '@/components/ClientErrorLogger';
 
 export const metadata: Metadata = {
   title: {
@@ -128,16 +129,19 @@ export default function RootLayout({
             }
           `}
         </Script>
-        {/* AdSense - solo en producción para evitar CORS en localhost */}
+        {/* AdSense - load directly from Google (no proxy); only in production */}
         {process.env.NODE_ENV === 'production' && (
           <Script
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
-            strategy="lazyOnload"
+            id="adsbygoogle"
+            strategy="afterInteractive"
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616'}`}
             crossOrigin="anonymous"
           />
         )}
       </head>
       <body className="font-serif overflow-x-hidden" suppressHydrationWarning>
+        <ClientErrorLogger />
         {/* JSON-LD - suppressHydrationWarning evita el warning de hidratación */}
         <script
           type="application/ld+json"

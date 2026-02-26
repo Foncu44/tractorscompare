@@ -38,19 +38,7 @@ export default function AdSense({
       return;
     }
 
-    // Función para cargar el script de AdSense dinámicamente
-    const loadAdSenseScript = () => {
-      if (document.querySelector('script[src*="adsbygoogle.js"]')) {
-        return; // Ya está cargado
-      }
-      
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616';
-      script.crossOrigin = 'anonymous';
-      script.defer = true;
-      document.head.appendChild(script);
-    };
+    // Script is loaded by layout.tsx (Next.js Script from pagead2.googlesyndication.com). Do not inject or proxy it.
 
     // Función para verificar si el script de AdSense está cargado
     const isAdSenseLoaded = () => {
@@ -141,50 +129,35 @@ export default function AdSense({
       }
     };
 
-    // Usar Intersection Observer para cargar ads solo cuando sean visibles
+    // Usar Intersection Observer para inicializar el anuncio solo cuando sea visible (script ya cargado por layout)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !initializedRef.current) {
-            // Cargar el script de AdSense solo cuando el anuncio es visible
-            loadAdSenseScript();
-            // Esperar a que el script se cargue antes de inicializar
             const checkScript = setInterval(() => {
               if (isAdSenseLoaded()) {
                 clearInterval(checkScript);
                 initializeAd();
               }
             }, 100);
-            
-            // Timeout de seguridad
             setTimeout(() => clearInterval(checkScript), 5000);
             observer.disconnect();
           }
         });
       },
-      {
-        rootMargin: '50px', // Cargar 50px antes de que sea visible
-        threshold: 0.01,
-      }
+      { rootMargin: '50px', threshold: 0.01 }
     );
 
-    // Si el anuncio ya es visible, inicializar inmediatamente
-    // De lo contrario, el Intersection Observer lo hará
     if (adRef.current) {
       const rect = adRef.current.getBoundingClientRect();
       const isVisible = rect.top < window.innerHeight + 50 && rect.bottom > -50;
-      
       if (isVisible) {
-        loadAdSenseScript();
-        // Esperar a que el script se cargue antes de inicializar
         const checkScript = setInterval(() => {
           if (isAdSenseLoaded()) {
             clearInterval(checkScript);
             initializeAd();
           }
         }, 100);
-        
-        // Timeout de seguridad
         setTimeout(() => clearInterval(checkScript), 5000);
       } else {
         observer.observe(adRef.current);
@@ -218,7 +191,7 @@ export default function AdSense({
         display: 'block',
         ...style,
       }}
-      data-ad-client="ca-pub-1428727998918616"
+      data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616'}
       data-ad-slot={adSlot}
       data-ad-format={adFormat}
       data-full-width-responsive={fullWidthResponsive ? 'true' : 'false'}
