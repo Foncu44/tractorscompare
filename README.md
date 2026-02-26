@@ -210,7 +210,16 @@ No olvides configurar las variables de entorno según tu fuente de datos.
 | Variable | Descripción | Ejemplo |
 |----------|-------------|---------|
 | `NEXT_PUBLIC_ADSENSE_CLIENT` | ID de cliente de Google AdSense (obligatorio en producción para mostrar anuncios). | `ca-pub-1428727998918616` |
-| `NEXT_PUBLIC_DEBUG_ERRORS` | Si es `true`, registra en consola errores de cliente (`window.onerror`, `unhandledrejection`) con prefijo `[TractorsCompare Error]`. Útil para depurar excepciones en preview/producción (p. ej. AdSense/CSP). | `true` o `false` |
+| `NEXT_PUBLIC_DEBUG_ERRORS` | Si es `true`, registra en consola errores de cliente (`window.onerror`, `unhandledrejection`) con prefijo `[TC-CLIENT-ERROR]` e incluye `location.href` y `userAgent`. Útil para depurar excepciones en preview/producción (p. ej. AdSense preview iframe). | `true` o `false` |
+
+### Depuración del preview de AdSense (“Application error: a client-side exception has occurred”)
+
+Si el preview de AdSense falla con un error de cliente:
+
+1. **Despliega con el logger activado**: en Vercel (Preview o Production) configura `NEXT_PUBLIC_DEBUG_ERRORS=true`.
+2. **Reproduce**: abre de nuevo el preview de AdSense (el sitio se carga dentro de un iframe).
+3. **Revisa la consola**: abre las herramientas de desarrollador en el contexto del iframe donde se carga tu sitio (o en la ventana del preview) y busca mensajes que empiecen por `[TC-CLIENT-ERROR]`.
+4. **Corrige la causa**: el log incluirá `window.onerror` o `unhandledrejection`, más `location.href` y `userAgent`. Causas típicas: acceso a `window.top` o a `localStorage`/cookies en iframe, o scripts de analytics/GTM que no soportan iframes. En este proyecto, GTM/GA y Vercel Analytics se desactivan automáticamente dentro de iframes para evitar el fallo.
 
 ## 📄 Licencia
 

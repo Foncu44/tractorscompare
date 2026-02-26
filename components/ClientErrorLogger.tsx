@@ -2,24 +2,28 @@
 
 import { useEffect } from 'react';
 
-const PREFIX = '[TractorsCompare Error]';
+const PREFIX = '[TC-CLIENT-ERROR]';
 
 /**
- * Minimal client-side error logger. Only active when NEXT_PUBLIC_DEBUG_ERRORS=true.
- * Use for production preview testing to detect client-side exceptions (e.g. AdSense/CSP).
+ * Production-safe client error logger. Only active when NEXT_PUBLIC_DEBUG_ERRORS === "true".
+ * Logs window.onerror and unhandledrejection with location.href and userAgent for debugging
+ * (e.g. AdSense preview iframe exceptions).
  */
 export default function ClientErrorLogger() {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEBUG_ERRORS !== 'true') {
-      return;
-    }
+    if (process.env.NEXT_PUBLIC_DEBUG_ERRORS !== 'true') return;
+
+    const ctx = () => ({
+      href: typeof window !== 'undefined' ? window.location.href : '',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+    });
 
     const onError = (event: ErrorEvent) => {
-      console.error(PREFIX, 'window.onerror:', event.message, event.filename, event.lineno, event.colno, event.error);
+      console.error(PREFIX, 'window.onerror:', event.message, event.filename, event.lineno, event.colno, event.error, ctx());
     };
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error(PREFIX, 'unhandledrejection:', event.reason);
+      console.error(PREFIX, 'unhandledrejection:', event.reason, ctx());
     };
 
     window.addEventListener('error', onError);
