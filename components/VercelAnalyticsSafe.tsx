@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Analytics } from '@vercel/analytics/next';
-import { isInIframe } from '@/lib/isInIframe';
+import { isInIframe } from '@/src/lib/isInIframe';
 
 /**
  * Renders Vercel Analytics only when NOT inside an iframe (e.g. AdSense preview).

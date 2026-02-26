@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { isInIframe } from '@/lib/isInIframe';
+import { isInIframe } from '@/src/lib/isInIframe';
 
 /**
  * Loads GTM/GA only when NOT inside an iframe (e.g. AdSense preview).

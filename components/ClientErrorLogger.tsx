@@ -2,28 +2,29 @@
 
 import { useEffect } from 'react';
 
-const PREFIX = '[TC-CLIENT-ERROR]';
+const PREFIX = '[TC CLIENT ERROR]';
 
 /**
- * Production-safe client error logger. Only active when NEXT_PUBLIC_DEBUG_ERRORS === "true".
- * Logs window.onerror and unhandledrejection with location.href and userAgent for debugging
+ * Lightweight client error logger. Only active when NEXT_PUBLIC_DEBUG_ERRORS === "true".
+ * Logs window.onerror and unhandledrejection with href and stack for debugging
  * (e.g. AdSense preview iframe exceptions).
  */
 export default function ClientErrorLogger() {
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_DEBUG_ERRORS !== 'true') return;
 
-    const ctx = () => ({
-      href: typeof window !== 'undefined' ? window.location.href : '',
-      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-    });
+    const href = typeof window !== 'undefined' ? window.location.href : '';
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
 
     const onError = (event: ErrorEvent) => {
-      console.error(PREFIX, 'window.onerror:', event.message, event.filename, event.lineno, event.colno, event.error, ctx());
+      const stack = event.error?.stack ?? event.error ?? '';
+      console.error(PREFIX, 'window.onerror', { message: event.message, filename: event.filename, lineno: event.lineno, colno: event.colno, stack, href, ua });
     };
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
-      console.error(PREFIX, 'unhandledrejection:', event.reason, ctx());
+      const reason = event.reason;
+      const stack = reason?.stack ?? (reason instanceof Error ? reason.stack : '');
+      console.error(PREFIX, 'unhandledrejection', { reason, stack: stack || String(reason), href, ua });
     };
 
     window.addEventListener('error', onError);

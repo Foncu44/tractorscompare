@@ -1,9 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname } from 'next/navigation';
-
-const LOG_PREFIX = '[TC-CLIENT-ERROR]';
 
 export default function Error({
   error,
@@ -12,16 +9,17 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const pathname = usePathname();
-
   useEffect(() => {
-    console.error(LOG_PREFIX, 'App error boundary:', {
+    const href = typeof window !== 'undefined' ? window.location.href : '';
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+    console.error('[TC ERROR BOUNDARY]', {
       message: error.message,
       stack: error.stack,
-      pathname: pathname ?? typeof window !== 'undefined' ? window.location.pathname : '',
       digest: error.digest,
+      href,
+      ua,
     });
-  }, [error, pathname]);
+  }, [error]);
 
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 font-serif">
