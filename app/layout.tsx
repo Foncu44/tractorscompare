@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ClientErrorLogger from '@/components/ClientErrorLogger';
+import ClientErrorReporter from '@/components/ClientErrorReporter';
 import AnalyticsScripts from '@/components/AnalyticsScripts';
 import VercelAnalyticsSafe from '@/components/VercelAnalyticsSafe';
 
@@ -114,6 +115,7 @@ export default function RootLayout({
       </head>
       <body className="font-serif overflow-x-hidden" suppressHydrationWarning>
         <ClientErrorLogger />
+        {process.env.NEXT_PUBLIC_DEBUG_ERRORS === 'true' && <ClientErrorReporter />}
         <AnalyticsScripts />
         {/* JSON-LD - suppressHydrationWarning evita el warning de hidratación */}
         <script

@@ -2,6 +2,19 @@
 
 import { useEffect } from 'react';
 
+const CLIENT_ERROR_ENDPOINT = '/api/client-error';
+
+function reportToApi(payload: Record<string, unknown>) {
+  try {
+    fetch(CLIENT_ERROR_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'error-boundary', ...payload }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (_) {}
+}
+
 export default function Error({
   error,
   reset,
@@ -12,15 +25,18 @@ export default function Error({
   useEffect(() => {
     const href = typeof window !== 'undefined' ? window.location.href : '';
     const referrer = typeof document !== 'undefined' ? document.referrer || '' : '';
-    const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-    console.error('[TC ERROR BOUNDARY]', {
+    const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+    const payload = {
       message: error.message,
-      stack: error.stack,
-      digest: error.digest,
+      stack: error.stack ?? null,
+      digest: error.digest ?? null,
       href,
       referrer,
-      ua,
-    });
+      userAgent,
+      timestamp: new Date().toISOString(),
+    };
+    console.error('[TC ERROR BOUNDARY]', payload);
+    reportToApi(payload);
   }, [error]);
 
   return (

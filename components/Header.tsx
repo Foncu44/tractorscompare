@@ -88,7 +88,9 @@ export default function Header() {
           <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-shrink-0">
             <div className="relative w-full min-w-[250px] group">
               <input
-                type="text"
+                id="tractor-search"
+                name="q"
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search tractors..."
@@ -116,11 +118,14 @@ export default function Header() {
               <form onSubmit={handleSearch} className="mb-4">
                 <div className="relative">
                   <input
-                    type="text"
+                    id="tractor-search-mobile"
+                    name="q"
+                    type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search tractors..."
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                    aria-label="Search tractors"
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 </div>

@@ -271,11 +271,14 @@ export default function CompararPage() {
               
               <div className="p-4 md:p-6 flex-1 overflow-y-auto">
                 <input
-                  type="text"
+                  id="compare-tractor-search"
+                  name="q"
+                  type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Buscar tractor por marca o modelo..."
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                  aria-label="Search tractor to compare"
                 />
                 
                 <div className="space-y-2 max-h-[400px] overflow-y-auto">
@@ -361,8 +364,10 @@ export default function CompararPage() {
                     <span className="hidden sm:inline">Reiniciar</span>
                   </button>
                 </div>
-                <label className="flex items-center gap-2 cursor-pointer">
+                <label htmlFor="compare-show-differences" className="flex items-center gap-2 cursor-pointer">
                   <input
+                    id="compare-show-differences"
+                    name="showOnlyDifferences"
                     type="checkbox"
                     checked={showOnlyDifferences}
                     onChange={(e) => setShowOnlyDifferences(e.target.checked)}

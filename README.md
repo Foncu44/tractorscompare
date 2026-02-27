@@ -259,6 +259,11 @@ Cuando el sitio se embebe en el iframe del preview de AdSense, el error boundary
    - Si ves bloqueos CSP: revisa `next.config.js` → `headers` → `Content-Security-Policy` e incluye los dominios que indica la consola (p. ej. `fundingchoicesmessages.google.com`, `www.gstatic.com`, `*.googleusercontent.com`).
    - Si el sitio normal deja de cargar: revierte los cambios recientes o desactiva temporalmente el “AdSense preview safe mode” (los scripts que dependen de `isAdSensePreview()` en `AnalyticsScripts` y `VercelAnalyticsSafe`).
 
+5. **React #418 y reporte a servidor**
+   - Con `NEXT_PUBLIC_DEBUG_ERRORS=true` se monta `ClientErrorReporter`, que envía `window.onerror` y `unhandledrejection` a `POST /api/client-error`. El error boundary también envía el error a esa ruta.
+   - En Vercel: **Logs** (pestaña del proyecto) → filtrar por “TC CLIENT-ERROR” o “TC ERROR BOUNDARY” para ver el payload (message, stack, href, referrer, userAgent) y localizar el componente que provoca el #418.
+   - Para componentes que lean APIs del navegador en el primer render, usa el hook `hooks/useHasMounted` y devuelve `null` (o un placeholder estable) hasta que `useHasMounted()` sea `true`.
+
 ## 📄 Licencia
 
 MIT

@@ -228,14 +228,18 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
+                id="brand-model-search"
                 name="q"
+                type="search"
                 defaultValue={sp.q || ''}
                 placeholder="Search model..."
                 className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-200"
+                aria-label="Search model"
               />
             </div>
 
             <select
+              id="brand-type-filter"
               name="tipo"
               defaultValue={tipo || ''}
               className="w-full md:w-[200px] px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-200"
@@ -247,6 +251,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
             </select>
 
             <select
+              id="brand-model-sort"
               name="sort"
               defaultValue={sort}
               className="w-full md:w-[200px] px-3 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-200"

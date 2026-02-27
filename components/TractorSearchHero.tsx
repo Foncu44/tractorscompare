@@ -61,12 +61,15 @@ export default function TractorSearchHero() {
                 <Search className="w-6 h-6" />
               </div>
               <input
-                type="text"
+                id="hero-tractor-search"
+                name="q"
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => setShowSuggestions(true)}
                 placeholder="Search by brand or model (e.g., John Deere 8245R)"
                 className="flex-1 px-4 py-4 text-lg text-gray-900 placeholder-gray-400 focus:outline-none"
+                aria-label="Search tractors by brand or model"
               />
               <button
                 type="submit"
@@ -146,19 +149,25 @@ export default function TractorSearchHero() {
             </label>
             <div className="flex items-center gap-3">
               <input
+                id="hero-min-hp"
+                name="minHP"
                 type="number"
                 value={hpRange.min}
                 onChange={(e) => setHpRange({ ...hpRange, min: parseInt(e.target.value) || 0 })}
                 placeholder="Min"
                 className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                aria-label="Minimum horsepower"
               />
               <span className="text-gray-500">-</span>
               <input
+                id="hero-max-hp"
+                name="maxHP"
                 type="number"
                 value={hpRange.max}
                 onChange={(e) => setHpRange({ ...hpRange, max: parseInt(e.target.value) || 1000 })}
                 placeholder="Max"
                 className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                aria-label="Maximum horsepower"
               />
             </div>
           </div>

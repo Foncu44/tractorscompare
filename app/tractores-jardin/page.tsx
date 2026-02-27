@@ -71,16 +71,21 @@ function TractoresJardinContent() {
             <div className="relative flex-1 max-w-md w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
               <input
-                type="text"
+                id="lawn-brand-search"
+                name="q"
+                type="search"
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search brand..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                aria-label="Search brand"
               />
             </div>
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <Filter className="h-4 w-4 text-gray-500" />
               <select
+                id="lawn-brand-sort"
+                name="sort"
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
                 className="w-full sm:w-56 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none bg-white"
