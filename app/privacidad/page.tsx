@@ -13,7 +13,7 @@ export default function PrivacidadPage() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
         <p className="text-gray-600 mb-8">
-          Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+          Last updated: February 20, 2026
         </p>
 
         <div className="bg-white rounded-lg shadow-md p-8 mb-8">

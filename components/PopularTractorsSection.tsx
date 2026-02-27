@@ -75,15 +75,15 @@ export default function PopularTractorsSection({ tractors: propTractors }: Popul
 
   if (popularTractors.length === 0) return null;
 
-  // Simular vistas y ratings (en producción esto vendría de analytics)
+  // Deterministic placeholder views/ratings to avoid hydration mismatch (no Math.random in render)
   const getViews = (index: number) => {
     const views = [12500, 9800, 8200, 7500, 6800];
-    return views[index] || Math.floor(Math.random() * 5000 + 3000);
+    return views[index] ?? 3000 + index * 1000;
   };
 
   const getRating = (index: number) => {
     const ratings = [4.8, 4.7, 4.9, 4.6, 4.5];
-    return ratings[index] || (4.5 + Math.random() * 0.4);
+    return ratings[index] ?? 4.6;
   };
 
   return (

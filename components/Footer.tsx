@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { AdBanner } from '@/components/AdSense';
 
+// Static year to avoid hydration mismatch (server vs client date)
+const COPYRIGHT_YEAR = 2026;
+
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300 mt-20 border-t border-gray-800">
@@ -125,7 +127,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-sm text-gray-400">&copy; {currentYear} TractorsCompare. All rights reserved.</p>
+          <p className="text-sm text-gray-400">&copy; {COPYRIGHT_YEAR} TractorsCompare. All rights reserved.</p>
           <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
             All information is provided for reference. Always consult the manufacturer official specifications.
           </p>

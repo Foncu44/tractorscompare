@@ -105,7 +105,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://commons.wikimedia.org" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* GTM/GA loaded by AnalyticsScripts only when NOT in iframe (avoids AdSense preview crashes) */}
+        {/* Iframe-safe: GTM/GA and Vercel Analytics load only when NOT in iframe (see AnalyticsScripts + VercelAnalyticsSafe). AdSense script always loads in production so preview works. */}
         {/* AdSense - load directly from Google; only in production. Kept here so it runs in iframe (preview). */}
         {process.env.NODE_ENV === 'production' && (
           <Script
