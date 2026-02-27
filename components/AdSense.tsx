@@ -43,9 +43,11 @@ export default function AdSense({
 
     // Función para verificar si el script de AdSense está cargado
     const isAdSenseLoaded = () => {
-      return typeof window !== 'undefined' && 
-             window.adsbygoogle && 
-             (Array.isArray(window.adsbygoogle) || typeof window.adsbygoogle.push === 'function');
+      if (typeof window === 'undefined') return false;
+      const ads = (window as any).adsbygoogle;
+      if (!ads) return false;
+      if (Array.isArray(ads)) return true;
+      return typeof ads.push === 'function';
     };
 
     // Función para inicializar el anuncio
