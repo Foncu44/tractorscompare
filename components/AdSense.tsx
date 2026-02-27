@@ -1,19 +1,23 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: any[] | { loaded?: boolean; push: (ad: any) => void };
+    adsbygoogle?: Array<Record<string, unknown>>;
   }
 }
 
 interface AdSenseProps {
-  adSlot?: string;
+  adSlot: string;
   adFormat?: 'auto' | 'rectangle' | 'vertical' | 'horizontal';
   fullWidthResponsive?: boolean;
   style?: React.CSSProperties;
   className?: string;
+}
+
+function isNonEmptyString(value: string | undefined): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
 }
 
 export default function AdSense({
@@ -25,16 +29,13 @@ export default function AdSense({
 }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
   const initializedRef = useRef(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Solo montar en el cliente para evitar hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
-    // Solo inicializar una vez
-    if (initializedRef.current || !adRef.current || !mounted) {
+    if (!adRef.current || initializedRef.current) return;
+
+    const status = adRef.current.getAttribute('data-adsbygoogle-status');
+    if (status === 'done' || status === 'filled') {
+      initializedRef.current = true;
       return;
     }
 
@@ -162,26 +163,9 @@ export default function AdSense({
       } else {
         observer.observe(adRef.current);
       }
+      console.error('AdSense initialization error:', error);
     }
-    
-    return () => {
-      observer.disconnect();
-    };
-  }, [mounted]);
-
-  // No renderizar hasta que esté montado en el cliente
-  if (!mounted) {
-    return (
-      <div
-        className={className}
-        style={{
-          display: 'block',
-          minHeight: style?.minHeight || '250px',
-          ...style,
-        }}
-      />
-    );
-  }
+  }, []);
 
   return (
     <ins
@@ -199,16 +183,42 @@ export default function AdSense({
   );
 }
 
+const SLOT_HEADER = process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER;
+const SLOT_SIDEBAR = process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR;
+const SLOT_INCONTENT = process.env.NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT;
+const SLOT_LIST = process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST;
+
+function AdFallback({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
+  if (process.env.NODE_ENV === 'production') return null;
+
+  return (
+    <div
+      className={className}
+      style={{
+        display: 'block',
+        background: '#f5f5f5',
+        border: '1px dashed #d1d5db',
+        ...style,
+      }}
+    />
+  );
+}
+
 // Componente para banner horizontal (header/footer)
 export function AdBanner({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-4 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="horizontal"
-        fullWidthResponsive={true}
-        style={{ minHeight: '90px' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_HEADER) ? (
+        <AdSense
+          adSlot={SLOT_HEADER}
+          adFormat="horizontal"
+          fullWidthResponsive={true}
+          style={{ minHeight: '90px' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '90px' }} />
+      )}
     </div>
   );
 }
@@ -217,12 +227,17 @@ export function AdBanner({ className = '' }: { className?: string }) {
 export function AdSidebar({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-4 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="vertical"
-        fullWidthResponsive={true}
-        style={{ minHeight: '250px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_SIDEBAR) ? (
+        <AdSense
+          adSlot={SLOT_SIDEBAR}
+          adFormat="vertical"
+          fullWidthResponsive={true}
+          style={{ minHeight: '250px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '250px' }} />
+      )}
     </div>
   );
 }
@@ -231,12 +246,17 @@ export function AdSidebar({ className = '' }: { className?: string }) {
 export function AdInContent({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-8 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="auto"
-        fullWidthResponsive={true}
-        style={{ minHeight: '250px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_INCONTENT) ? (
+        <AdSense
+          adSlot={SLOT_INCONTENT}
+          adFormat="auto"
+          fullWidthResponsive={true}
+          style={{ minHeight: '250px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '250px' }} />
+      )}
     </div>
   );
 }
@@ -245,12 +265,17 @@ export function AdInContent({ className = '' }: { className?: string }) {
 export function AdList({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-6 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="rectangle"
-        fullWidthResponsive={true}
-        style={{ minHeight: '280px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_LIST) ? (
+        <AdSense
+          adSlot={SLOT_LIST}
+          adFormat="rectangle"
+          fullWidthResponsive={true}
+          style={{ minHeight: '280px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '280px' }} />
+      )}
     </div>
   );
 }

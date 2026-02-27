@@ -196,6 +196,20 @@ npm run prune-old-tractors -- --before-year 1995
 - Para guardar cambios reales añade `--apply`.
 - Guía completa: `docs/gestion-tractores-antiguos.md`.
 
+
+## 💰 Configuración de AdSense
+
+Para que los anuncios in-page se rendericen correctamente debes configurar slots reales:
+
+```env
+NEXT_PUBLIC_ADSENSE_SLOT_HEADER=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR=2345678901
+NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT=3456789012
+NEXT_PUBLIC_ADSENSE_SLOT_LIST=4567890123
+```
+
+Además, el archivo `public/ads.txt` ya incluye el publisher ID `ca-pub-1428727998918616`.
+
 ## 🚀 Despliegue
 
 El proyecto está listo para desplegar en:

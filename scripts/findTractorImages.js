@@ -5,11 +5,12 @@
  * 
  * Prioriza:
  * 1. Wikimedia Commons (vía API oficial: URLs directas + metadatos)
- * 2. (Opcional) Google Images con filtro Creative Commons (FRÁGIL)
- * 3. (Opcional) Sitios oficiales de fabricantes (NO recomendado por licencias)
+ * 2. Openverse API (solo CC/uso gratuito)
+ * 3. (Opcional) Google Images con filtro Creative Commons (FRÁGIL)
+ * 4. (Opcional) Sitios oficiales de fabricantes (NO recomendado por licencias)
  *
- * Nota: Por defecto este script usa SOLO Wikimedia Commons para maximizar fiabilidad
- * y evitar problemas de copyright / bloqueos.
+ * Nota: Por defecto este script usa SOLO fuentes de licencia libre
+ * (Wikimedia + Openverse) para maximizar fiabilidad y evitar copyright.
  */
 
 const fs = require('fs-extra');
@@ -39,7 +40,18 @@ const FREE_LICENSE_SITES = [
   'pexels.com',
   'unsplash.com',
   'pxhere.com',
+  'openverse.org',
 ];
+
+const OPENVERSE_ALLOWED_LICENSES = new Set([
+  'cc0',
+  'by',
+  'by-sa',
+  'by-nd',
+  'by-nc',
+  'by-nc-sa',
+  'by-nc-nd',
+]);
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -57,6 +69,7 @@ function parseArgs(argv) {
     onlyMissing: true,
     enableGoogle: false,
     enableBrandSites: false,
+    disableOpenverse: false,
     verbose: false,
   };
 
@@ -68,6 +81,7 @@ function parseArgs(argv) {
     else if (a === '--all') args.onlyMissing = false;
     else if (a === '--enable-google') args.enableGoogle = true;
     else if (a === '--enable-brand-sites') args.enableBrandSites = true;
+    else if (a === '--no-openverse') args.disableOpenverse = true;
     else if (a === '--verbose') args.verbose = true;
     else if (a === '--limit') args.limit = Number(rest[++i]);
     else if (a === '--start') {
@@ -81,8 +95,48 @@ function parseArgs(argv) {
   return args;
 }
 
+function sanitizeHtml(text) {
+  return String(text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
 function isNonEmptyString(v) {
   return typeof v === 'string' && v.trim() !== '' && v !== 'null' && v !== 'undefined';
+}
+
+function isAllowedOpenverseResult(item) {
+  const license = String(item?.license || '').toLowerCase();
+  const source = String(item?.source || '').toLowerCase();
+  const imageUrl = String(item?.url || '').toLowerCase();
+  const provider = String(item?.provider || '').toLowerCase();
+
+  if (!OPENVERSE_ALLOWED_LICENSES.has(license)) return false;
+  if (source === 'wordpress') return false;
+
+  // Evitar fuentes con copyright incierto cuando solo queremos bancos gratuitos/reutilizables.
+  const trustedProvider =
+    provider.includes('flickr') ||
+    provider.includes('wikimedia') ||
+    provider.includes('nasa') ||
+    provider.includes('smithsonian') ||
+    provider.includes('met museum') ||
+    provider.includes('europeana') ||
+    FREE_LICENSE_SITES.some(site => imageUrl.includes(site));
+
+  return trustedProvider;
+}
+
+function scoreOpenverseCandidate(item, brand, model) {
+  const title = sanitizeHtml(item?.title || '');
+  const desc = sanitizeHtml(item?.foreign_landing_url || '') + ' ' + sanitizeHtml(item?.creator || '');
+  let score = scoreCandidate({ title, description: desc }, brand, model);
+
+  if (score < 0) return score;
+
+  if ((item?.license || '').toLowerCase() === 'cc0') score += 5;
+  if (Number(item?.width || 0) >= 1000) score += 2;
+  if (Number(item?.height || 0) >= 700) score += 1;
+
+  return score;
 }
 
 function normalizeText(s) {
@@ -247,6 +301,54 @@ async function searchWikimediaCommons(brand, model, { verbose = false } = {}) {
 }
 
 /**
+ * Busca imagen en Openverse (API pública de contenido CC)
+ */
+async function searchOpenverse(brand, model, { verbose = false } = {}) {
+  const queries = buildWikimediaQueries(brand, model).slice(0, 3);
+
+  for (const q of queries) {
+    try {
+      const url =
+        'https://api.openverse.org/v1/images/' +
+        `?q=${encodeURIComponent(q)}` +
+        '&page_size=20' +
+        '&license_type=commercial';
+
+      if (verbose) console.log(`  🧠 Openverse API query: ${q}`);
+      const data = await fetchJson(url, { timeoutMs: 25000 });
+      const results = Array.isArray(data?.results) ? data.results : [];
+      if (!results.length) continue;
+
+      const candidates = results
+        .filter(isAllowedOpenverseResult)
+        .map((item) => ({
+          title: sanitizeHtml(item.title || ''),
+          description: sanitizeHtml(item.creator || ''),
+          url: item.url,
+          score: scoreOpenverseCandidate(item, brand, model),
+        }))
+        .filter((item) => isNonEmptyString(item.url));
+
+      if (!candidates.length) continue;
+
+      candidates.sort((a, b) => b.score - a.score);
+      const best = candidates[0];
+      if (best.score < 0) {
+        if (verbose) console.log(`  ⚠️  Openverse: candidatos pero score bajo (${best.score}).`);
+        continue;
+      }
+
+      if (verbose) console.log(`  ✅ Openverse: ${best.title || best.url} (score ${best.score})`);
+      return best.url;
+    } catch (e) {
+      if (verbose) console.log(`  ⚠️  Openverse API error: ${e.message}`);
+    }
+  }
+
+  return null;
+}
+
+/**
  * Busca una imagen en Google Images con filtro de licencia libre (Creative Commons)
  */
 async function searchGoogleImages(page, brand, model) {
@@ -386,19 +488,24 @@ async function searchBrandWebsite(page, brand, model) {
  * Función principal para buscar imagen de un tractor
  * Prioriza imágenes con licencia libre para evitar problemas de copyright
  */
-async function findTractorImage({ page, tractor, enableGoogle, enableBrandSites, verbose }) {
+async function findTractorImage({ page, tractor, enableGoogle, enableBrandSites, disableOpenverse, verbose }) {
   const { brand, model } = tractor;
   
   // 1. Primero intentar buscar en Wikimedia Commons (API oficial: más fiable)
   let imageUrl = await searchWikimediaCommons(brand, model, { verbose });
   
-  // 2. Si no encontramos, buscar en Google Images con filtro Creative Commons
+  // 2. Fallback en Openverse (CC / uso gratuito)
+  if (!imageUrl && !disableOpenverse) {
+    imageUrl = await searchOpenverse(brand, model, { verbose });
+  }
+
+  // 3. Si no encontramos, buscar en Google Images con filtro Creative Commons
   if (!imageUrl && enableGoogle && page) {
     console.log(`  🔍 Buscando en Google Images (Creative Commons)...`);
     imageUrl = await searchGoogleImages(page, brand, model);
   }
   
-  // 3. Como último recurso, buscar en sitio oficial del fabricante
+  // 4. Como último recurso, buscar en sitio oficial del fabricante
   // (uso informativo, generalmente permitido para fines educativos)
   // NOTA: Esto debe usarse con precaución y solo si no hay alternativas libres
   if (!imageUrl && enableBrandSites && page && BRAND_WEBSITES[brand]) {
@@ -457,7 +564,8 @@ async function main() {
   const args = parseArgs(process.argv);
 
   console.log('🚀 Iniciando búsqueda de imágenes de tractores...');
-  console.log('✅ Modo por defecto: SOLO Wikimedia Commons (API oficial)');
+  console.log('✅ Modo por defecto: Wikimedia Commons + Openverse (solo uso gratuito)');
+  if (args.disableOpenverse) console.log('⚠️  Openverse desactivado (--no-openverse)');
   if (args.enableGoogle) console.log('⚠️  Google Images activado (puede fallar/bloquearse)');
   if (args.enableBrandSites) console.log('⚠️  Webs de fabricantes activadas (revisar licencias)');
   console.log('⚠️  IMPORTANTE: se priorizan imágenes libres para evitar problemas de copyright\n');
@@ -551,6 +659,7 @@ async function main() {
         tractor,
         enableGoogle: args.enableGoogle,
         enableBrandSites: args.enableBrandSites,
+        disableOpenverse: args.disableOpenverse,
         verbose: args.verbose,
       });
 
