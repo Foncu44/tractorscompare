@@ -165,7 +165,6 @@ export default function AdSense({
       } else {
         observer.observe(adRef.current);
       }
-      console.error('AdSense initialization error:', error);
     }
   }, []);
 
