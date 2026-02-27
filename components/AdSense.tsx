@@ -1,19 +1,23 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: any[] | { loaded?: boolean; push: (ad: any) => void };
+    adsbygoogle?: Array<Record<string, unknown>>;
   }
 }
 
 interface AdSenseProps {
-  adSlot?: string;
+  adSlot: string;
   adFormat?: 'auto' | 'rectangle' | 'vertical' | 'horizontal';
   fullWidthResponsive?: boolean;
   style?: React.CSSProperties;
   className?: string;
+}
+
+function isNonEmptyString(value: string | undefined): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
 }
 
 export default function AdSense({
@@ -25,190 +29,28 @@ export default function AdSense({
 }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
   const initializedRef = useRef(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Solo montar en el cliente para evitar hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
-    // Solo inicializar una vez
-    if (initializedRef.current || !adRef.current || !mounted) {
+    if (!adRef.current || initializedRef.current) return;
+
+    const status = adRef.current.getAttribute('data-adsbygoogle-status');
+    if (status === 'done' || status === 'filled') {
+      initializedRef.current = true;
       return;
     }
 
-    // Función para cargar el script de AdSense dinámicamente
-    const loadAdSenseScript = () => {
-      if (document.querySelector('script[src*="adsbygoogle.js"]')) {
-        return; // Ya está cargado
-      }
-      
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616';
-      script.crossOrigin = 'anonymous';
-      script.defer = true;
-      document.head.appendChild(script);
-    };
-
-    // Función para verificar si el script de AdSense está cargado
-    const isAdSenseLoaded = () => {
-      return typeof window !== 'undefined' && 
-             window.adsbygoogle && 
-             (Array.isArray(window.adsbygoogle) || typeof window.adsbygoogle.push === 'function');
-    };
-
-    // Función para inicializar el anuncio
-    const initializeAd = () => {
-      if (!adRef.current) return;
-
-      try {
-        // Verificar si el elemento ya tiene el atributo que indica que fue inicializado
-        const status = adRef.current.getAttribute('data-adsbygoogle-status');
-        if (status === 'done' || status === 'filled') {
-          initializedRef.current = true;
-          return;
-        }
-
-        // Verificar si ya tiene un anuncio asociado
-        if (status) {
-          initializedRef.current = true;
-          return;
-        }
-
-        // Asegurar que adsbygoogle esté disponible
-        if (!isAdSenseLoaded()) {
-          // Esperar más tiempo y reintentar
-          let retries = 0;
-          const maxRetries = 50; // 5 segundos máximo
-          
-          const checkAndRetry = () => {
-            if (retries >= maxRetries) {
-              console.warn('AdSense script not loaded after maximum retries');
-              return;
-            }
-            
-            if (isAdSenseLoaded()) {
-              initializeAd();
-            } else {
-              retries++;
-              setTimeout(checkAndRetry, 100);
-            }
-          };
-          
-          setTimeout(checkAndRetry, 100);
-          return;
-        }
-
-        // Inicializar adsbygoogle si no existe como array
-        if (!Array.isArray(window.adsbygoogle)) {
-          window.adsbygoogle = [];
-        }
-        
-        // Inicializar el anuncio usando el método correcto de AdSense
-        try {
-          // Después de verificar/crear el array, siempre será un array
-          const adsbygoogle = window.adsbygoogle as any[];
-          adsbygoogle.push({});
-          
-          // Forzar la inicialización si es necesario
-          if (typeof (window as any).adsbygoogle?.loaded === 'undefined') {
-            (window as any).adsbygoogle.loaded = true;
-          }
-        } catch (pushError) {
-          // Si push falla, intentar inicialización manual
-          if (adRef.current && typeof (window as any).adsbygoogle?.requestNonPersonalizedAds === 'function') {
-            (window as any).adsbygoogle.requestNonPersonalizedAds = 1;
-          }
-        }
-        
+    try {
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      initializedRef.current = true;
+    } catch (error) {
+      // Evitar ruido por llamadas duplicadas de AdSense
+      if (error instanceof Error && error.message.toLowerCase().includes('already')) {
         initializedRef.current = true;
-      } catch (err) {
-        // Ignorar errores de múltiples inicializaciones
-        if (err instanceof Error && (
-          err.message.includes('already have ads') || 
-          err.message.includes('adsbygoogle') ||
-          err.message.includes('duplicate')
-        )) {
-          initializedRef.current = true;
-          return;
-        }
-        // Solo loggear errores críticos
-        if (err instanceof Error && !err.message.includes('adsbygoogle')) {
-          console.error('AdSense error:', err);
-        }
+        return;
       }
-    };
-
-    // Usar Intersection Observer para cargar ads solo cuando sean visibles
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !initializedRef.current) {
-            // Cargar el script de AdSense solo cuando el anuncio es visible
-            loadAdSenseScript();
-            // Esperar a que el script se cargue antes de inicializar
-            const checkScript = setInterval(() => {
-              if (isAdSenseLoaded()) {
-                clearInterval(checkScript);
-                initializeAd();
-              }
-            }, 100);
-            
-            // Timeout de seguridad
-            setTimeout(() => clearInterval(checkScript), 5000);
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        rootMargin: '50px', // Cargar 50px antes de que sea visible
-        threshold: 0.01,
-      }
-    );
-
-    // Si el anuncio ya es visible, inicializar inmediatamente
-    // De lo contrario, el Intersection Observer lo hará
-    if (adRef.current) {
-      const rect = adRef.current.getBoundingClientRect();
-      const isVisible = rect.top < window.innerHeight + 50 && rect.bottom > -50;
-      
-      if (isVisible) {
-        loadAdSenseScript();
-        // Esperar a que el script se cargue antes de inicializar
-        const checkScript = setInterval(() => {
-          if (isAdSenseLoaded()) {
-            clearInterval(checkScript);
-            initializeAd();
-          }
-        }, 100);
-        
-        // Timeout de seguridad
-        setTimeout(() => clearInterval(checkScript), 5000);
-      } else {
-        observer.observe(adRef.current);
-      }
+      console.error('AdSense initialization error:', error);
     }
-    
-    return () => {
-      observer.disconnect();
-    };
-  }, [mounted]);
-
-  // No renderizar hasta que esté montado en el cliente
-  if (!mounted) {
-    return (
-      <div
-        className={className}
-        style={{
-          display: 'block',
-          minHeight: style?.minHeight || '250px',
-          ...style,
-        }}
-      />
-    );
-  }
+  }, []);
 
   return (
     <ins
@@ -226,16 +68,42 @@ export default function AdSense({
   );
 }
 
+const SLOT_HEADER = process.env.NEXT_PUBLIC_ADSENSE_SLOT_HEADER;
+const SLOT_SIDEBAR = process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR;
+const SLOT_INCONTENT = process.env.NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT;
+const SLOT_LIST = process.env.NEXT_PUBLIC_ADSENSE_SLOT_LIST;
+
+function AdFallback({ className = '', style }: { className?: string; style?: React.CSSProperties }) {
+  if (process.env.NODE_ENV === 'production') return null;
+
+  return (
+    <div
+      className={className}
+      style={{
+        display: 'block',
+        background: '#f5f5f5',
+        border: '1px dashed #d1d5db',
+        ...style,
+      }}
+    />
+  );
+}
+
 // Componente para banner horizontal (header/footer)
 export function AdBanner({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-4 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="horizontal"
-        fullWidthResponsive={true}
-        style={{ minHeight: '90px' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_HEADER) ? (
+        <AdSense
+          adSlot={SLOT_HEADER}
+          adFormat="horizontal"
+          fullWidthResponsive={true}
+          style={{ minHeight: '90px' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '90px' }} />
+      )}
     </div>
   );
 }
@@ -244,12 +112,17 @@ export function AdBanner({ className = '' }: { className?: string }) {
 export function AdSidebar({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-4 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="vertical"
-        fullWidthResponsive={true}
-        style={{ minHeight: '250px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_SIDEBAR) ? (
+        <AdSense
+          adSlot={SLOT_SIDEBAR}
+          adFormat="vertical"
+          fullWidthResponsive={true}
+          style={{ minHeight: '250px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '250px' }} />
+      )}
     </div>
   );
 }
@@ -258,12 +131,17 @@ export function AdSidebar({ className = '' }: { className?: string }) {
 export function AdInContent({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-8 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="auto"
-        fullWidthResponsive={true}
-        style={{ minHeight: '250px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_INCONTENT) ? (
+        <AdSense
+          adSlot={SLOT_INCONTENT}
+          adFormat="auto"
+          fullWidthResponsive={true}
+          style={{ minHeight: '250px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '250px' }} />
+      )}
     </div>
   );
 }
@@ -272,12 +150,17 @@ export function AdInContent({ className = '' }: { className?: string }) {
 export function AdList({ className = '' }: { className?: string }) {
   return (
     <div className={`w-full my-6 flex justify-center ${className}`}>
-      <AdSense
-        adFormat="rectangle"
-        fullWidthResponsive={true}
-        style={{ minHeight: '280px', width: '100%' }}
-        className="w-full"
-      />
+      {isNonEmptyString(SLOT_LIST) ? (
+        <AdSense
+          adSlot={SLOT_LIST}
+          adFormat="rectangle"
+          fullWidthResponsive={true}
+          style={{ minHeight: '280px', width: '100%' }}
+          className="w-full"
+        />
+      ) : (
+        <AdFallback className="w-full" style={{ minHeight: '280px' }} />
+      )}
     </div>
   );
 }
