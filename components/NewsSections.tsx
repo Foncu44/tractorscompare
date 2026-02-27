@@ -44,12 +44,13 @@ function formatDateEn(publishedAtISO: string): string {
 export default function NewsSections({ items, showAll = false }: { items: NewsItem[]; showAll?: boolean }) {
   const [active, setActive] = useState<NewsCategory>('all');
   const [currentPage, setCurrentPage] = useState(0);
+  // Avoid Date.now() during initial render to prevent hydration mismatch (React #418).
+  const [recentItems, setRecentItems] = useState<NewsItem[]>(() => (items || []).slice(0, 20));
 
-  // Client-side filter: even with static export, hide items older than 3 months.
-  const recentItems = useMemo(() => {
+  useEffect(() => {
     const filtered = (items || []).filter((i) => isWithinLastMonths(i.publishedAt, 3));
     filtered.sort((a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt));
-    return filtered;
+    setRecentItems(filtered);
   }, [items]);
 
   const sectorItems = useMemo(() => {

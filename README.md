@@ -234,9 +234,30 @@ Cuando el sitio se embebe en el iframe del preview de AdSense, el error boundary
 2. **Reproduce**: abre el preview de AdSense (el sitio se carga dentro de un iframe).
 3. **Abre DevTools**: abre la consola del navegador (contexto del iframe donde se carga tu sitio o la ventana del preview).
 4. **Busca los logs**:
-   - **`[TC ERROR BOUNDARY]`** — error que disparó `app/error.tsx`: incluye `message`, `stack`, `digest`, `href`, `ua`. Es la excepción real que provocó el fallo.
-   - **`[TC CLIENT ERROR]`** — errores capturados por `window.onerror` o `unhandledrejection` (solo si `NEXT_PUBLIC_DEBUG_ERRORS=true`), con `href` y `stack`.
-5. **Corrige la causa**: usa el `message` y `stack` del log para localizar el código que falla (p. ej. acceso a `window.top`, `localStorage`/`sessionStorage` en iframe). En este proyecto, GTM/GA y Vercel Analytics se desactivan automáticamente dentro de iframes; para nuevo código que use `localStorage`/`sessionStorage` o `window.top`, usa `src/lib/safeStorage.ts` y `src/lib/isInIframe.ts`.
+   - **`[TC ERROR BOUNDARY]`** — error que disparó `app/error.tsx`: incluye `message`, `stack`, `digest`, `href`, `referrer`, `ua`. Es la excepción real que provocó el fallo.
+   - **`[TC CLIENT ERROR]`** — errores capturados por `window.onerror` o `unhandledrejection` (solo si `NEXT_PUBLIC_DEBUG_ERRORS=true`), con `href`, `referrer` y `stack`.
+5. **Corrige la causa**: usa el `message` y `stack` del log para localizar el código que falla (p. ej. acceso a `window.top`, `localStorage`/`sessionStorage` en iframe). En este proyecto, GTM/GA y Vercel Analytics se desactivan en modo AdSense preview (`src/lib/runtimeEnv.ts`: `isAdSensePreview()`); para nuevo código que use storage o `window.top`, usa `src/lib/safeStorage.ts` y `src/lib/runtimeEnv.ts`.
+
+### Verificación del preview de AdSense (checklist)
+
+1. **Despliegue para pruebas**
+   - En Vercel (Preview o Production) configura `NEXT_PUBLIC_DEBUG_ERRORS=true`.
+   - Despliega y espera a que el build termine.
+
+2. **Validar carga normal**
+   - Abre la URL del sitio en una pestaña normal (no en el preview de AdSense).
+   - Comprueba que la página carga sin errores y que los anuncios (si aplica) y la navegación funcionan.
+
+3. **Validar preview de AdSense**
+   - En la consola de AdSense, abre el “site preview” de tu sitio.
+   - El preview debe cargar sin mensaje “Application error: a client-side exception has occurred” ni pantalla “Something went wrong”.
+   - En DevTools (consola del iframe donde se carga tu sitio) no debe aparecer bloqueo de `fundingchoicesmessages.google.com` ni de `www.gstatic.com` (translate). Si la CSP está bien configurada, no deberían verse esos bloqueos.
+
+4. **Troubleshooting**
+   - Si el preview sigue fallando: revisa los logs `[TC ERROR BOUNDARY]` y `[TC CLIENT ERROR]` en la consola del iframe.
+   - Si ves React error #418: suele ser hidratación (contenido distinto en servidor y cliente). Revisa uso de `Date.now()`, `Math.random()`, `new Date()` o acceso a `window`/`document` durante el render.
+   - Si ves bloqueos CSP: revisa `next.config.js` → `headers` → `Content-Security-Policy` e incluye los dominios que indica la consola (p. ej. `fundingchoicesmessages.google.com`, `www.gstatic.com`, `*.googleusercontent.com`).
+   - Si el sitio normal deja de cargar: revierte los cambios recientes o desactiva temporalmente el “AdSense preview safe mode” (los scripts que dependen de `isAdSensePreview()` en `AnalyticsScripts` y `VercelAnalyticsSafe`).
 
 ## 📄 Licencia
 

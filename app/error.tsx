@@ -11,12 +11,14 @@ export default function Error({
 }) {
   useEffect(() => {
     const href = typeof window !== 'undefined' ? window.location.href : '';
+    const referrer = typeof document !== 'undefined' ? document.referrer || '' : '';
     const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
     console.error('[TC ERROR BOUNDARY]', {
       message: error.message,
       stack: error.stack,
       digest: error.digest,
       href,
+      referrer,
       ua,
     });
   }, [error]);

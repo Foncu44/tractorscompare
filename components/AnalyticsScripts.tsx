@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { isInIframe } from '@/src/lib/isInIframe';
+import { isAdSensePreview } from '@/src/lib/runtimeEnv';
 
 /**
- * Loads GTM/GA only when NOT inside an iframe (e.g. AdSense preview).
- * Inside iframes these scripts can throw; we skip them to avoid client-side exceptions.
+ * Loads GTM/GA only when NOT in AdSense preview (iframe + google referrer).
+ * In preview, these scripts can throw; we skip them to avoid client-side exceptions.
  */
 export default function AnalyticsScripts() {
   const [allowAnalytics, setAllowAnalytics] = useState(false);
 
   useEffect(() => {
-    setAllowAnalytics(!isInIframe());
+    setAllowAnalytics(!isAdSensePreview());
   }, []);
 
   if (!allowAnalytics) return null;

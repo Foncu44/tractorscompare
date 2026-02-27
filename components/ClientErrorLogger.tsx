@@ -14,17 +14,18 @@ export default function ClientErrorLogger() {
     if (process.env.NEXT_PUBLIC_DEBUG_ERRORS !== 'true') return;
 
     const href = typeof window !== 'undefined' ? window.location.href : '';
+    const referrer = typeof document !== 'undefined' ? document.referrer || '' : '';
     const ua = typeof navigator !== 'undefined' ? navigator.userAgent : '';
 
     const onError = (event: ErrorEvent) => {
       const stack = event.error?.stack ?? event.error ?? '';
-      console.error(PREFIX, 'window.onerror', { message: event.message, filename: event.filename, lineno: event.lineno, colno: event.colno, stack, href, ua });
+      console.error(PREFIX, 'window.onerror', { message: event.message, filename: event.filename, lineno: event.lineno, colno: event.colno, stack, href, referrer, ua });
     };
 
     const onUnhandledRejection = (event: PromiseRejectionEvent) => {
       const reason = event.reason;
       const stack = reason?.stack ?? (reason instanceof Error ? reason.stack : '');
-      console.error(PREFIX, 'unhandledrejection', { reason, stack: stack || String(reason), href, ua });
+      console.error(PREFIX, 'unhandledrejection', { reason, stack: stack || String(reason), href, referrer, ua });
     };
 
     window.addEventListener('error', onError);
