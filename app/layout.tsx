@@ -101,12 +101,13 @@ export default function RootLayout({
         {/* AdSense - load directly from Google; only in production. Kept here so it runs in iframe (preview). */}
         {process.env.NODE_ENV === 'production' && (
           <Script
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
-            strategy="afterInteractive"
             id="adsense"
             strategy="afterInteractive"
             async
-            src={'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + (process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616')}
+            src={
+              'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
+              (process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616')
+            }
             crossOrigin="anonymous"
           />
         )}
