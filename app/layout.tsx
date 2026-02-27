@@ -3,6 +3,9 @@ import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ClientErrorLogger from '@/components/ClientErrorLogger';
+import AnalyticsScripts from '@/components/AnalyticsScripts';
+import VercelAnalyticsSafe from '@/components/VercelAnalyticsSafe';
 
 export const metadata: Metadata = {
   title: {
@@ -94,41 +97,23 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://commons.wikimedia.org" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* Google Analytics - Carga diferida después de interacción del usuario */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-5WVZHK0232"
-          strategy="lazyOnload"
-        />
-        <Script id="google-analytics" strategy="lazyOnload">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-5WVZHK0232', {
-              'send_page_view': false
-            });
-            // Enviar pageview solo después de interacción del usuario
-            if (typeof window !== 'undefined') {
-              ['mousedown', 'touchstart', 'keydown'].forEach(function(event) {
-                document.addEventListener(event, function() {
-                  gtag('config', 'G-5WVZHK0232', {
-                    'send_page_view': true
-                  });
-                }, { once: true });
-              });
-            }
-          `}
-        </Script>
-        {/* AdSense - solo en producción para evitar CORS en localhost */}
+        {/* Iframe-safe: GTM/GA and Vercel Analytics load only when NOT in iframe (see AnalyticsScripts + VercelAnalyticsSafe). AdSense script always loads in production so preview works. */}
+        {/* AdSense - load directly from Google; only in production. Kept here so it runs in iframe (preview). */}
         {process.env.NODE_ENV === 'production' && (
           <Script
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
             strategy="afterInteractive"
+            id="adsense"
+            strategy="afterInteractive"
+            async
+            src={'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + (process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616')}
             crossOrigin="anonymous"
           />
         )}
       </head>
       <body className="font-serif overflow-x-hidden" suppressHydrationWarning>
+        <ClientErrorLogger />
+        <AnalyticsScripts />
         {/* JSON-LD - suppressHydrationWarning evita el warning de hidratación */}
         <script
           type="application/ld+json"
@@ -163,6 +148,7 @@ export default function RootLayout({
         <Header />
         <main className="min-h-screen">{children}</main>
         <Footer />
+        <VercelAnalyticsSafe />
       </body>
     </html>
   );

@@ -88,6 +88,18 @@ export interface ProductionYears {
   end?: number; // Production end year
 }
 
+/** Free-to-use image with attribution (e.g. from Wikimedia Commons). */
+export interface TractorImage {
+  url: string;
+  source: 'wikimedia';
+  sourcePageUrl: string;
+  author: string;
+  license: string;
+  licenseUrl: string;
+  attributionHtml: string;
+  matchConfidence?: 'high' | 'medium' | 'low';
+}
+
 export interface Tractor {
   id: string;
   brand: string;
@@ -97,6 +109,8 @@ export interface Tractor {
   type: TractorType;
   category?: string;
   imageUrl?: string;
+  /** Structured image + attribution (e.g. from Wikimedia pipeline). */
+  image?: TractorImage;
   brandWebsite?: string; // Sitio oficial del fabricante (si está disponible)
   
   // Specifications

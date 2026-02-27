@@ -108,7 +108,9 @@ export default function UsedListingsInternational({
     };
   }, [query, brandName, modelName]);
 
-  const displayItems = items ?? [];
+  const displayItems = (items ?? []).filter(
+    (item) => !/facebook/i.test(item.marketplaceId || '') && !/facebook/i.test(item.marketplaceName || '')
+  );
 
   if (loading && displayItems.length === 0) {
     return (
@@ -135,19 +137,19 @@ export default function UsedListingsInternational({
     const searchLinks = buildMarketplaceLinks(input);
 
     return (
-      <section className="mt-10 md:mt-12 pt-8 border-t border-gray-200" aria-labelledby="used-listings-heading">
-        <h2 id="used-listings-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
-          Find Used Listings (International)
+      <section className="mt-8 md:mt-10 pt-6 border-t border-gray-200" aria-labelledby="used-listings-heading">
+        <h2 id="used-listings-heading" className="text-base font-semibold text-gray-800 mb-2">
+          Used listings
         </h2>
-        <p className="text-sm text-gray-600 mb-3">
-          Search used listings on{' '}
+        <p className="text-sm text-gray-600">
+          Search on{' '}
           {searchLinks.map((link, i) => (
             <span key={link.marketplaceId}>
               <a
                 href={link.url}
                 target="_blank"
                 rel="nofollow sponsored noopener noreferrer"
-                className="text-primary-600 hover:underline font-medium"
+                className="text-primary-600 hover:underline"
               >
                 {getMarketplaceById(link.marketplaceId)?.name ?? link.marketplaceId}
               </a>

@@ -1,17 +1,36 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { brandToSlug, getTractorBySlug, tractors } from '@/data/tractors';
-import { Tractor, Calendar, Weight, Gauge, Settings, Zap, ArrowLeft, GitCompare, Fuel, Cog, DollarSign } from 'lucide-react';
+import { ArrowLeft, GitCompare } from 'lucide-react';
 import type { Metadata } from 'next';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
 import { AdSidebar } from '@/components/AdSense';
 import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 import SEOContentSection from '@/components/SEOContentSection';
-import TractorSuitabilitySection from '@/components/TractorSuitabilitySection';
 import UsedListingsInternational from '@/components/UsedListingsInternational';
-import UsedPriceEstimateBox from '@/components/UsedPriceEstimateBox';
 import { specsFromTractor, computeSuitability } from '@/lib/tractorSuitability';
 import { buildPerformanceProfile } from '@/lib/tractorIntelligence/profile';
+import { buildTractorNarrative } from '@/lib/tractorNarrative';
+import { estimateUsedPrice } from '@/lib/usedPriceEstimate';
+import { narrativesMap } from '@/data/narratives-map';
+import {
+  buildTractorInsights,
+  buildTabMeaningNotes,
+  buildFaqs,
+  getSimilarTractors,
+  getHpBandHubSlug,
+  getBestForSubheading,
+} from '@/lib/tractorPageContent';
+import { getBestCategoryConfig } from '@/lib/tractorIntelligence/seo/bestCategory';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import QuickFactsGrid from '@/components/QuickFactsGrid';
+import TractorFitPanel from '@/components/TractorFitPanel';
+import RealWorldInsights from '@/components/RealWorldInsights';
+import UsedMarketInsights from '@/components/UsedMarketInsights';
+import SimilarTractors from '@/components/SimilarTractors';
+import TractorFaq from '@/components/TractorFaq';
+import DataSourcesLinks from '@/components/DataSourcesLinks';
+import { getTractorImage } from '@/lib/tractorImages';
 
 interface TractorDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -141,10 +160,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ...targetKeywords,
   ].filter(Boolean) as string[];
 
-  // Título optimizado para tractores objetivo
-  const optimizedTitle = targetKeywords.length > 0 
-    ? `${fullName}${yearText} Specs - ${targetKeywords[0]} | TractorsCompare`
-    : `${fullName}${yearText} – Technical Specifications | TractorsCompare`;
+  const optimizedTitle = `${fullName}${yearText}: Specs, TractorFit™ Analysis & Used Price Guide | TractorsCompare`;
 
   return {
     title: optimizedTitle,
@@ -195,7 +211,56 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   const specs = specsFromTractor(tractor);
   const suitabilityResult = computeSuitability(specs, fullName);
   const profile = buildPerformanceProfile(tractor.id, fullName, specs, suitabilityResult);
-  
+
+  const usedEstimate = estimateUsedPrice({
+    category: tractor.type === 'farm' ? 'Farm' : tractor.type === 'lawn' ? 'Lawn' : 'Industrial',
+    powerHP: tractor.engine.powerHP,
+    priceMin: tractor.priceRange?.min ?? null,
+    priceMax: tractor.priceRange?.max ?? null,
+  });
+
+  const narrative =
+    narrativesMap[tractor.slug] ??
+    buildTractorNarrative({
+      fullName,
+      brandName: tractor.brand,
+      modelName: tractor.model,
+      category: tractor.type,
+      hp: tractor.engine.powerHP,
+      ptoHP: tractor.ptoHP ?? null,
+      ptoRPM: tractor.ptoRPM ?? null,
+      weightKg: tractor.weight ?? null,
+      fuelType: tractor.engine.fuelType ?? null,
+      cooling: tractor.engine.cooling ?? null,
+      transmissionType: tractor.transmission?.type ?? null,
+      priceMin: tractor.priceRange?.min ?? null,
+      priceMax: tractor.priceRange?.max ?? null,
+      usedMin: usedEstimate?.usedMin ?? null,
+      usedMax: usedEstimate?.usedMax ?? null,
+      suitability: {
+        overallScore: suitabilityResult.overallScore,
+        loaderWork: suitabilityResult.loaderScore,
+        fuelEfficiency: suitabilityResult.fuelEfficiency,
+        maintenance: suitabilityResult.maintenanceComplexity,
+        versatility: suitabilityResult.versatilityIndex,
+        costTier: suitabilityResult.costTier,
+      },
+    });
+
+  const insights = buildTractorInsights(narrative);
+  const tabMeaningNotes = buildTabMeaningNotes(tractor);
+  const faqs = buildFaqs(tractor, suitabilityResult, usedEstimate, narrative);
+  const similarTractors = getSimilarTractors(tractor, tractors, 6);
+  const hpBandSlug = getHpBandHubSlug(tractor.engine.powerHP ?? 0);
+  const hubLinks = hpBandSlug
+    ? [{ href: `/best/${hpBandSlug}`, label: getBestCategoryConfig(hpBandSlug)?.title ?? `Best tractors ${tractor.engine.powerHP && tractor.engine.powerHP < 50 ? 'under 50 HP' : 'for your size'}` }, { href: '/best/small-farm-tractors', label: 'Best small farm tractors' }, { href: '/best/loader-tractors', label: 'Best tractors for loader work' }]
+    : [{ href: '/best/small-farm-tractors', label: 'Best small farm tractors' }, { href: '/best/loader-tractors', label: 'Best tractors for loader work' }];
+  const bestForLabels = getBestForSubheading(suitabilityResult);
+  const subheadingParts = [typeLabel, tractor.engine.powerHP ? `${tractor.engine.powerHP} HP` : null, bestForLabels.length ? `Best for ${bestForLabels.join(' and ')}` : null].filter(Boolean);
+
+  const tractorImage = tractor.image ?? getTractorImage(tractor.slug);
+  const displayImageUrl = tractorImage?.url ?? tractor.imageUrl;
+
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -279,54 +344,28 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
       />
 
       <div className="min-h-screen">
-        {/* Breadcrumb */}
-        <div className="bg-gray-100/60 border-b border-gray-200">
-          <div className="container-custom py-3 md:py-4">
-            <nav className="text-xs md:text-sm text-gray-600 break-words" aria-label="Breadcrumb">
-              <Link href="/" className="hover:text-primary-700">Home</Link>
-              {' / '}
-              <Link href="/tractores" className="hover:text-primary-700">Tractors</Link>
-              {' / '}
-              <span className="text-gray-900">{tractor.brand} {tractor.model}</span>
-            </nav>
+        <Breadcrumbs
+          brandName={tractor.brand}
+          brandSlug={brandToSlug(tractor.brand)}
+          modelName={tractor.model}
+          tractorSlug={tractor.slug}
+          currentLabel={fullName + (tractor.productionYears ? ` (${tractor.productionYears.start}${tractor.productionYears.end && tractor.productionYears.end !== tractor.productionYears.start ? `-${tractor.productionYears.end}` : ''})` : tractor.year ? ` ${tractor.year}` : '')}
+        />
 
-            {/* Structured Data for Breadcrumb */}
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  '@context': 'https://schema.org',
-                  '@type': 'BreadcrumbList',
-                  itemListElement: [
-                    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tractorscompare.com' },
-                    { '@type': 'ListItem', position: 2, name: 'Tractor Data', item: 'https://tractorscompare.com/tractores' },
-                    { '@type': 'ListItem', position: 3, name: `${tractor.brand} ${tractor.model}`, item: `https://tractorscompare.com/tractores/${tractor.slug}` },
-                  ],
-                }),
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Hero */}
         <section className="bg-gradient-to-b from-primary-50 to-gray-50 py-6 md:py-8 lg:py-12">
           <div className="container-custom">
-            <Link
-              href="/marcas"
-              className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-700 mb-4 md:mb-6 transition-colors text-sm md:text-base"
-            >
+            <Link href="/marcas" className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-700 mb-4 md:mb-6 transition-colors text-sm md:text-base">
               <ArrowLeft className="h-4 w-4" />
               <span>Back to brands</span>
             </Link>
 
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-              {/* Image */}
               <div className="relative">
-                <div className="aspect-[4/3] md:aspect-[4/3] max-h-[280px] md:max-h-none rounded-2xl overflow-hidden bg-white border border-gray-200 flex items-center justify-center">
+                <div className="aspect-[4/3] max-h-[280px] md:max-h-none rounded-2xl overflow-hidden bg-white border border-gray-200 flex items-center justify-center">
                   <TractorImagePlaceholder
                     brand={tractor.brand}
                     model={tractor.model}
-                    imageUrl={tractor.imageUrl}
+                    imageUrl={displayImageUrl}
                     width={800}
                     height={600}
                     className="w-full h-full"
@@ -335,103 +374,37 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                 <span className="absolute top-2 left-2 md:top-4 md:left-4 inline-flex items-center rounded-full bg-primary-700 text-white px-2 md:px-3 py-1 text-xs font-semibold z-10">
                   {tractor.category || typeLabel}
                 </span>
+                {tractorImage && (
+                  <p className="mt-2 text-xs text-gray-500 [&_a]:text-primary-600 [&_a]:hover:underline" dangerouslySetInnerHTML={{ __html: tractorImage.attributionHtml }} />
+                )}
               </div>
 
-              {/* Info */}
               <div className="flex flex-col justify-center">
-                <div className="mb-2">
-                  <Link
-                    href={`/marcas/${brandToSlug(tractor.brand)}`}
-                    className="text-primary-700 hover:text-primary-800 font-semibold"
-                  >
-                    {tractor.brand}
-                  </Link>
-                </div>
-
-                <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 md:mb-4 break-words">
-                  {tractor.brand} {tractor.model}
-                  {tractor.productionYears 
-                    ? ` (${tractor.productionYears.start}${tractor.productionYears.end && tractor.productionYears.end !== tractor.productionYears.start ? `-${tractor.productionYears.end}` : ''})`
-                    : tractor.year ? ` ${tractor.year}` : ''} Specifications
+                <Link href={`/marcas/${brandToSlug(tractor.brand)}`} className="text-primary-700 hover:text-primary-800 font-semibold mb-2 inline-block">
+                  {tractor.brand}
+                </Link>
+                <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
+                  {fullName}: Specs, TractorFit™ Analysis & Used Price Guide
                 </h1>
-
-                {tractor.description && (
-                  <p className="text-gray-700 text-sm md:text-base lg:text-lg mb-4 md:mb-6 leading-relaxed break-words">
-                    {tractor.description}
+                {subheadingParts.length > 0 && (
+                  <p className="text-sm md:text-base text-gray-600 mb-4">
+                    {subheadingParts.join(' · ')}
                   </p>
                 )}
-
-                <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-gray-900">Engine Features</h2>
-                <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4 mb-6 md:mb-8">
-                  <div className="flex items-center gap-2 md:gap-3 bg-white rounded-lg p-3 md:p-4 border border-gray-200 min-w-0">
-                    <Zap className="h-4 w-4 md:h-5 md:w-5 text-primary-700 flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs md:text-sm text-gray-600">Power</p>
-                      <p className="font-semibold text-gray-900 text-sm md:text-base break-words">{tractor.engine.powerHP} HP</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 md:gap-3 bg-white rounded-lg p-3 md:p-4 border border-gray-200 min-w-0">
-                    <Calendar className="h-4 w-4 md:h-5 md:w-5 text-primary-700 flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs md:text-sm text-gray-600">Production Years</p>
-                      <p className="font-semibold text-gray-900 text-sm md:text-base break-words">
-                        {tractor.productionYears 
-                          ? `${tractor.productionYears.start}${tractor.productionYears.end && tractor.productionYears.end !== tractor.productionYears.start ? `-${tractor.productionYears.end}` : ''}`
-                          : tractor.year || '—'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 md:gap-3 bg-white rounded-lg p-3 md:p-4 border border-gray-200 min-w-0">
-                    <Fuel className="h-4 w-4 md:h-5 md:w-5 text-primary-700 flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs md:text-sm text-gray-600">Fuel</p>
-                      <p className="font-semibold text-gray-900 text-sm md:text-base capitalize break-words">{tractor.engine.fuelType}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 md:gap-3 bg-white rounded-lg p-3 md:p-4 border border-gray-200 min-w-0">
-                    <Cog className="h-4 w-4 md:h-5 md:w-5 text-primary-700 flex-shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-xs md:text-sm text-gray-600">Transmission</p>
-                      <p className="font-semibold text-gray-900 text-sm md:text-base capitalize break-words">{tractor.transmission.type}</p>
-                    </div>
-                  </div>
-
-                  {tractor.priceRange && (tractor.priceRange.min || tractor.priceRange.max) && (
-                    <div className="col-span-2 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl p-4 md:p-6 border-2 border-primary-200">
-                      <div className="flex items-center gap-2 md:gap-3 mb-2">
-                        <DollarSign className="h-5 w-5 md:h-6 md:w-6 text-primary-700 flex-shrink-0" />
-                        <p className="text-xs md:text-sm text-gray-600 font-medium">Estimated Price Range</p>
-                      </div>
-                      <p className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 break-words">
-                        {tractor.priceRange.min && tractor.priceRange.max ? (
-                          <>
-                            ${tractor.priceRange.min.toLocaleString()} - ${tractor.priceRange.max.toLocaleString()}
-                          </>
-                        ) : tractor.priceRange.min ? (
-                          <>From ${tractor.priceRange.min.toLocaleString()}</>
-                        ) : tractor.priceRange.max ? (
-                          <>Up to ${tractor.priceRange.max.toLocaleString()}</>
-                        ) : null}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">USD • Estimated market value</p>
-                    </div>
-                  )}
-
-                  {tractor.weight && (
-                    <div className="col-span-2 bg-white rounded-xl p-4 md:p-6 border border-gray-200">
-                      <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Weight and Dimensions</h3>
-                      <p className="text-xs md:text-sm text-gray-600 mb-1">Weight</p>
-                      <p className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 break-words">
-                        {tractor.weight.toLocaleString()} kg ({Math.round(tractor.weight / 1000)} tons)
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <QuickFactsGrid
+                  powerHP={tractor.engine.powerHP}
+                  powerKW={tractor.engine.powerKW}
+                  fuelType={tractor.engine.fuelType}
+                  transmissionType={tractor.transmission?.type}
+                  ptoHP={tractor.ptoHP}
+                  ptoRPM={tractor.ptoRPM}
+                  weightKg={tractor.weight}
+                  priceMin={tractor.priceRange?.min}
+                  priceMax={tractor.priceRange?.max}
+                  usedMin={usedEstimate?.usedMin}
+                  usedMax={usedEstimate?.usedMax}
+                />
+                <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-6">
                   <Link href={`/comparar?tractores=${tractor.id}`} className="flex-1">
                     <span className="btn-secondary w-full inline-flex items-center justify-center gap-2 text-sm md:text-base">
                       <GitCompare className="h-4 w-4" />
@@ -450,10 +423,38 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
         </section>
 
         <div className="container-custom py-6 md:py-12">
-          {/* Features */}
+          <TractorFitPanel
+            result={suitabilityResult}
+            tractorName={fullName}
+            fitInterpretation={insights.fitInterpretation}
+            profile={{
+              idealUseCase: profile.idealUseCase,
+              maintenanceTier: profile.maintenanceTier,
+              maintenanceTierDescription: profile.maintenanceTierDescription,
+              operatingCostTier: profile.operatingCostTier,
+              operatingCostTierDescription: profile.operatingCostTierDescription,
+              expertSummary: profile.expertSummary,
+            }}
+          />
+
+          <RealWorldInsights insights={insights} />
+
+          <UsedMarketInsights
+            usedEstimate={usedEstimate ?? undefined}
+            buyerChecklist={narrative.buyingTips}
+            category={tractor.type}
+            tractorName={fullName}
+          />
+
+          <UsedListingsInternational
+            query={fullName.trim() || 'tractor'}
+            brandName={tractor.brand}
+            modelName={tractor.model}
+          />
+
           {tractor.features && tractor.features.length > 0 && (
-            <div className="mb-6 md:mb-10 bg-white rounded-xl border border-gray-200 p-4 md:p-6">
-              <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-gray-900">Main Features</h2>
+            <div className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 p-4 md:p-6">
+              <h2 className="text-xl font-bold mb-3 text-gray-900">Main Features</h2>
               <ul className="space-y-2">
                 {tractor.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
@@ -465,68 +466,31 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             </div>
           )}
 
-        {/* TractorSuitability™ Analysis */}
-        <TractorSuitabilitySection
-          result={suitabilityResult}
-          tractorName={fullName}
-          profile={{
-            idealUseCase: profile.idealUseCase,
-            maintenanceTier: profile.maintenanceTier,
-            maintenanceTierDescription: profile.maintenanceTierDescription,
-            operatingCostTier: profile.operatingCostTier,
-            operatingCostTierDescription: profile.operatingCostTierDescription,
-            expertSummary: profile.expertSummary,
-          }}
-        />
-
-        {/* SEO Content Section */}
-        {tractor.seoContent && (
-          <SEOContentSection content={tractor.seoContent} />
-        )}
-
-        {/* Specifications with Tabs */}
-        <div className="mt-8 md:mt-12">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-900">Technical Specifications</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <div className="md:col-span-2">
-              <TractorSpecsTabs tractor={tractor} />
-            </div>
-            
-            {/* Sidebar con anuncios */}
-            <div className="md:col-span-1">
-              <div className="sticky top-20 md:top-24">
-                <AdSidebar />
+          <div className="mt-8 md:mt-12">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-900">Technical Specifications</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="md:col-span-2">
+                <TractorSpecsTabs tractor={tractor} tabMeaningNotes={tabMeaningNotes} />
+              </div>
+              <div className="md:col-span-1">
+                <div className="sticky top-20 md:top-24">
+                  <AdSidebar />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Compare CTA */}
-        <div className="mt-8 md:mt-12 bg-primary-50 rounded-xl p-6 md:p-8 text-center border border-gray-200">
-          <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-gray-900">Want to compare it with other models?</h2>
-          <Link href={`/comparar?tractores=${tractor.id}`} className="btn-primary inline-block text-sm md:text-base">
-            Compare tractors
-          </Link>
-        </div>
+          <SimilarTractors similar={similarTractors} hubLinks={hubLinks} currentName={fullName} />
 
-        {/* Estimated Used Price - always shown when estimable */}
-        <div className="mt-8 md:mt-12">
-          <UsedPriceEstimateBox
-            category={tractor.type}
-            powerHP={tractor.engine.powerHP}
-            priceRange={tractor.priceRange}
-          />
-        </div>
+          <TractorFaq faqs={faqs} tractorSlug={tractor.slug} />
 
-        {/* Find Used Listings (International) */}
-        <UsedListingsInternational
-          query={fullName.trim() || 'tractor'}
-          brandName={tractor.brand}
-          modelName={tractor.model}
-        />
+          {tractor.seoContent && (
+            <SEOContentSection content={tractor.seoContent} />
+          )}
+
+          <DataSourcesLinks />
+        </div>
       </div>
-    </div>
     </>
   );
 }

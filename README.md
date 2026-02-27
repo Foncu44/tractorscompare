@@ -219,6 +219,25 @@ El proyecto está listo para desplegar en:
 
 No olvides configurar las variables de entorno según tu fuente de datos.
 
+### Variables de entorno para AdSense y depuración
+
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_ADSENSE_CLIENT` | ID de cliente de Google AdSense (obligatorio en producción para mostrar anuncios). | `ca-pub-1428727998918616` |
+| `NEXT_PUBLIC_DEBUG_ERRORS` | Si es `true`, registra en consola errores de cliente con prefijo `[TC CLIENT ERROR]` (incluye href, stack, userAgent). Útil para depurar excepciones en preview/producción (p. ej. AdSense preview iframe). | `true` o `false` |
+
+### Depuración del preview de AdSense (“Something went wrong” / “Application error: a client-side exception has occurred”)
+
+Cuando el sitio se embebe en el iframe del preview de AdSense, el error boundary puede mostrarse sin que la consola muestre el error real (solo avisos de googleusercontent). Para exponer la excepción:
+
+1. **Despliega con el logger activado**: en Vercel (Preview o Production) configura `NEXT_PUBLIC_DEBUG_ERRORS=true`.
+2. **Reproduce**: abre el preview de AdSense (el sitio se carga dentro de un iframe).
+3. **Abre DevTools**: abre la consola del navegador (contexto del iframe donde se carga tu sitio o la ventana del preview).
+4. **Busca los logs**:
+   - **`[TC ERROR BOUNDARY]`** — error que disparó `app/error.tsx`: incluye `message`, `stack`, `digest`, `href`, `ua`. Es la excepción real que provocó el fallo.
+   - **`[TC CLIENT ERROR]`** — errores capturados por `window.onerror` o `unhandledrejection` (solo si `NEXT_PUBLIC_DEBUG_ERRORS=true`), con `href` y `stack`.
+5. **Corrige la causa**: usa el `message` y `stack` del log para localizar el código que falla (p. ej. acceso a `window.top`, `localStorage`/`sessionStorage` en iframe). En este proyecto, GTM/GA y Vercel Analytics se desactivan automáticamente dentro de iframes; para nuevo código que use `localStorage`/`sessionStorage` o `window.top`, usa `src/lib/safeStorage.ts` y `src/lib/isInIframe.ts`.
+
 ## 📄 Licencia
 
 MIT

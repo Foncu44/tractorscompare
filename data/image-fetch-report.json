@@ -1,0 +1,16 @@
+{
+  "total": 10690,
+  "matched": 4340,
+  "byConfidence": {
+    "high": 2192,
+    "medium": 378,
+    "low": 1770
+  },
+  "unmatched": 6350,
+  "failureReasons": {
+    "no_allowed_license": 6349,
+    "fetch failed": 1
+  },
+  "cachedHits": 222,
+  "apiCalls": 10467
+}
