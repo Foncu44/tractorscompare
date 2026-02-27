@@ -82,20 +82,12 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
         <link rel="canonical" href="https://tractorscompare.com" />
+        <meta name="google-adsense-account" content="ca-pub-1428727998918616" />
         {/* Preload banner image for faster LCP */}
         <link
           rel="preload"
           href="/images/banner.webp"
           as="image"
-          type="image/webp"
-          media="(max-width: 768px)"
-        />
-        <link
-          rel="preload"
-          href="/images/banner.webp"
-          as="image"
-          type="image/webp"
-          media="(min-width: 769px)"
         />
         {/* DNS prefetch para recursos externos comunes */}
         <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
@@ -127,11 +119,11 @@ export default function RootLayout({
             }
           `}
         </Script>
-        {/* AdSense - solo en producción para evitar CORS en localhost */}
+        {/* AdSense: usar script nativo para evitar data-nscript (warning de AdSense) */}
         {process.env.NODE_ENV === 'production' && (
-          <Script
+          <script
+            async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
-            strategy="lazyOnload"
             crossOrigin="anonymous"
           />
         )}

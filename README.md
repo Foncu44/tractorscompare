@@ -184,6 +184,32 @@ Los providers están en `lib/listings/providers/`. Para integrar una API o feed 
 2. Devuelve un `Listing` con `isRealListing: true` y los campos: `marketplaceId`, `marketplaceName`, `title`, `listingUrl`, y opcionalmente `imageUrl`, `priceText`, `locationText`.
 3. El orquestador (`lib/listings/index.ts`) ya llama a cada provider con concurrencia 2; no hace falta modificar la API route.
 
+## 🧹 Eliminar tractores antiguos (discontinuados)
+
+Para limpiar modelos antiguos del dataset usa:
+
+```bash
+npm run prune-old-tractors -- --before-year 1995
+```
+
+- Por defecto corre en simulación.
+- Para guardar cambios reales añade `--apply`.
+- Guía completa: `docs/gestion-tractores-antiguos.md`.
+
+
+## 💰 Configuración de AdSense
+
+Para que los anuncios in-page se rendericen correctamente debes configurar slots reales:
+
+```env
+NEXT_PUBLIC_ADSENSE_SLOT_HEADER=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR=2345678901
+NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT=3456789012
+NEXT_PUBLIC_ADSENSE_SLOT_LIST=4567890123
+```
+
+Además, el archivo `public/ads.txt` ya incluye el publisher ID `ca-pub-1428727998918616`.
+
 ## 🚀 Despliegue
 
 El proyecto está listo para desplegar en:

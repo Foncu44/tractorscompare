@@ -115,6 +115,11 @@ export default function Footer() {
                   Methodology
                 </Link>
               </li>
+              <li>
+                <Link href="/disclaimer" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
+                  Editorial & Ads Disclosure
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -122,7 +127,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-sm text-gray-400">&copy; {currentYear} TractorsCompare. All rights reserved.</p>
           <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
-            All information is provided for reference. Always consult the manufacturer's official specifications.
+            All information is provided for reference. Always consult the manufacturer official specifications.
           </p>
         </div>
       </div>
