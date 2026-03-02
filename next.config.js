@@ -3,15 +3,38 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-// Single CSP header: AdSense + Funding Choices + Translate; no require-trusted-types-for (can break AdSense)
+// CSP compatible con AdSense, Auto Ads preview y Funding Choices. Sin require-trusted-types-for (rompe preview).
+const scriptAndStyleHosts = [
+  'https://pagead2.googlesyndication.com',
+  'https://tpc.googlesyndication.com',
+  'https://googleads.g.doubleclick.net',
+  'https://securepubads.g.doubleclick.net',
+  'https://www.googletagservices.com',
+  'https://adservice.google.com',
+  'https://fundingchoicesmessages.google.com',
+  'https://www.googletagmanager.com',
+  'https://www.gstatic.com',
+  'https://*.googlesyndication.com',
+  'https://*.doubleclick.net',
+  'https://*.google.com',
+  'https://*.googleusercontent.com',
+];
+const scriptSrc = ["'self'", "'unsafe-inline'", "'unsafe-eval'", ...scriptAndStyleHosts].join(' ');
+const styleSrc = ["'self'", "'unsafe-inline'", "https://www.gstatic.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
+const frameSrc = ["'self'", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://securepubads.g.doubleclick.net", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
+const connectSrc = ["'self'", "https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://analytics.google.com", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
+const frameAncestors = ["'self'", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.googletagmanager.com https://fundingchoicesmessages.google.com https://www.gstatic.com https://*.googleusercontent.com",
-  "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com https://*.googleusercontent.com",
-  "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://www.google-analytics.com https://analytics.google.com https://*.google.com https://fundingchoicesmessages.google.com https://*.googleusercontent.com",
-  "img-src 'self' data: blob: https: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
-  "style-src 'self' 'unsafe-inline' https://www.gstatic.com",
-  "font-src 'self' data: https://www.gstatic.com",
+  `script-src ${scriptSrc}`,
+  `script-src-elem ${scriptSrc}`,
+  `style-src ${styleSrc}`,
+  `style-src-elem ${styleSrc}`,
+  `frame-src ${frameSrc}`,
+  `frame-ancestors ${frameAncestors}`,
+  "connect-src " + connectSrc,
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data: https://www.gstatic.com https://*.googleusercontent.com",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

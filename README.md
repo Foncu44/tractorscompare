@@ -261,8 +261,13 @@ Cuando el sitio se embebe en el iframe del preview de AdSense, el error boundary
 
 5. **React #418 y reporte a servidor**
    - Con `NEXT_PUBLIC_DEBUG_ERRORS=true` se monta `ClientErrorReporter`, que envía `window.onerror` y `unhandledrejection` a `POST /api/client-error`. El error boundary también envía el error a esa ruta.
-   - En Vercel: **Logs** (pestaña del proyecto) → filtrar por “TC CLIENT-ERROR” o “TC ERROR BOUNDARY” para ver el payload (message, stack, href, referrer, userAgent) y localizar el componente que provoca el #418.
+   - En Vercel: **Logs** (pestaña del proyecto) → filtrar por “TC CLIENT ERROR” o “TC ERROR BOUNDARY” para ver el payload (message, stack, href, referrer, userAgent) y localizar el componente que provoca el #418.
    - Para componentes que lean APIs del navegador en el primer render, usa el hook `hooks/useHasMounted` y devuelve `null` (o un placeholder estable) hasta que `useHasMounted()` sea `true`.
+
+6. **Verificación tras cambios CSP / AdSense / client-error**
+   - Abre la página en producción y revisa la consola: no deberían aparecer bloqueos CSP de scripts o estilos de dominios Google (googlesyndication, doubleclick, gstatic, fundingchoicesmessages, etc.).
+   - Abre el preview de Auto Ads en AdSense: la vista previa debería cargar sin “Something went wrong”. Si sigue apareciendo, abre DevTools → pestaña **Network**, recarga el preview y comprueba si algún recurso (script/stylesheet) devuelve (blocked:csp) o 404; añade ese origen a la CSP en `next.config.js` si hace falta.
+   - `GET /api/client-error` y `OPTIONS /api/client-error` devuelven 204 (nunca 405), para que iframes y preview no fallen por ese endpoint.
 
 ## 📄 Licencia
 

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-  'Access-Control-Allow-Headers': 'content-type',
+  'Access-Control-Allow-Methods': 'POST,GET,OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
 /**
@@ -14,13 +14,10 @@ export async function OPTIONS() {
 }
 
 /**
- * GET: Health/usage hint. Return JSON so visiting /api/client-error in browser shows ok:true.
+ * GET: 204 para que nunca devuelva 405 ni rompa iframes/preview.
  */
 export async function GET() {
-  return NextResponse.json(
-    { ok: true, method: 'GET', hint: 'Use POST to send error payload' },
-    { status: 200, headers: CORS_HEADERS }
-  );
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
 
 /**

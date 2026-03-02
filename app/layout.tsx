@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -84,7 +83,8 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        {/* Favicon: data URI evita 404 si no existe /public/favicon.ico */}
+        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🚜%3C/text%3E%3C/svg%3E" />
         <link rel="canonical" href="https://tractorscompare.com" />
         <meta name="google-adsense-account" content="ca-pub-1428727998918616" />
         {/* Preload banner image for faster LCP */}
@@ -98,17 +98,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://commons.wikimedia.org" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* Iframe-safe: GTM/GA and Vercel Analytics load only when NOT in iframe (see AnalyticsScripts + VercelAnalyticsSafe). AdSense script always loads in production so preview works. */}
-        {/* AdSense - load directly from Google; only in production. Kept here so it runs in iframe (preview). */}
+        {/* AdSense: script HTML normal (sin next/script) para evitar data-nscript en head y fallos en preview. Solo producción. */}
         {process.env.NODE_ENV === 'production' && (
-          <Script
-            id="adsense"
-            strategy="afterInteractive"
+          <script
             async
-            src={
-              'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
-              (process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616')
-            }
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616'}`}
             crossOrigin="anonymous"
           />
         )}
