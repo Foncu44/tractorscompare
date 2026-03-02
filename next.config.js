@@ -23,7 +23,16 @@ const scriptSrc = ["'self'", "'unsafe-inline'", "'unsafe-eval'", ...scriptAndSty
 const styleSrc = ["'self'", "'unsafe-inline'", "https://www.gstatic.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
 const frameSrc = ["'self'", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://securepubads.g.doubleclick.net", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
 const connectSrc = ["'self'", "https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://analytics.google.com", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
-const frameAncestors = ["'self'", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
+// frame-ancestors: quién puede embeber esta web en iframe (AdSense Preview, etc.). No confundir con frame-src.
+const frameAncestors = [
+  "'self'",
+  "https://*.google.com",
+  "https://*.googleusercontent.com",
+  "https://adsense.google.com",
+  "https://autoads-preview.googleusercontent.com",
+  "https://*.doubleclick.net",
+  "https://*.googlesyndication.com",
+].join(' ');
 const csp = [
   "default-src 'self'",
   `script-src ${scriptSrc}`,
@@ -43,6 +52,7 @@ const csp = [
 const nextConfig = {
   reactStrictMode: true,
   eslint: { ignoreDuringBuilds: true },
+  // No se envía X-Frame-Options (permitiría bloquear iframe); el control de embedding se hace solo con CSP frame-ancestors.
   async headers() {
     return [
       {
