@@ -98,11 +98,11 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://commons.wikimedia.org" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
-        {/* AdSense: script HTML normal (sin next/script) para evitar data-nscript en head y fallos en preview. Solo producción. */}
+        {/* AdSense: <script> nativo en <head> (sin next/script) para evitar data-nscript y "AdSense head tag doesn't support data-nscript". */}
         {process.env.NODE_ENV === 'production' && (
           <script
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT || 'ca-pub-1428727998918616'}`}
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616"
             crossOrigin="anonymous"
           />
         )}

@@ -208,7 +208,7 @@ NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT=3456789012
 NEXT_PUBLIC_ADSENSE_SLOT_LIST=4567890123
 ```
 
-Además, el archivo `public/ads.txt` ya incluye el publisher ID `ca-pub-1428727998918616`.
+Además, el archivo `public/ads.txt` incluye la línea de verificación de Google (publisher `ca-pub-1428727998918616`). **Favicon**: el sitio usa un favicon por data URI en `app/layout.tsx`; para evitar 404 en peticiones directas a `/favicon.ico`, puedes añadir un archivo `public/favicon.ico`.
 
 ## 🚀 Despliegue
 
@@ -268,6 +268,15 @@ Cuando el sitio se embebe en el iframe del preview de AdSense, el error boundary
    - Abre la página en producción y revisa la consola: no deberían aparecer bloqueos CSP de scripts o estilos de dominios Google (googlesyndication, doubleclick, gstatic, fundingchoicesmessages, etc.).
    - Abre el preview de Auto Ads en AdSense: la vista previa debería cargar sin “Something went wrong”. Si sigue apareciendo, abre DevTools → pestaña **Network**, recarga el preview y comprueba si algún recurso (script/stylesheet) devuelve (blocked:csp) o 404; añade ese origen a la CSP en `next.config.js` si hace falta.
    - `GET /api/client-error` y `OPTIONS /api/client-error` devuelven 204 (nunca 405), para que iframes y preview no fallen por ese endpoint.
+
+### Comprobaciones técnicas (script, CSP, View Source)
+
+Para confirmar que AdSense y la CSP están bien configurados:
+
+1. **Script carga con 200**: En DevTools → Network, filtra por `adsbygoogle`. La petición a `adsbygoogle.js?client=ca-pub-...` debe devolver **status 200**. Si aparece (blocked:csp) o error, revisa `script-src` en `next.config.js`.
+2. **Sin violación CSP en consola**: En Console no debe aparecer *"Loading the script ... violates the following Content-Security-Policy directive"* ni avisos de bloqueo de dominios de Google/AdSense.
+3. **Script en `<head>` sin data-nscript**: View Source (Ctrl+U) del documento debe mostrar en `<head>` la etiqueta `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1428727998918616" crossorigin="anonymous"></script>` **sin** el atributo `data-nscript` (el script se inserta como HTML nativo en `app/layout.tsx`, no con `next/script`).
+4. **Cabecera CSP**: La respuesta HTML de cualquier página debe incluir la cabecera `Content-Security-Policy` (y no debe incluir `X-Frame-Options`). Para comprobarlo: DevTools → Network → selecciona el documento → Response Headers. En desarrollo puedes usar `GET /debug/headers` (solo si `NODE_ENV=development` o `ALLOW_DEBUG_HEADERS=true`) para recordatorio de cómo verificar.
 
 ## 📄 Licencia
 

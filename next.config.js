@@ -4,26 +4,60 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 // CSP compatible con AdSense, Auto Ads preview y Funding Choices. Sin require-trusted-types-for (rompe preview).
-const scriptAndStyleHosts = [
+// No se usa X-Frame-Options ni frame-ancestors solo 'self' para permitir el iframe del preview.
+const scriptSrcList = [
+  "'self'", "'unsafe-inline'", "'unsafe-eval'",
   'https://pagead2.googlesyndication.com',
-  'https://tpc.googlesyndication.com',
   'https://googleads.g.doubleclick.net',
+  'https://tpc.googlesyndication.com',
+  'https://www.googletagmanager.com',
+  'https://www.google-analytics.com',
+  'https://analytics.google.com',
+  'https://fundingchoicesmessages.google.com',
+  'https://fundingchoices.google.com',
+  'https://*.gstatic.com',
   'https://securepubads.g.doubleclick.net',
   'https://www.googletagservices.com',
   'https://adservice.google.com',
-  'https://fundingchoicesmessages.google.com',
-  'https://www.googletagmanager.com',
-  'https://www.gstatic.com',
   'https://*.googlesyndication.com',
   'https://*.doubleclick.net',
   'https://*.google.com',
   'https://*.googleusercontent.com',
 ];
-const scriptSrc = ["'self'", "'unsafe-inline'", "'unsafe-eval'", ...scriptAndStyleHosts].join(' ');
-const styleSrc = ["'self'", "'unsafe-inline'", "https://www.gstatic.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
-const frameSrc = ["'self'", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://securepubads.g.doubleclick.net", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
-const connectSrc = ["'self'", "https://pagead2.googlesyndication.com", "https://googleads.g.doubleclick.net", "https://tpc.googlesyndication.com", "https://www.googletagmanager.com", "https://www.google-analytics.com", "https://analytics.google.com", "https://fundingchoicesmessages.google.com", "https://*.google.com", "https://*.googleusercontent.com"].join(' ');
-// frame-ancestors: quién puede embeber esta web en iframe (AdSense Preview, etc.). No confundir con frame-src.
+const scriptSrc = scriptSrcList.join(' ');
+const styleSrc = ["'self'", "'unsafe-inline'", "https://*.gstatic.com"].join(' ');
+const frameSrc = [
+  "'self'",
+  'https://googleads.g.doubleclick.net',
+  'https://tpc.googlesyndication.com',
+  'https://fundingchoicesmessages.google.com',
+  'https://fundingchoices.google.com',
+  'https://securepubads.g.doubleclick.net',
+  'https://*.google.com',
+  'https://*.googleusercontent.com',
+].join(' ');
+const connectSrc = [
+  "'self'",
+  'https://pagead2.googlesyndication.com',
+  'https://googleads.g.doubleclick.net',
+  'https://tpc.googlesyndication.com',
+  'https://www.googletagmanager.com',
+  'https://www.google-analytics.com',
+  'https://analytics.google.com',
+  'https://fundingchoicesmessages.google.com',
+  'https://fundingchoices.google.com',
+  'https://*.google.com',
+  'https://*.gstatic.com',
+  'https://*.googleusercontent.com',
+].join(' ');
+const imgSrc = [
+  "'self'", 'data:', 'blob:', 'https:',
+  'https://pagead2.googlesyndication.com',
+  'https://googleads.g.doubleclick.net',
+  'https://tpc.googlesyndication.com',
+  'https://*.gstatic.com',
+].join(' ');
+// frame-ancestors: quién puede embeber esta web en iframe (AdSense Preview). No restringir solo a 'self'.
 const frameAncestors = [
   "'self'",
   "https://*.google.com",
@@ -42,7 +76,7 @@ const csp = [
   `frame-src ${frameSrc}`,
   `frame-ancestors ${frameAncestors}`,
   "connect-src " + connectSrc,
-  "img-src 'self' data: blob: https:",
+  "img-src " + imgSrc,
   "font-src 'self' data: https://www.gstatic.com https://*.googleusercontent.com",
   "object-src 'none'",
   "base-uri 'self'",
