@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
       receivedAt: new Date().toISOString(),
     };
     // Log to stdout so it shows in Vercel function logs
-    console.error('[TC CLIENT-ERROR]', JSON.stringify(payload));
-    return NextResponse.json({ ok: true }, { status: 200 });
+    console.error('[TC CLIENT ERROR]', JSON.stringify(payload));
+    return new NextResponse(null, { status: 204 });
   } catch (e) {
-    console.error('[TC CLIENT-ERROR] parse failed', e);
-    return NextResponse.json({ ok: false }, { status: 400 });
+    console.error('[TC CLIENT ERROR] parse failed', e);
+    return new NextResponse(null, { status: 400 });
   }
 }
