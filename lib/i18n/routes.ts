@@ -17,6 +17,17 @@ import type { Locale } from './config';
 export const PATH_SEGMENT_BY_LOCALE: Record<string, { es: string; en: string }> = {
   home: { es: '', en: '' },
   tractors: { es: 'tractores', en: 'tractors' },
+  'tractor-data': { es: 'datos-tractores', en: 'tractor-data' },
+  'tractor-production-database': { es: 'base-datos-produccion-tractores', en: 'tractor-production-database' },
+  'tractor-hp-comparison': { es: 'comparativa-potencia-tractores', en: 'tractor-hp-comparison' },
+  'lawn-mower-production-database': {
+    es: 'base-datos-produccion-cortacesped',
+    en: 'lawn-mower-production-database',
+  },
+  'riding-mower-production-database': {
+    es: 'base-datos-produccion-riding-mowers',
+    en: 'riding-mower-production-database',
+  },
   brands: { es: 'marcas', en: 'brands' },
   news: { es: 'noticias', en: 'news' },
   compare: { es: 'comparar', en: 'compare' },

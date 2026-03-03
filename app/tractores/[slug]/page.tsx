@@ -22,6 +22,7 @@ import {
   getBestForSubheading,
 } from '@/lib/tractorPageContent';
 import { getBestCategoryConfig } from '@/lib/tractorIntelligence/seo/bestCategory';
+import { buildTractorMetadata } from '@/lib/tractorSeo';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import QuickFactsGrid from '@/components/QuickFactsGrid';
 import TractorFitPanel from '@/components/TractorFitPanel';
@@ -53,15 +54,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  const fullName = `${tractor.brand} ${tractor.model}`;
-  const yearText = tractor.year ? ` ${tractor.year}` : '';
-  const powerText = tractor.engine.powerHP ? ` ${tractor.engine.powerHP} HP` : '';
-  const transmissionText = tractor.transmission.type ? ` ${tractor.transmission.type} transmission` : '';
-  
-  const optimizedDescription = tractor.metaDescription || 
-    `${fullName}${yearText} tractor data and specifications.${powerText}${transmissionText} ${tractor.weight ? `Weight: ${Math.round(tractor.weight / 1000)} tons. ` : ''}Complete technical specifications, engine details, dimensions, hydraulic system, and performance data.`;
+  // Metadata SEO reutilizable para todos los modelos
+  return buildTractorMetadata({ tractor });
+}
 
-  // Keywords específicas para tractores objetivo de SEO
   const targetTractorKeywords: Record<string, string[]> = {
     'international-harvester-1586': [
       '1586 international specs',
@@ -384,7 +380,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                   {tractor.brand}
                 </Link>
                 <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
-                  {fullName}: Specs, TractorFit™ Analysis & Used Price Guide
+                  {fullName} Specifications
                 </h1>
                 {subheadingParts.length > 0 && (
                   <p className="text-sm md:text-base text-gray-600 mb-4">
