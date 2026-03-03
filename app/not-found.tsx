@@ -10,7 +10,7 @@ export default function NotFound() {
       <p className="text-gray-600 mb-8">
         Sorry, the page you are looking for does not exist or has been moved.
       </p>
-      <Link href="/" className="btn-primary inline-block">
+      <Link href="/en" className="btn-primary inline-block">
         Back to Home
       </Link>
     </div>

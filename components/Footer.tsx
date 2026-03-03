@@ -1,11 +1,12 @@
-import Link from 'next/link';
+import LocaleLink from '@/components/LocaleLink';
 import { AdBanner } from '@/components/AdSense';
+import { t } from '@/lib/i18n/t';
+import type { Locale } from '@/lib/i18n/config';
 
-// Static year to avoid hydration mismatch (server vs client date)
 const COPYRIGHT_YEAR = 2026;
+const linkCls = "text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1";
 
-export default function Footer() {
-
+export default function Footer({ locale }: { locale: Locale }) {
   return (
     <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-gray-300 mt-20 border-t border-gray-800">
       <div className="bg-gray-50/50 border-b border-gray-800 py-4">
@@ -15,122 +16,45 @@ export default function Footer() {
       </div>
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* About */}
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">TractorsCompare</h3>
-            <p className="text-sm text-gray-400 leading-relaxed">
-              The most complete source of information on agricultural, lawn, and industrial tractors. 
-              Compare specifications and find the perfect tractor for your needs.
-            </p>
+            <h3 className="text-white font-bold text-xl mb-5">{t('common.siteName', undefined, locale)}</h3>
+            <p className="text-sm text-gray-400 leading-relaxed">{t('footer.tagline', undefined, locale)}</p>
           </div>
-
-          {/* Quick Links */}
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">Quick Links</h3>
+            <h3 className="text-white font-bold text-xl mb-5">{t('footer.quickLinks', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link href="/tractores-agricolas" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Agricultural Tractors
-                </Link>
-              </li>
-              <li>
-                <Link href="/tractores-jardin" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Lawn Tractors
-                </Link>
-              </li>
-              <li>
-                <Link href="/best" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Best Tractors
-                </Link>
-              </li>
-              <li>
-                <Link href="/comparar" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Compare
-                </Link>
-              </li>
-              <li>
-                <Link href="/noticias" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  News
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Blog
-                </Link>
-              </li>
+              <li><LocaleLink locale={locale} logicalPath="agricultural-tractors" className={linkCls}>{t('common.agriculturalTractors', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="lawn-garden-tractors" className={linkCls}>{t('common.lawnTractors', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="best" className={linkCls}>{t('common.bestTractors', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="compare" className={linkCls}>{t('common.compare', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="news" className={linkCls}>{t('common.news', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="blog" className={linkCls}>{t('common.blog', undefined, locale)}</LocaleLink></li>
             </ul>
           </div>
-
-          {/* Categories */}
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">Categories</h3>
+            <h3 className="text-white font-bold text-xl mb-5">{t('footer.categories', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link href="/tractores" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Tractors (categories)
-                </Link>
-              </li>
-              <li>
-                <Link href="/best" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Best Tractors
-                </Link>
-              </li>
-              <li>
-                <Link href="/comparar" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Compare Tractors
-                </Link>
-              </li>
-              <li>
-                <Link href="/marcas" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  All Brands
-                </Link>
-              </li>
+              <li><LocaleLink locale={locale} logicalPath="tractors" className={linkCls}>{t('common.tractorDatabase', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="best" className={linkCls}>{t('common.bestTractors', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="compare" className={linkCls}>{t('common.compareTractors', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="brands" className={linkCls}>{t('common.allBrands', undefined, locale)}</LocaleLink></li>
             </ul>
           </div>
-
-          {/* Contact */}
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">Contact</h3>
+            <h3 className="text-white font-bold text-xl mb-5">{t('footer.contact', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
-              <li>
-                <Link href="/contacto" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/sobre-nosotros" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacidad" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Privacy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terminos" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Terms of Use
-                </Link>
-              </li>
-              <li>
-                <Link href="/methodology" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Methodology
-                </Link>
-              </li>
-              <li>
-                <Link href="/disclaimer" className="text-gray-400 hover:text-white transition-colors duration-200 inline-block hover:translate-x-1">
-                  Editorial & Ads Disclosure
-                </Link>
-              </li>
+              <li><LocaleLink locale={locale} logicalPath="contact" className={linkCls}>{t('common.contactUs', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="about-us" className={linkCls}>{t('common.aboutUs', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="privacy" className={linkCls}>{t('common.privacy', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="terms" className={linkCls}>{t('common.terms', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="methodology" className={linkCls}>{t('common.methodology', undefined, locale)}</LocaleLink></li>
+              <li><LocaleLink locale={locale} logicalPath="disclaimer" className={linkCls}>{t('common.editorialAdsDisclosure', undefined, locale)}</LocaleLink></li>
             </ul>
           </div>
         </div>
-
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-sm text-gray-400">&copy; {COPYRIGHT_YEAR} TractorsCompare. All rights reserved.</p>
-          <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">
-            All information is provided for reference. Always consult the manufacturer official specifications.
-          </p>
+          <p className="text-sm text-gray-400">{t('footer.copyright', { year: String(COPYRIGHT_YEAR) }, locale)}</p>
+          <p className="mt-3 text-xs text-gray-500 max-w-2xl mx-auto">{t('footer.disclaimer', undefined, locale)}</p>
         </div>
       </div>
     </footer>

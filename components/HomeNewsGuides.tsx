@@ -2,29 +2,16 @@
 
 import Link from 'next/link';
 import { Newspaper, BookOpen, ArrowRight } from 'lucide-react';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
 
 const placeholderArticles = [
-  {
-    title: 'Understanding Tractor Specifications',
-    description: 'Learn how to read and compare engine, transmission, and PTO specifications',
-    href: '/guides/tractor-specifications',
-    type: 'guide',
-  },
-  {
-    title: 'Best Compact Tractors 2026',
-    description: 'Top-rated compact utility tractors with detailed performance data',
-    href: '/news/best-compact-tractors-2026',
-    type: 'news',
-  },
-  {
-    title: 'Tractor Maintenance Guide',
-    description: 'Essential maintenance tips for diesel engines and hydraulic systems',
-    href: '/guides/tractor-maintenance',
-    type: 'guide',
-  },
+  { title: 'Understanding Tractor Specifications', description: 'Learn how to read and compare engine, transmission, and PTO specifications', href: 'guides/tractor-specifications', type: 'guide' },
+  { title: 'Best Compact Tractors 2026', description: 'Top-rated compact utility tractors with detailed performance data', href: 'news/best-compact-tractors-2026', type: 'news' },
+  { title: 'Tractor Maintenance Guide', description: 'Essential maintenance tips for diesel engines and hydraulic systems', href: 'guides/tractor-maintenance', type: 'guide' },
 ];
 
-export default function HomeNewsGuides() {
+export default function HomeNewsGuides({ locale = 'en' }: { locale?: Locale }) {
   return (
     <section className="py-12 bg-white">
       <div className="container-custom">
@@ -38,19 +25,11 @@ export default function HomeNewsGuides() {
             </p>
           </div>
           <div className="flex gap-4">
-            <Link
-              href="/news"
-              className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors"
-            >
-              <Newspaper className="w-5 h-5" />
-              All News
+            <Link href={pathForLocale('news', locale)} className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors">
+              <Newspaper className="w-5 h-5" /> All News
             </Link>
-            <Link
-              href="/guides"
-              className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors"
-            >
-              <BookOpen className="w-5 h-5" />
-              All Guides
+            <Link href={pathForLocale('guides', locale)} className="flex items-center gap-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors">
+              <BookOpen className="w-5 h-5" /> All Guides
             </Link>
           </div>
         </div>
@@ -59,7 +38,7 @@ export default function HomeNewsGuides() {
           {placeholderArticles.map((article, index) => (
             <Link
               key={index}
-              href={article.href}
+              href={pathForLocale(article.href, locale)}
               className="group bg-white rounded-xl border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
             >
               <div className="flex items-start gap-4">

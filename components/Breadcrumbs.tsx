@@ -1,19 +1,18 @@
 import Link from 'next/link';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
 
 export interface BreadcrumbsProps {
-  /** Brand display name, e.g. "John Deere" */
   brandName: string;
-  /** Brand URL slug, e.g. "john-deere" */
   brandSlug: string;
-  /** Model display name, e.g. "850" */
   modelName: string;
-  /** Tractor page slug for canonical URL in schema, e.g. "john-deere-850" */
   tractorSlug: string;
-  /** Full name for the last segment (can be "Brand Model" or include year) */
   currentLabel?: string;
+  /** Si se pasa, los enlaces usan pathForLocale (i18n). */
+  locale?: Locale;
 }
 
-const BASE = 'https://tractorscompare.com';
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://tractorscompare.com';
 
 export default function Breadcrumbs({
   brandName,
@@ -21,21 +20,26 @@ export default function Breadcrumbs({
   modelName,
   tractorSlug,
   currentLabel,
+  locale,
 }: BreadcrumbsProps) {
   const lastLabel = currentLabel ?? `${brandName} ${modelName}`;
-  const tractorUrl = `${BASE}/tractores/${tractorSlug}`;
+  const homeHref = locale ? pathForLocale('', locale) : '/';
+  const brandsHref = locale ? pathForLocale('brands', locale) : '/marcas';
+  const brandHref = locale ? pathForLocale('brands/' + brandSlug, locale) : `/marcas/${brandSlug}`;
+  const tractorPath = locale ? pathForLocale('tractors/' + tractorSlug, locale) : `/tractores/${tractorSlug}`;
+  const tractorUrl = tractorPath.startsWith('http') ? tractorPath : `${BASE}${tractorPath}`;
 
   const items = [
-    { name: 'Home', href: '/' },
-    { name: 'Brands', href: '/marcas' },
-    { name: brandName, href: `/marcas/${brandSlug}` },
+    { name: 'Home', href: homeHref },
+    { name: 'Brands', href: brandsHref },
+    { name: brandName, href: brandHref },
     { name: lastLabel, href: null },
   ];
 
   const schemaItems = [
-    { '@type': 'ListItem' as const, position: 1, name: 'Home', item: BASE },
-    { '@type': 'ListItem' as const, position: 2, name: 'Brands', item: `${BASE}/marcas` },
-    { '@type': 'ListItem' as const, position: 3, name: brandName, item: `${BASE}/marcas/${brandSlug}` },
+    { '@type': 'ListItem' as const, position: 1, name: 'Home', item: BASE + (locale ? pathForLocale('', locale) : '') },
+    { '@type': 'ListItem' as const, position: 2, name: 'Brands', item: BASE + (locale ? pathForLocale('brands', locale) : '/marcas') },
+    { '@type': 'ListItem' as const, position: 3, name: brandName, item: BASE + (locale ? pathForLocale('brands/' + brandSlug, locale) : `/marcas/${brandSlug}`) },
     { '@type': 'ListItem' as const, position: 4, name: lastLabel, item: tractorUrl },
   ];
 

@@ -1,7 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { Tractor, Scissors, Package, Factory } from 'lucide-react';
+import { Tractor, Scissors, Package } from 'lucide-react';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
 
 const types = [
   {
@@ -34,7 +36,7 @@ const types = [
   },
 ];
 
-export default function HomeBrowseByType() {
+export default function HomeBrowseByType({ locale = 'en' }: { locale?: Locale }) {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container-custom">
@@ -53,7 +55,7 @@ export default function HomeBrowseByType() {
             return (
               <Link
                 key={type.slug}
-                href={`/type/${type.slug}`}
+                href={pathForLocale(`type/${type.slug}`, locale)}
                 className="group bg-white rounded-xl border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
               >
                 <div className="flex flex-col items-center text-center gap-4">

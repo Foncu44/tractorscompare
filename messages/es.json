@@ -1,0 +1,61 @@
+{
+  "common": {
+    "siteName": "TractorsCompare",
+    "home": "Inicio",
+    "search": "Buscar",
+    "compare": "Comparar",
+    "news": "Noticias",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "aboutUs": "Sobre nosotros",
+    "privacy": "Privacidad",
+    "terms": "Términos de uso",
+    "methodology": "Metodología",
+    "disclaimer": "Aviso editorial y publicidad",
+    "allBrands": "Todas las marcas",
+    "tractors": "Tractores",
+    "agriculturalTractors": "Tractores agrícolas",
+    "lawnTractors": "Tractores de jardín",
+    "bestTractors": "Mejores tractores",
+    "compareTractors": "Comparar tractores",
+    "categories": "Categorías",
+    "quickLinks": "Enlaces rápidos",
+    "contactUs": "Contacto",
+    "dataSources": "Fuentes de datos",
+    "specs": "Especificaciones",
+    "guides": "Guías",
+    "used": "Ocasion",
+    "offers": "Ofertas",
+    "fullTractorDatabase": "Base de tractores",
+    "tractorDatabase": "Base de tractores (categorías)",
+    "editorialAdsDisclosure": "Aviso editorial y publicidad"
+  },
+  "home": {
+    "title": "Base de datos de datos y especificaciones de tractores | TractorsCompare",
+    "description": "Compara más de 18.000 tractores por marca, modelo, motor, transmisión y TDF. Base de datos de especificaciones de tractores con datos técnicos detallados.",
+    "heroSubtitle": "Compara especificaciones y encuentra el tractor adecuado para tu explotación."
+  },
+  "tractor": {
+    "h1": "{{brand}} {{model}}",
+    "specs": "Especificaciones",
+    "backToBrands": "Marcas",
+    "backToTractors": "Tractores"
+  },
+  "nav": {
+    "home": "Inicio",
+    "agriculturalTractors": "Tractores agrícolas",
+    "lawnTractors": "Tractores de jardín",
+    "bestTractors": "Mejores tractors",
+    "compare": "Comparar",
+    "news": "Noticias",
+    "blog": "Blog"
+  },
+  "footer": {
+    "tagline": "La fuente más completa de información sobre tractores agrícolas, de jardín e industriales. Compara especificaciones y encuentra el tractor que necesitas.",
+    "quickLinks": "Enlaces rápidos",
+    "categories": "Categorías",
+    "contact": "Contacto",
+    "copyright": "© {year} TractorsCompare. Todos los derechos reservados.",
+    "disclaimer": "La información es orientativa. Consulta siempre las especificaciones oficiales del fabricante."
+  }
+}

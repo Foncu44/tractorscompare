@@ -65,6 +65,28 @@ La aplicación estará disponible en `http://localhost:3000`
 └── public/                # Archivos estáticos
 ```
 
+## 🌐 i18n (ES/EN) – SEO-safe
+
+El sitio sirve **español** bajo `/es` e **inglés** bajo `/en`. Las rutas están traducidas (ej. `/es/tractores/[slug]`, `/en/tractors/[slug]`). El slug del tractor es el mismo en ambos idiomas.
+
+### Cómo añadir nuevas keys de traducción
+
+1. Añade la key en **`messages/es.json`** y **`messages/en.json`** con la misma estructura (ej. `"section": { "key": "valor" }`).
+2. Usa en código: `t('section.key', { var: value }, locale)` (interpolación con `{{var}}` o `{var}` en el JSON).
+
+### Cómo añadir una nueva ruta con traducciones
+
+1. En **`lib/i18n/routes.ts`** añade en `PATH_SEGMENT_BY_LOCALE` el par EN/ES (clave = segmento EN usado en filesystem):  
+   `'my-page': { es: 'mi-pagina', en: 'my-page' }`.
+2. Crea la página bajo **`app/[locale]/my-page/page.tsx`** (usa el segmento EN).
+3. Enlaces: `<LocaleLink locale={loc} logicalPath="my-page">` o `pathForLocale('my-page', locale)`.
+
+### Canonical y hreflang
+
+- **Canonical**: cada página tiene `alternates.canonical` apuntando a su URL con locale (generado en `app/[locale]/layout.tsx` desde `x-pathname` y `getCanonicalUrl`).
+- **hreflang**: el mismo layout genera `alternates.languages` con `es`, `en` y `x-default` (EN) usando `getAlternates(logicalPath, locale)`.
+- No se usa `X-Frame-Options`; el iframe del preview de AdSense se permite vía CSP `frame-ancestors`.
+
 ## 🔌 Configuración de Fuente de Datos
 
 El proyecto soporta múltiples fuentes de datos a través de variables de entorno:

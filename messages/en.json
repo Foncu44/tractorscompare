@@ -1,0 +1,61 @@
+{
+  "common": {
+    "siteName": "TractorsCompare",
+    "home": "Home",
+    "search": "Search",
+    "compare": "Compare",
+    "news": "News",
+    "blog": "Blog",
+    "contact": "Contact",
+    "aboutUs": "About Us",
+    "privacy": "Privacy",
+    "terms": "Terms of Use",
+    "methodology": "Methodology",
+    "disclaimer": "Editorial & Ads Disclosure",
+    "allBrands": "All Brands",
+    "tractors": "Tractors",
+    "agriculturalTractors": "Agricultural Tractors",
+    "lawnTractors": "Lawn Tractors",
+    "bestTractors": "Best Tractors",
+    "compareTractors": "Compare Tractors",
+    "categories": "Categories",
+    "quickLinks": "Quick Links",
+    "contactUs": "Contact Us",
+    "dataSources": "Data Sources",
+    "specs": "Specifications",
+    "guides": "Guides",
+    "used": "Used",
+    "offers": "Offers",
+    "fullTractorDatabase": "Full tractor database",
+    "tractorDatabase": "Tractors (categories)",
+    "editorialAdsDisclosure": "Editorial & Ads Disclosure"
+  },
+  "home": {
+    "title": "Tractor Data & Specifications Database | TractorsCompare",
+    "description": "Compare 18,000+ tractors by brand, model, engine, transmission, and PTO. Complete tractor specifications database with detailed technical data.",
+    "heroSubtitle": "Compare specifications and find the right tractor for your operation."
+  },
+  "tractor": {
+    "h1": "{{brand}} {{model}}",
+    "specs": "Specifications",
+    "backToBrands": "Brands",
+    "backToTractors": "Tractors"
+  },
+  "nav": {
+    "home": "Home",
+    "agriculturalTractors": "Agricultural Tractors",
+    "lawnTractors": "Lawn Tractors",
+    "bestTractors": "Best Tractors",
+    "compare": "Compare",
+    "news": "News",
+    "blog": "Blog"
+  },
+  "footer": {
+    "tagline": "The most complete source of information on agricultural, lawn, and industrial tractors. Compare specifications and find the perfect tractor for your needs.",
+    "quickLinks": "Quick Links",
+    "categories": "Categories",
+    "contact": "Contact",
+    "copyright": "© {year} TractorsCompare. All rights reserved.",
+    "disclaimer": "All information is provided for reference. Always consult the manufacturer official specifications."
+  }
+}
