@@ -70,25 +70,25 @@ export default function Header({ locale }: { locale: Locale }) {
             </LocaleLink>
           </nav>
 
-          {/* Locale + Search - Right */}
-          <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+          {/* Buscar + selector de idiomas a la derecha del todo */}
+          <div className="hidden lg:flex items-center gap-2 ml-auto flex-shrink-0">
+            <form onSubmit={handleSearch} className="flex items-center">
+              <div className="relative w-full min-w-[220px] group">
+                <input
+                  id="tractor-search"
+                  name="q"
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search tractors..."
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400"
+                  aria-label="Search tractors"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-500 transition-colors duration-200" />
+              </div>
+            </form>
             <LanguageSwitcher locale={locale} />
           </div>
-          <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-shrink-0">
-            <div className="relative w-full min-w-[250px] group">
-              <input
-                id="tractor-search"
-                name="q"
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search tractors..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl bg-gray-50 focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 placeholder:text-gray-400"
-                aria-label="Search tractors"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-primary-500 transition-colors duration-200" />
-            </div>
-          </form>
 
           {/* Mobile Menu Button */}
           <button
