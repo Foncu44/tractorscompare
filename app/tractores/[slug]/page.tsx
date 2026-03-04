@@ -128,67 +128,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     ],
   };
 
-  const targetKeywords = targetTractorKeywords[tractor.slug] || [];
-
-  const optimizedKeywords = [
-    `${fullName} tractor data`,
-    `${fullName} specifications`,
-    `${fullName} specs`,
-    `${fullName} technical data`,
-    `${tractor.brand} ${tractor.model} data`,
-    `${tractor.brand} ${tractor.model} specs`,
-    `${tractor.brand} ${tractor.model} specifications`,
-    `${tractor.brand} tractor data`,
-    `${tractor.brand} tractor specifications`,
-    `${tractor.model} tractor specifications`,
-    `${tractor.model} tractor data`,
-    'tractor data',
-    'tractor specifications',
-    'tractor specs',
-    'tractor technical data',
-    'tractor specs database',
-    tractor.engine.powerHP ? `${tractor.engine.powerHP} hp tractor` : null,
-    tractor.engine.powerHP ? `${tractor.engine.powerHP} horsepower tractor` : null,
-    tractor.type === 'farm' ? 'farm tractor data' : 'lawn tractor data',
-    tractor.type === 'farm' ? 'agricultural tractor specifications' : 'lawn tractor specifications',
-    tractor.transmission?.type ? `${tractor.transmission.type} transmission tractor` : null,
-    tractor.engine.fuelType ? `${tractor.engine.fuelType} tractor` : null,
-    ...targetKeywords,
-  ].filter(Boolean) as string[];
-
-  const optimizedTitle = `${fullName}${yearText}: Specs, TractorFit™ Analysis & Used Price Guide | TractorsCompare`;
-
-  return {
-    title: optimizedTitle,
-    description: optimizedDescription,
-    keywords: [
-      ...targetKeywords,
-      `${fullName} specifications`,
-      `${fullName} technical data`,
-      `${fullName} specs`,
-      `${tractor.brand} ${tractor.model} tractor specifications`,
-      'tractor specs',
-      'tractor technical data',
-      ...optimizedKeywords,
-      ...(tractor.metaKeywords || []),
-    ],
-    openGraph: {
-      title: `${fullName}${yearText} - Tractor Data`,
-      description: optimizedDescription,
-      // Using placeholder image component instead
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${fullName} - Tractor Data`,
-      description: optimizedDescription,
-    },
-    alternates: {
-      canonical: `https://tractorscompare.com/tractores/${tractor.slug}`,
-    },
-  };
-}
-
 export default async function TractorDetailPage({ params }: TractorDetailPageProps) {
   const { slug } = await params;
   const tractor = getTractorBySlug(slug);
