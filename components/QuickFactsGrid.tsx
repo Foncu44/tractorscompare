@@ -1,6 +1,9 @@
 import { Zap, Fuel, Cog, Settings, Weight, DollarSign, TrendingDown } from 'lucide-react';
+import type { Locale } from '@/lib/i18n/config';
+import { t } from '@/lib/i18n/t';
 
 export interface QuickFactsGridProps {
+  locale?: Locale;
   powerHP?: number | null;
   powerKW?: number | null;
   fuelType?: string | null;
@@ -32,6 +35,7 @@ const fact = (
 );
 
 export default function QuickFactsGrid({
+  locale = 'en',
   powerHP,
   powerKW,
   fuelType,
@@ -51,34 +55,34 @@ export default function QuickFactsGrid({
     <div className="grid grid-cols-2 gap-2 md:gap-3 lg:gap-4">
       {powerHP != null && powerHP > 0 && fact(
         <Zap className="h-4 w-4 md:h-5 md:w-5" />,
-        'Power',
+        t('quickFacts.power', undefined, locale),
         powerKW != null ? `${powerHP} HP (${powerKW} kW)` : `${powerHP} HP`
       )}
       {fuelType && fact(
         <Fuel className="h-4 w-4 md:h-5 md:w-5" />,
-        'Fuel',
+        t('quickFacts.fuel', undefined, locale),
         fuelType.charAt(0).toUpperCase() + fuelType.slice(1)
       )}
       {transmissionType && fact(
         <Cog className="h-4 w-4 md:h-5 md:w-5" />,
-        'Transmission',
+        t('quickFacts.transmission', undefined, locale),
         transmissionType.charAt(0).toUpperCase() + transmissionType.slice(1).replace(/([A-Z])/g, ' $1')
       )}
       {(ptoHP != null && ptoHP > 0) || ptoRPM ? fact(
         <Settings className="h-4 w-4 md:h-5 md:w-5" />,
-        'PTO',
+        t('quickFacts.pto', undefined, locale),
         ptoHP != null && ptoHP > 0
           ? ptoRPM ? `${ptoHP} HP @ ${ptoRPM} rpm` : `${ptoHP} HP`
           : ptoRPM ? `${ptoRPM} rpm` : '—'
       ) : null}
       {weightKg != null && weightKg > 0 && fact(
         <Weight className="h-4 w-4 md:h-5 md:w-5" />,
-        'Weight',
+        t('quickFacts.weight', undefined, locale),
         `${weightKg.toLocaleString()} kg (${Math.round(weightKg / 1000)} t)`
       )}
       {hasNewPrice && fact(
         <DollarSign className="h-4 w-4 md:h-5 md:w-5" />,
-        'New price (est.)',
+        t('quickFacts.newPriceEst', undefined, locale),
         priceMin != null && priceMax != null
           ? `$${priceMin.toLocaleString()} – $${priceMax.toLocaleString()}`
           : priceMin != null
@@ -87,7 +91,7 @@ export default function QuickFactsGrid({
       )}
       {hasUsedPrice && fact(
         <TrendingDown className="h-4 w-4 md:h-5 md:w-5" />,
-        'Est. used price',
+        t('quickFacts.estUsedPrice', undefined, locale),
         `$${usedMin!.toLocaleString()} – $${usedMax!.toLocaleString()}`
       )}
     </div>

@@ -1,7 +1,10 @@
 import type { UsedPriceEstimate } from '@/lib/usedPriceEstimate';
 import { CheckCircle2, Info } from 'lucide-react';
+import type { Locale } from '@/lib/i18n/config';
+import { t } from '@/lib/i18n/t';
 
 export interface UsedMarketInsightsProps {
+  locale?: Locale;
   /** Estimated used price (from estimateUsedPrice); if null, section can still show checklist + note */
   usedEstimate?: UsedPriceEstimate | null;
   /** 3–6 buyer checklist items (e.g. from narrative.buyingTips) */
@@ -12,20 +15,21 @@ export interface UsedMarketInsightsProps {
   tractorName?: string;
 }
 
-function confidenceLabel(confidence: UsedPriceEstimate['confidence']): string {
+function confidenceLabelKey(confidence: UsedPriceEstimate['confidence']): string {
   switch (confidence) {
     case 'high':
-      return 'High confidence';
+      return 'usedMarket.highConfidence';
     case 'medium':
-      return 'Medium confidence';
+      return 'usedMarket.mediumConfidence';
     case 'low':
-      return 'Low confidence';
+      return 'usedMarket.lowConfidence';
     default:
       return '';
   }
 }
 
 export default function UsedMarketInsights({
+  locale = 'en',
   usedEstimate,
   buyerChecklist,
   category = 'farm',
@@ -39,25 +43,25 @@ export default function UsedMarketInsights({
       aria-labelledby="used-market-heading"
     >
       <h2 id="used-market-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-        Used market insights
+        {t('usedMarket.title', undefined, locale)}
       </h2>
 
       {usedEstimate && (
         <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-4 md:p-6 border-2 border-amber-200 mb-6">
-          <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">Estimated used price</h3>
+          <h3 className="text-base md:text-lg font-bold text-gray-900 mb-2">{t('usedMarket.estimatedUsedPrice', undefined, locale)}</h3>
           <p className="text-xl md:text-2xl font-bold text-gray-900 mb-1">
             ${usedEstimate.usedMin.toLocaleString()} – ${usedEstimate.usedMax.toLocaleString()} {usedEstimate.currency}
           </p>
-          <p className="text-xs text-amber-800/80 mb-2">{confidenceLabel(usedEstimate.confidence)}</p>
+          <p className="text-xs text-amber-800/80 mb-2">{t(confidenceLabelKey(usedEstimate.confidence), undefined, locale)}</p>
           <p className="text-xs text-gray-600">
-            Estimate only. Actual prices vary by condition, hours, and region.
+            {t('usedMarket.estimateNote', undefined, locale)}
           </p>
         </div>
       )}
 
       {buyerChecklist.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-base font-semibold text-gray-900 mb-2">Buyer checklist</h3>
+          <h3 className="text-base font-semibold text-gray-900 mb-2">{t('usedMarket.buyerChecklist', undefined, locale)}</h3>
           <ul className="space-y-2">
             {buyerChecklist.map((item, i) => (
               <li key={i} className="flex gap-2 text-sm text-gray-700">
@@ -73,17 +77,11 @@ export default function UsedMarketInsights({
         <Info className="h-5 w-5 text-gray-500 flex-shrink-0 mt-0.5" aria-hidden />
         <div className="text-sm text-gray-700">
           {category === 'lawn' ? (
-            <p>
-              For used {name}, check hours and blade deck condition. Verify PTO and transmission operation, and that attachments match.
-            </p>
+            <p>{t('usedMarket.forUsedLawn', { name }, locale)}</p>
           ) : category === 'industrial' ? (
-            <p>
-              For used {name}, verify hours, hydraulic condition, and loader/backhoe compatibility. Confirm weight for transport and permits.
-            </p>
+            <p>{t('usedMarket.forUsedIndustrial', { name }, locale)}</p>
           ) : (
-            <p>
-              For used {name}, hours and service history matter. Confirm PTO and hydraulic operation, tire condition, and that implements match your HP and category.
-            </p>
+            <p>{t('usedMarket.forUsedFarm', { name }, locale)}</p>
           )}
         </div>
       </div>

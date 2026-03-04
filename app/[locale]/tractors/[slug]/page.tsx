@@ -34,6 +34,7 @@ import { getTractorImage } from '@/lib/tractorImages';
 import { pathForLocale, getCanonicalUrl } from '@/lib/i18n/routes';
 import type { Locale } from '@/lib/i18n/config';
 import { locales } from '@/lib/i18n/config';
+import { t } from '@/lib/i18n/t';
 
 interface TractorDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -204,10 +205,10 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   }
 
   const typeLabel =
-    tractor.type === 'farm' ? 'Agricultural' :
-    tractor.type === 'lawn' ? 'Lawn' :
-    tractor.type === 'industrial' ? 'Industrial' :
-    'Tractor';
+    tractor.type === 'farm' ? t('tractor.typeAgricultural', undefined, loc) :
+    tractor.type === 'lawn' ? t('tractor.typeLawn', undefined, loc) :
+    tractor.type === 'industrial' ? t('tractor.typeIndustrial', undefined, loc) :
+    t('tractor.typeDefault', undefined, loc);
 
   const fullName = `${tractor.brand} ${tractor.model}`;
   const specs = specsFromTractor(tractor);
@@ -255,10 +256,27 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   const similarTractors = getSimilarTractors(tractor, tractors, 6);
   const hpBandSlug = getHpBandHubSlug(tractor.engine.powerHP ?? 0);
   const hubLinks = hpBandSlug
-    ? [{ href: `/best/${hpBandSlug}`, label: getBestCategoryConfig(hpBandSlug)?.title ?? `Best tractors ${tractor.engine.powerHP && tractor.engine.powerHP < 50 ? 'under 50 HP' : 'for your size'}` }, { href: '/best/small-farm-tractors', label: 'Best small farm tractors' }, { href: '/best/loader-tractors', label: 'Best tractors for loader work' }]
-    : [{ href: '/best/small-farm-tractors', label: 'Best small farm tractors' }, { href: '/best/loader-tractors', label: 'Best tractors for loader work' }];
+    ? [
+        { href: `/best/${hpBandSlug}`, label: getBestCategoryConfig(hpBandSlug)?.title ?? (tractor.engine.powerHP != null && tractor.engine.powerHP < 50 ? t('similar.bestCompactUnder50', undefined, loc) : t('similar.bestForYourSize', undefined, loc)) },
+        { href: '/best/small-farm-tractors', label: t('similar.bestSmallFarm', undefined, loc) },
+        { href: '/best/loader-tractors', label: t('similar.bestLoaderWork', undefined, loc) },
+      ]
+    : [
+        { href: '/best/small-farm-tractors', label: t('similar.bestSmallFarm', undefined, loc) },
+        { href: '/best/loader-tractors', label: t('similar.bestLoaderWork', undefined, loc) },
+      ];
   const bestForLabels = getBestForSubheading(suitabilityResult);
-  const subheadingParts = [typeLabel, tractor.engine.powerHP ? `${tractor.engine.powerHP} HP` : null, bestForLabels.length ? `Best for ${bestForLabels.join(' and ')}` : null].filter(Boolean);
+  const bestForKeyMap: Record<string, string> = {
+    'loader work': 'tractor.bestForLoaderWork',
+    'small farms': 'tractor.bestForSmallFarms',
+    'large farms': 'tractor.bestForLargeFarms',
+    'fuel efficiency': 'tractor.bestForFuelEfficiency',
+    versatility: 'tractor.bestForVersatility',
+  };
+  const bestForText = bestForLabels.length
+    ? t('tractor.bestForPrefix', undefined, loc) + ' ' + bestForLabels.map((l) => t(bestForKeyMap[l] ?? l, undefined, loc)).join(t('tractor.bestForAnd', undefined, loc))
+    : null;
+  const subheadingParts = [typeLabel, tractor.engine.powerHP ? `${tractor.engine.powerHP} HP` : null, bestForText].filter(Boolean);
 
   const tractorImage = tractor.image ?? getTractorImage(tractor.slug);
   const displayImageUrl = tractorImage?.url ?? tractor.imageUrl;
@@ -359,7 +377,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
           <div className="container-custom">
             <Link href={pathForLocale('brands', loc)} className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-700 mb-4 md:mb-6 transition-colors text-sm md:text-base">
               <ArrowLeft className="h-4 w-4" />
-              <span>Back to brands</span>
+              <span>{t('tractor.backToBrands', undefined, loc)}</span>
             </Link>
 
             <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
@@ -387,7 +405,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                   {tractor.brand}
                 </Link>
                 <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
-                  {fullName}: Specs, TractorFit™ Analysis & Used Price Guide
+                  {fullName}: {t('tractor.h1Suffix', undefined, loc)}
                 </h1>
                 {subheadingParts.length > 0 && (
                   <p className="text-sm md:text-base text-gray-600 mb-4">
@@ -395,6 +413,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                   </p>
                 )}
                 <QuickFactsGrid
+                  locale={loc}
                   powerHP={tractor.engine.powerHP}
                   powerKW={tractor.engine.powerKW}
                   fuelType={tractor.engine.fuelType}
@@ -411,12 +430,12 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                   <Link href={`${pathForLocale('compare', loc)}?tractores=${tractor.id}`} className="flex-1">
                     <span className="btn-secondary w-full inline-flex items-center justify-center gap-2 text-sm md:text-base">
                       <GitCompare className="h-4 w-4" />
-                      Compare
+                      {t('tractor.compare', undefined, loc)}
                     </span>
                   </Link>
                   <Link href={pathForLocale('brands/' + brandToSlug(tractor.brand), loc)} className="flex-1">
                     <span className="btn-primary w-full inline-flex items-center justify-center text-sm md:text-base">
-                      View brand
+                      {t('tractor.viewBrand', undefined, loc)}
                     </span>
                   </Link>
                 </div>
@@ -427,6 +446,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
 
         <div className="container-custom py-6 md:py-12">
           <TractorFitPanel
+            locale={loc}
             result={suitabilityResult}
             tractorName={fullName}
             fitInterpretation={insights.fitInterpretation}
@@ -440,9 +460,10 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             }}
           />
 
-          <RealWorldInsights insights={insights} />
+          <RealWorldInsights locale={loc} insights={insights} />
 
           <UsedMarketInsights
+            locale={loc}
             usedEstimate={usedEstimate ?? undefined}
             buyerChecklist={narrative.buyingTips}
             category={tractor.type}
@@ -457,7 +478,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
 
           {tractor.features && tractor.features.length > 0 && (
             <div className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 p-4 md:p-6">
-              <h2 className="text-xl font-bold mb-3 text-gray-900">Main Features</h2>
+              <h2 className="text-xl font-bold mb-3 text-gray-900">{t('tractor.mainFeatures', undefined, loc)}</h2>
               <ul className="space-y-2">
                 {tractor.features.map((feature, index) => (
                   <li key={index} className="flex items-start">
@@ -470,7 +491,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
           )}
 
           <div className="mt-8 md:mt-12">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-900">Technical Specifications</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-900">{t('tractor.technicalSpecs', undefined, loc)}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               <div className="md:col-span-2">
                 <TractorSpecsTabs tractor={tractor} tabMeaningNotes={tabMeaningNotes} />
@@ -483,9 +504,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             </div>
           </div>
 
-          <SimilarTractors similar={similarTractors} hubLinks={hubLinks} currentName={fullName} />
+          <SimilarTractors locale={loc} similar={similarTractors} hubLinks={hubLinks} currentName={fullName} />
 
-          <TractorFaq faqs={faqs} tractorSlug={tractor.slug} />
+          <TractorFaq locale={loc} faqs={faqs} tractorSlug={tractor.slug} />
 
           {tractor.seoContent && (
             <SEOContentSection content={tractor.seoContent} />

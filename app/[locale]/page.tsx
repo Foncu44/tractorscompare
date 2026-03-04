@@ -71,19 +71,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight drop-shadow-2xl">
-                Tractor Data & Specifications Database
+                {t('home.heroTitle', undefined, loc)}
               </h1>
               <p className="text-lg md:text-xl mb-8 text-white/95 leading-relaxed drop-shadow-lg max-w-2xl mx-auto">
-                Compare tractors by specifications, performance, engine, transmission, PTO, hydraulic system, horsepower, weight, and dimensions. Complete tractor data for over 18,000 models from all major brands.
+                {t('home.heroSubline', undefined, loc)}
               </p>
               <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8">
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl px-6 py-5 shadow-xl border border-white/20">
                   <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-1">18,000+</div>
-                  <div className="text-gray-800 text-sm md:text-base font-semibold">Tractors</div>
+                  <div className="text-gray-800 text-sm md:text-base font-semibold">{t('home.statTractors', undefined, loc)}</div>
                 </div>
                 <div className="bg-white/95 backdrop-blur-sm rounded-xl px-6 py-5 shadow-xl border border-white/20">
                   <div className="text-3xl md:text-4xl font-bold text-orange-500 mb-1">{brands.length}+</div>
-                  <div className="text-gray-800 text-sm md:text-base font-semibold">Brands</div>
+                  <div className="text-gray-800 text-sm md:text-base font-semibold">{t('home.statBrands', undefined, loc)}</div>
                 </div>
               </div>
             </div>
@@ -100,15 +100,23 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="py-10 md:py-14 bg-white">
         <div className="container-custom">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">What is TractorsCompare?</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{t('home.whatIsTitle', undefined, loc)}</h2>
             <p className="text-gray-700 text-lg leading-relaxed mb-4">
-              TractorsCompare is a free tractor specifications database that helps farmers, landowners, and buyers compare thousands of tractor models by engine power, transmission, PTO, hydraulics, weight, and dimensions.
+              {t('home.whatIsP1', undefined, loc)}
             </p>
             <p className="text-gray-700 text-lg leading-relaxed mb-4">
-              Use the search above to find a specific model, browse by <LocaleLink locale={loc} logicalPath="brands" className="text-primary-600 hover:text-primary-700 font-semibold underline">brand</LocaleLink> or <LocaleLink locale={loc} logicalPath="tractors" className="text-primary-600 hover:text-primary-700 font-semibold underline">category</LocaleLink>, or head to our <LocaleLink locale={loc} logicalPath="best" className="text-primary-600 hover:text-primary-700 font-semibold underline">Best Tractors</LocaleLink> section.
+              {t('home.whatIsP2a', undefined, loc)}
+              <LocaleLink locale={loc} logicalPath="brands" className="text-primary-600 hover:text-primary-700 font-semibold underline">{t('common.brand', undefined, loc)}</LocaleLink>
+              {t('home.whatIsP2b', undefined, loc)}
+              <LocaleLink locale={loc} logicalPath="tractors" className="text-primary-600 hover:text-primary-700 font-semibold underline">{t('common.category', undefined, loc)}</LocaleLink>
+              {t('home.whatIsP2c', undefined, loc)}
+              <LocaleLink locale={loc} logicalPath="best" className="text-primary-600 hover:text-primary-700 font-semibold underline">{t('home.linkBestTractors', undefined, loc)}</LocaleLink>
+              {t('home.whatIsP2d', undefined, loc)}
             </p>
             <p className="text-gray-700 text-lg leading-relaxed">
-              Our <LocaleLink locale={loc} logicalPath="methodology" className="text-primary-600 hover:text-primary-700 font-semibold underline">methodology</LocaleLink> page explains how we compute scores and rankings.
+              {t('home.whatIsP3before', undefined, loc)}
+              <LocaleLink locale={loc} logicalPath="methodology" className="text-primary-600 hover:text-primary-700 font-semibold underline">{t('common.methodology', undefined, loc)}</LocaleLink>
+              {t('home.whatIsP3after', undefined, loc)}
             </p>
           </div>
         </div>
@@ -126,24 +134,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="py-20 bg-white">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Why Choose TractorsCompare?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">The most comprehensive tractor database with powerful comparison tools</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('home.whyChooseTitle', undefined, loc)}</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('home.whyChooseSub', undefined, loc)}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6"><Search className="w-10 h-10 text-primary-600" /></div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Search by Brand and Model</h3>
-              <p className="text-gray-600 leading-relaxed">Find tractors by brand, model, power, type or any technical specification with our advanced search.</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">{t('home.searchCardTitle', undefined, loc)}</h3>
+              <p className="text-gray-600 leading-relaxed">{t('home.searchCardDesc', undefined, loc)}</p>
             </div>
             <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6"><GitCompare className="w-10 h-10 text-primary-600" /></div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Compare Technical Specifications</h3>
-              <p className="text-gray-600 leading-relaxed">Compare multiple tractors side by side: HP, engine, PTO, transmission and all technical features.</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">{t('home.compareCardTitle', undefined, loc)}</h3>
+              <p className="text-gray-600 leading-relaxed">{t('home.compareCardDesc', undefined, loc)}</p>
             </div>
             <div className="text-center group p-8 rounded-2xl bg-gradient-to-br from-white to-gray-50 border border-gray-100 hover:border-primary-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-primary-200 rounded-2xl flex items-center justify-center mx-auto mb-6"><TrendingUp className="w-10 h-10 text-primary-600" /></div>
-              <h3 className="text-xl font-bold mb-3 text-gray-900">Best Tractors 2026 by Category</h3>
-              <p className="text-gray-600 leading-relaxed">Accurate and up-to-date information on all available tractor models with detailed specifications.</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-900">{t('home.bestCardTitle', undefined, loc)}</h3>
+              <p className="text-gray-600 leading-relaxed">{t('home.bestCardDesc', undefined, loc)}</p>
             </div>
           </div>
         </div>
@@ -160,20 +168,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="py-12 md:py-20 bg-white">
         <div className="container-custom">
           <div className="max-w-4xl mx-auto prose prose-lg">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 md:mb-6">Complete Tractor Specifications and Technical Data Database</h2>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 md:mb-6">{t('home.completeSpecsTitle', undefined, loc)}</h2>
             <p className="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
-              TractorsCompare provides comprehensive tractor data and detailed specifications for over 18,000 tractor models from major manufacturers.
+              {t('home.completeSpecsP', undefined, loc)}
             </p>
             <div className="bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl p-4 md:p-6 mt-6 md:mt-8 border border-primary-200">
-              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">Need Help Finding the Right Tractor?</h4>
+              <h4 className="text-lg md:text-xl font-bold text-gray-900 mb-2 md:mb-3">{t('home.needHelpTitle', undefined, loc)}</h4>
               <p className="text-sm md:text-base text-gray-700 mb-3 md:mb-4">
-                Visit our <LocaleLink locale={loc} logicalPath="specs" className="text-primary-600 hover:text-primary-700 font-semibold underline">specifications glossary</LocaleLink>, check our <LocaleLink locale={loc} logicalPath="news" className="text-primary-600 hover:text-primary-700 font-semibold underline">news and guides</LocaleLink>, or <LocaleLink locale={loc} logicalPath="contact" className="text-primary-600 hover:text-primary-700 font-semibold underline">contact us</LocaleLink>.
+                {t('home.needHelpP', undefined, loc)}
               </p>
               <div className="flex flex-wrap gap-2 md:gap-3 mt-3 md:mt-4">
-                <LocaleLink locale={loc} logicalPath="best" className="inline-flex items-center px-3 md:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs md:text-sm font-semibold">Best Tractors</LocaleLink>
-                <LocaleLink locale={loc} logicalPath="compare" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">Compare Models</LocaleLink>
-                <LocaleLink locale={loc} logicalPath="brands" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">All Brands</LocaleLink>
-                <LocaleLink locale={loc} logicalPath="specs" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">Specifications Guide</LocaleLink>
+                <LocaleLink locale={loc} logicalPath="best" className="inline-flex items-center px-3 md:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-xs md:text-sm font-semibold">{t('home.btnBestTractors', undefined, loc)}</LocaleLink>
+                <LocaleLink locale={loc} logicalPath="compare" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">{t('home.btnCompareModels', undefined, loc)}</LocaleLink>
+                <LocaleLink locale={loc} logicalPath="brands" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">{t('home.btnAllBrands', undefined, loc)}</LocaleLink>
+                <LocaleLink locale={loc} logicalPath="specs" className="inline-flex items-center px-3 md:px-4 py-2 bg-white text-primary-600 border-2 border-primary-600 rounded-lg hover:bg-primary-50 transition-colors text-xs md:text-sm font-semibold">{t('home.btnSpecsGuide', undefined, loc)}</LocaleLink>
               </div>
             </div>
           </div>
@@ -182,17 +190,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       <section className="py-12 md:py-20 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white relative overflow-hidden">
         <div className="container-custom text-center relative z-10 px-4">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 md:mb-6">Ready to find your ideal tractor?</h2>
-          <p className="text-base md:text-xl lg:text-2xl mb-6 md:mb-10 text-primary-100 max-w-2xl mx-auto leading-relaxed">Explore our complete database and compare models to make the best decision.</p>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 md:mb-6">{t('home.ctaTitle', undefined, loc)}</h2>
+          <p className="text-base md:text-xl lg:text-2xl mb-6 md:mb-10 text-primary-100 max-w-2xl mx-auto leading-relaxed">{t('home.ctaSub', undefined, loc)}</p>
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
             <LocaleLink locale={loc} logicalPath="agricultural-tractors" className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-white text-primary-600 hover:bg-gray-50 rounded-xl font-semibold text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
-              Browse Database <span className="ml-2">→</span>
+              {t('home.browseDatabase', undefined, loc)} <span className="ml-2">→</span>
             </LocaleLink>
             <LocaleLink locale={loc} logicalPath="compare" className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-white/10 hover:bg-white/20 text-white border-2 border-white/30 hover:border-white/50 rounded-xl font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105">
-              <GitCompare className="w-4 h-4 md:w-5 md:h-5" /> Compare Tractors
+              <GitCompare className="w-4 h-4 md:w-5 md:h-5" /> {t('home.compareTractorsBtn', undefined, loc)}
             </LocaleLink>
             <LocaleLink locale={loc} logicalPath="contact" className="inline-flex items-center gap-2 px-6 md:px-8 py-3 md:py-4 bg-white/10 hover:bg-white/20 text-white border-2 border-white/30 hover:border-white/50 rounded-xl font-semibold text-base md:text-lg transition-all duration-300 hover:scale-105">
-              <Mail className="w-4 h-4 md:w-5 md:h-5" /> Get Help
+              <Mail className="w-4 h-4 md:w-5 md:h-5" /> {t('home.getHelp', undefined, loc)}
             </LocaleLink>
           </div>
         </div>

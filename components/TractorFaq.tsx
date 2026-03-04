@@ -1,7 +1,10 @@
 import type { FaqItem } from '@/lib/tractorPageContent';
 import { ChevronDown } from 'lucide-react';
+import type { Locale } from '@/lib/i18n/config';
+import { t } from '@/lib/i18n/t';
 
 export interface TractorFaqProps {
+  locale?: Locale;
   faqs: FaqItem[];
   /** If true, render FAQPage JSON-LD with baseUrl for item URLs */
   baseUrl?: string;
@@ -35,7 +38,7 @@ export function TractorFaqSchema({ faqs, tractorSlug }: { faqs: FaqItem[]; tract
   );
 }
 
-export default function TractorFaq({ faqs, baseUrl = BASE, tractorSlug }: TractorFaqProps) {
+export default function TractorFaq({ locale = 'en', faqs, baseUrl = BASE, tractorSlug }: TractorFaqProps) {
   if (faqs.length === 0) return null;
 
   return (
@@ -45,7 +48,7 @@ export default function TractorFaq({ faqs, baseUrl = BASE, tractorSlug }: Tracto
     >
       <TractorFaqSchema faqs={faqs} tractorSlug={tractorSlug} />
       <h2 id="faq-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
-        Frequently asked questions
+        {t('faq.title', undefined, locale)}
       </h2>
       <ul className="space-y-4">
         {faqs.map((faq, i) => (

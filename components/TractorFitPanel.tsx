@@ -14,6 +14,8 @@ import {
   Zap,
   DollarSign,
 } from 'lucide-react';
+import type { Locale } from '@/lib/i18n/config';
+import { t } from '@/lib/i18n/t';
 
 export interface PerformanceProfileDisplay {
   idealUseCase: string;
@@ -25,6 +27,7 @@ export interface PerformanceProfileDisplay {
 }
 
 export interface TractorFitPanelProps {
+  locale?: Locale;
   result: TractorSuitabilityResult;
   tractorName: string;
   /** Short deterministic interpretation (90–130 words) */
@@ -44,18 +47,19 @@ const scoreBarColor = (score: number) => {
   return 'bg-red-500';
 };
 
-const SUB_SCORES: { key: keyof TractorSuitabilityResult; label: string; icon: React.ReactNode }[] = [
-  { key: 'smallFarmScore', label: 'Small farm suitability', icon: <Home className="h-4 w-4" /> },
-  { key: 'largeFarmScore', label: 'Large farm suitability', icon: <Building2 className="h-4 w-4" /> },
-  { key: 'loaderScore', label: 'Loader work efficiency', icon: <Loader2 className="h-4 w-4" /> },
-  { key: 'fuelEfficiency', label: 'Fuel efficiency', icon: <Fuel className="h-4 w-4" /> },
-  { key: 'maintenanceComplexity', label: 'Maintenance ease', icon: <Wrench className="h-4 w-4" /> },
-  { key: 'versatilityIndex', label: 'Versatility', icon: <Layers className="h-4 w-4" /> },
-  { key: 'costTier', label: 'Cost tier', icon: <DollarSign className="h-4 w-4" /> },
-  { key: 'powerToWeightScore', label: 'Power-to-weight', icon: <Zap className="h-4 w-4" /> },
+const SUB_SCORE_KEYS: { key: keyof TractorSuitabilityResult; labelKey: string; icon: React.ReactNode }[] = [
+  { key: 'smallFarmScore', labelKey: 'tractorFit.smallFarmSuitability', icon: <Home className="h-4 w-4" /> },
+  { key: 'largeFarmScore', labelKey: 'tractorFit.largeFarmSuitability', icon: <Building2 className="h-4 w-4" /> },
+  { key: 'loaderScore', labelKey: 'tractorFit.loaderWorkEfficiency', icon: <Loader2 className="h-4 w-4" /> },
+  { key: 'fuelEfficiency', labelKey: 'tractorFit.fuelEfficiency', icon: <Fuel className="h-4 w-4" /> },
+  { key: 'maintenanceComplexity', labelKey: 'tractorFit.maintenanceEase', icon: <Wrench className="h-4 w-4" /> },
+  { key: 'versatilityIndex', labelKey: 'tractorFit.versatility', icon: <Layers className="h-4 w-4" /> },
+  { key: 'costTier', labelKey: 'tractorFit.costTier', icon: <DollarSign className="h-4 w-4" /> },
+  { key: 'powerToWeightScore', labelKey: 'tractorFit.powerToWeight', icon: <Zap className="h-4 w-4" /> },
 ];
 
 export default function TractorFitPanel({
+  locale = 'en',
   result,
   tractorName,
   fitInterpretation,
@@ -71,7 +75,7 @@ export default function TractorFitPanel({
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <BarChart3 className="h-6 w-6 text-primary-700" aria-hidden />
         <h2 id="tractorfit-heading" className="text-xl md:text-2xl font-bold text-gray-900">
-          TractorFit™ Analysis
+          {t('tractorFit.title', undefined, locale)}
         </h2>
       </div>
 
@@ -84,9 +88,9 @@ export default function TractorFitPanel({
           {result.overallScore}
         </div>
         <div>
-          <p className="text-sm md:text-base font-semibold text-gray-900">Overall score</p>
+          <p className="text-sm md:text-base font-semibold text-gray-900">{t('tractorFit.overallScore', undefined, locale)}</p>
           <p className="text-xs md:text-sm text-gray-600 mt-1">
-            Based on specs and use-case fit for {tractorName}.
+            {t('tractorFit.basedOnSpecs', { name: tractorName }, locale)}
           </p>
         </div>
       </div>
@@ -100,14 +104,14 @@ export default function TractorFitPanel({
 
       {/* Sub-scores grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
-        {SUB_SCORES.map(({ key, label, icon }) => {
+        {SUB_SCORE_KEYS.map(({ key, labelKey, icon }) => {
           const value = key === 'maintenanceComplexity' ? maintenanceDisplay : (result[key] as number | undefined) ?? 0;
           const isMaintenance = key === 'maintenanceComplexity';
           return (
             <div key={key} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
               <div className="flex items-center gap-2 text-gray-700 mb-1">
                 <span className="text-primary-700" aria-hidden>{icon}</span>
-                <span className="text-xs font-medium">{label}</span>
+                <span className="text-xs font-medium">{t(labelKey, undefined, locale)}</span>
               </div>
               <div className="flex items-baseline gap-2">
                 <span className={`text-lg font-bold ${scoreColor(value)}`}>{Math.round(value)}</span>
@@ -123,7 +127,7 @@ export default function TractorFitPanel({
                   aria-valuemax={100}
                 />
               </div>
-              {isMaintenance && <p className="text-xs text-gray-500 mt-0.5">Higher = simpler</p>}
+              {isMaintenance && <p className="text-xs text-gray-500 mt-0.5">{t('tractorFit.higherSimpler', undefined, locale)}</p>}
             </div>
           );
         })}
@@ -133,7 +137,7 @@ export default function TractorFitPanel({
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <div className="bg-green-50/50 rounded-lg p-4 border border-green-200/60">
           <h3 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-2">
-            <ThumbsUp className="h-4 w-4 text-green-700" /> Pros
+            <ThumbsUp className="h-4 w-4 text-green-700" /> {t('tractorFit.pros', undefined, locale)}
           </h3>
           {result.pros.length > 0 ? (
             <ul className="space-y-1 text-sm text-gray-700">
@@ -145,12 +149,12 @@ export default function TractorFitPanel({
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-500">No major strengths identified.</p>
+            <p className="text-sm text-gray-500">{t('tractorFit.noStrengths', undefined, locale)}</p>
           )}
         </div>
         <div className="bg-amber-50/50 rounded-lg p-4 border border-amber-200/60">
           <h3 className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-2">
-            <ThumbsDown className="h-4 w-4 text-amber-700" /> Cons
+            <ThumbsDown className="h-4 w-4 text-amber-700" /> {t('tractorFit.cons', undefined, locale)}
           </h3>
           {result.cons.length > 0 ? (
             <ul className="space-y-1 text-sm text-gray-700">
@@ -162,7 +166,7 @@ export default function TractorFitPanel({
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-gray-500">No major limitations identified.</p>
+            <p className="text-sm text-gray-500">{t('tractorFit.noLimitations', undefined, locale)}</p>
           )}
         </div>
       </div>
