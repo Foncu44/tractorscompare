@@ -222,33 +222,35 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
     priceMax: tractor.priceRange?.max ?? null,
   });
 
+  const narrativeInput = {
+    fullName,
+    brandName: tractor.brand,
+    modelName: tractor.model,
+    category: tractor.type,
+    hp: tractor.engine.powerHP,
+    ptoHP: tractor.ptoHP ?? null,
+    ptoRPM: tractor.ptoRPM ?? null,
+    weightKg: tractor.weight ?? null,
+    fuelType: tractor.engine.fuelType ?? null,
+    cooling: tractor.engine.cooling ?? null,
+    transmissionType: tractor.transmission?.type ?? null,
+    priceMin: tractor.priceRange?.min ?? null,
+    priceMax: tractor.priceRange?.max ?? null,
+    usedMin: usedEstimate?.usedMin ?? null,
+    usedMax: usedEstimate?.usedMax ?? null,
+    suitability: {
+      overallScore: suitabilityResult.overallScore,
+      loaderWork: suitabilityResult.loaderScore,
+      fuelEfficiency: suitabilityResult.fuelEfficiency,
+      maintenance: suitabilityResult.maintenanceComplexity,
+      versatility: suitabilityResult.versatilityIndex,
+      costTier: suitabilityResult.costTier,
+    },
+  };
   const narrative =
-    narrativesMap[tractor.slug] ??
-    buildTractorNarrative({
-      fullName,
-      brandName: tractor.brand,
-      modelName: tractor.model,
-      category: tractor.type,
-      hp: tractor.engine.powerHP,
-      ptoHP: tractor.ptoHP ?? null,
-      ptoRPM: tractor.ptoRPM ?? null,
-      weightKg: tractor.weight ?? null,
-      fuelType: tractor.engine.fuelType ?? null,
-      cooling: tractor.engine.cooling ?? null,
-      transmissionType: tractor.transmission?.type ?? null,
-      priceMin: tractor.priceRange?.min ?? null,
-      priceMax: tractor.priceRange?.max ?? null,
-      usedMin: usedEstimate?.usedMin ?? null,
-      usedMax: usedEstimate?.usedMax ?? null,
-      suitability: {
-        overallScore: suitabilityResult.overallScore,
-        loaderWork: suitabilityResult.loaderScore,
-        fuelEfficiency: suitabilityResult.fuelEfficiency,
-        maintenance: suitabilityResult.maintenanceComplexity,
-        versatility: suitabilityResult.versatilityIndex,
-        costTier: suitabilityResult.costTier,
-      },
-    });
+    loc === 'es'
+      ? buildTractorNarrative(narrativeInput, 'es')
+      : (narrativesMap[tractor.slug] ?? buildTractorNarrative(narrativeInput, 'en'));
 
   const insights = buildTractorInsights(narrative);
   const tabMeaningNotes = buildTabMeaningNotes(tractor);
