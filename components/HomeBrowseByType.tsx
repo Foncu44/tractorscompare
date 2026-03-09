@@ -56,7 +56,7 @@ export default function HomeBrowseByType({ locale = 'en' }: { locale?: Locale })
               <Link
                 key={type.slug}
                 href={pathForLocale(`type/${type.slug}`, locale)}
-                className="group bg-white rounded-xl border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="group bg-white rounded-card border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 shadow-card hover:shadow-card-hover hover:-translate-y-1"
               >
                 <div className="flex flex-col items-center text-center gap-4">
                   <div className={`w-16 h-16 rounded-full ${type.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>

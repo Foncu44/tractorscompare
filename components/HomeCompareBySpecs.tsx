@@ -22,7 +22,7 @@ export default function HomeCompareBySpecs({ locale = 'en' }: { locale?: Locale 
     <section className="py-12 bg-white">
       <div className="container-custom">
         <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+          <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-900 mb-3">
             Compare by Specifications
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -30,14 +30,14 @@ export default function HomeCompareBySpecs({ locale = 'en' }: { locale?: Locale 
           </p>
         </div>
         
-        <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl border-2 border-gray-200 p-6 md:p-8">
+        <div className="bg-gradient-to-br from-gray-50 to-white rounded-card border-2 border-gray-200 p-6 md:p-8 shadow-card">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
             {keySpecs.map((spec) => {
               const Icon = spec.icon;
               return (
                 <div
                   key={spec.keyword}
-                  className="flex flex-col items-center text-center gap-2 p-4 bg-white rounded-lg border border-gray-200 hover:border-primary-300 transition-colors"
+                  className="flex flex-col items-center text-center gap-2 p-4 bg-white rounded-card border border-gray-200 shadow-card hover:shadow-card-hover hover:border-primary-300 transition-all duration-300"
                 >
                   <Icon className="w-6 h-6 text-primary-600" />
                   <span className="text-sm font-semibold text-gray-900">{spec.label}</span>
@@ -49,7 +49,7 @@ export default function HomeCompareBySpecs({ locale = 'en' }: { locale?: Locale 
           <div className="text-center">
             <Link
               href={pathForLocale('compare', locale)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl"
+              className="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-button"
             >
               Compare Tractors
               <ArrowRight className="w-5 h-5" />

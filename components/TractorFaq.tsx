@@ -43,7 +43,7 @@ export default function TractorFaq({ locale = 'en', faqs, baseUrl = BASE, tracto
 
   return (
     <section
-      className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 p-4 md:p-6"
+      className="mt-8 md:mt-12 bg-white rounded-card border border-gray-200 shadow-card p-4 md:p-6"
       aria-labelledby="faq-heading"
     >
       <TractorFaqSchema faqs={faqs} tractorSlug={tractorSlug} />

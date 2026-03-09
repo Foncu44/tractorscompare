@@ -34,7 +34,7 @@ export default function SimilarTractors({
 
   return (
     <section
-      className="mt-8 md:mt-12 bg-primary-50 rounded-xl p-6 md:p-8 border border-primary-200"
+      className="mt-8 md:mt-12 bg-primary-50 rounded-card p-6 md:p-8 border border-primary-200 shadow-card"
       aria-labelledby="similar-tractors-heading"
     >
       <h2 id="similar-tractors-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-4">

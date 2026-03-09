@@ -250,7 +250,7 @@ export default function NewsSections({ items, showAll = false }: { items: NewsIt
                   href={n.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+                  className="group block bg-white rounded-card overflow-hidden shadow-card border border-gray-200 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2"
                 >
                   <div className="w-full h-56 bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center overflow-hidden relative">
                     {n.imageUrl && n.imageUrl.trim() ? (
@@ -383,7 +383,7 @@ export default function NewsSections({ items, showAll = false }: { items: NewsIt
                       href={n.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group block bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fadeIn"
+                      className="group block bg-white rounded-card overflow-hidden shadow-card border border-gray-200 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 animate-fadeIn"
                       style={{
                         animationDelay: `${index * 0.1}s`,
                       }}

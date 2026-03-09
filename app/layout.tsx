@@ -13,8 +13,14 @@ export default async function RootLayout({
 }) {
   const locale = (await headers()).get('x-locale') || 'en';
   return (
-    <html lang={locale} data-scroll-behavior="smooth">
+    <html lang={locale} data-scroll-behavior="smooth" className="scroll-smooth">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+        />
         <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🚜%3C/text%3E%3C/svg%3E" />
         <meta name="google-adsense-account" content="ca-pub-1428727998918616" />
         <link rel="preload" href="/images/banner.webp" as="image" />
@@ -30,7 +36,7 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <body className="font-serif overflow-x-hidden" suppressHydrationWarning>
+      <body className="font-sans text-gray-900 bg-gray-50/80 overflow-x-hidden antialiased" suppressHydrationWarning>
         <ClientErrorLogger />
         {process.env.NEXT_PUBLIC_DEBUG_ERRORS === 'true' && <ClientErrorReporter />}
         <AnalyticsScripts />

@@ -17,11 +17,11 @@ export default function Footer({ locale }: { locale: Locale }) {
       <div className="container-custom py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">{t('common.siteName', undefined, locale)}</h3>
+            <h3 className="font-heading text-white font-bold text-xl mb-5">{t('common.siteName', undefined, locale)}</h3>
             <p className="text-sm text-gray-400 leading-relaxed">{t('footer.tagline', undefined, locale)}</p>
           </div>
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">{t('footer.quickLinks', undefined, locale)}</h3>
+            <h3 className="font-heading text-white font-bold text-xl mb-5">{t('footer.quickLinks', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
               <li><LocaleLink locale={locale} logicalPath="agricultural-tractors" className={linkCls}>{t('common.agriculturalTractors', undefined, locale)}</LocaleLink></li>
               <li><LocaleLink locale={locale} logicalPath="lawn-garden-tractors" className={linkCls}>{t('common.lawnTractors', undefined, locale)}</LocaleLink></li>
@@ -32,7 +32,7 @@ export default function Footer({ locale }: { locale: Locale }) {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">{t('footer.categories', undefined, locale)}</h3>
+            <h3 className="font-heading text-white font-bold text-xl mb-5">{t('footer.categories', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
               <li><LocaleLink locale={locale} logicalPath="tractors" className={linkCls}>{t('common.tractorDatabase', undefined, locale)}</LocaleLink></li>
               <li><LocaleLink locale={locale} logicalPath="best" className={linkCls}>{t('common.bestTractors', undefined, locale)}</LocaleLink></li>
@@ -41,7 +41,7 @@ export default function Footer({ locale }: { locale: Locale }) {
             </ul>
           </div>
           <div>
-            <h3 className="text-white font-bold text-xl mb-5">{t('footer.contact', undefined, locale)}</h3>
+            <h3 className="font-heading text-white font-bold text-xl mb-5">{t('footer.contact', undefined, locale)}</h3>
             <ul className="space-y-3 text-sm">
               <li><LocaleLink locale={locale} logicalPath="contact" className={linkCls}>{t('common.contactUs', undefined, locale)}</LocaleLink></li>
               <li><LocaleLink locale={locale} logicalPath="about-us" className={linkCls}>{t('common.aboutUs', undefined, locale)}</LocaleLink></li>

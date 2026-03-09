@@ -250,7 +250,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
             <Link
               key={slug}
               href={`/tractores/${slug}`}
-              className="group bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 animate-fadeInUp"
+              className="group bg-white rounded-card overflow-hidden shadow-card border border-gray-200 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 animate-fadeInUp"
               style={{
                 animationDelay: `${index * 0.05}s`,
               }}

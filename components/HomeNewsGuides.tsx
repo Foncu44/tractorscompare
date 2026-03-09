@@ -39,7 +39,7 @@ export default function HomeNewsGuides({ locale = 'en' }: { locale?: Locale }) {
             <Link
               key={index}
               href={pathForLocale(article.href, locale)}
-              className="group bg-white rounded-xl border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+              className="group bg-white rounded-card border-2 border-gray-200 hover:border-primary-300 p-6 transition-all duration-300 shadow-card hover:shadow-card-hover hover:-translate-y-1"
             >
               <div className="flex items-start gap-4">
                 <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${

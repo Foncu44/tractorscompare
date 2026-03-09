@@ -271,7 +271,7 @@ export default function TractorSpecsTabs({ tractor, tabMeaningNotes }: TractorSp
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm">
+    <div className="bg-white rounded-card border border-gray-200 shadow-card">
       {/* Tabs Navigation */}
       <div className="border-b border-gray-200">
         <div className="px-4 md:px-6 pt-4 pb-3">

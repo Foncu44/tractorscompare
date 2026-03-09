@@ -51,7 +51,7 @@ export default function PopularTractorsSection({ tractors: propTractors }: Popul
           <div className="mb-6">
             <div className="flex items-center gap-3">
               <TrendingUp className="w-6 h-6 text-primary-600" />
-              <h2 className="text-3xl font-bold text-gray-900">Most Popular</h2>
+              <h2 className="font-heading text-3xl font-bold text-gray-900">Most Popular</h2>
             </div>
           </div>
           <SkeletonList count={5} />
@@ -92,7 +92,7 @@ export default function PopularTractorsSection({ tractors: propTractors }: Popul
         <div className="mb-4 md:mb-6">
           <div className="flex items-center gap-3">
             <TrendingUp className="w-5 h-5 md:w-6 md:h-6 text-primary-600" />
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Most Popular</h2>
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-gray-900">Most Popular</h2>
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export default function PopularTractorsSection({ tractors: propTractors }: Popul
               <Link
                 key={tractor.id}
                 href={`/tractores/${slug}`}
-                className="group bg-white rounded-xl p-3 md:p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 flex items-center gap-3 md:gap-4"
+                className="group bg-white rounded-card p-3 md:p-4 shadow-card hover:shadow-card-hover transition-all duration-300 border border-gray-200 flex items-center gap-3 md:gap-4"
               >
                 {/* Número de ranking */}
                 <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-100 flex items-center justify-center">

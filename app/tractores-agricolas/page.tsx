@@ -7,12 +7,16 @@ import { Filter, Search } from 'lucide-react';
 import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
 import { getBrandColor } from '@/lib/brandLogos';
 import BrandLogo from '@/components/BrandLogo';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
 
-function TractoresAgricolasContent() {
+function TractoresAgricolasContent({ locale }: { locale?: Locale }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [q, setQ] = useState(searchParams.get('q') || '');
   const [sort, setSort] = useState(searchParams.get('sort') || 'name');
+  const basePath = locale ? pathForLocale('agricultural-tractors', locale) : '/tractores-agricolas';
+  const brandHref = (slug: string) => (locale ? pathForLocale(`brands/${slug}`, locale) + '?tipo=farm' : `/marcas/${slug}?tipo=farm`);
 
   const farmTractors = useMemo(() => tractors.filter((t) => (t.type || 'farm') === 'farm'), []);
 
@@ -49,7 +53,7 @@ function TractoresAgricolasContent() {
     const params = new URLSearchParams();
     if (q.trim()) params.set('q', q.trim());
     if (sort !== 'name') params.set('sort', sort);
-    router.push(`/tractores-agricolas${params.toString() ? '?' + params.toString() : ''}`);
+    router.push(`${basePath}${params.toString() ? '?' + params.toString() : ''}`);
   };
 
   return (
@@ -110,7 +114,7 @@ function TractoresAgricolasContent() {
             {brands.map(({ brand, slug, count, color }) => (
               <Link
                 key={brand}
-                href={`/marcas/${slug}?tipo=farm`}
+                href={brandHref(slug)}
                 className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
               >
                 <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden p-4`}>
@@ -142,7 +146,7 @@ function TractoresAgricolasContent() {
   );
 }
 
-export default function TractoresAgricolasPage() {
+export default function TractoresAgricolasPage({ locale }: { locale?: Locale }) {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -152,7 +156,7 @@ export default function TractoresAgricolasPage() {
         </div>
       </div>
     }>
-      <TractoresAgricolasContent />
+      <TractoresAgricolasContent locale={locale} />
     </Suspense>
   );
 }

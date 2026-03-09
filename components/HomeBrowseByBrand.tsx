@@ -33,7 +33,7 @@ export default function HomeBrowseByBrand({ brands, locale = 'en' }: HomeBrowseB
               <Link
                 key={brand}
                 href={pathForLocale(`brands/${slug}`, locale)}
-                className="group bg-white rounded-xl border-2 border-gray-200 hover:border-primary-300 p-4 md:p-6 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                className="group bg-white rounded-card border-2 border-gray-200 hover:border-primary-300 p-4 md:p-6 text-center transition-all duration-300 shadow-card hover:shadow-card-hover hover:-translate-y-1"
               >
                 <div className="flex flex-col items-center gap-2 md:gap-3">
                   <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">

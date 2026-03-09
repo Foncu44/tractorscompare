@@ -4,21 +4,20 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth; /* fallback; Next.js prefers data-scroll-behavior on html */
+    scroll-behavior: smooth;
   }
-  
+
   body {
-    @apply bg-gray-50 text-gray-900;
-    font-family: 'Times New Roman', Times, serif;
+    @apply bg-gray-50 text-gray-900 font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
-  * {
-    font-family: 'Times New Roman', Times, serif;
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-semibold tracking-tight text-gray-900;
   }
 
-  /* Focus styles for accessibility */
+  /* Focus styles for accessibility (UI UX Pro Max: a11y) */
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-primary-500;
   }
@@ -30,15 +29,15 @@
   }
   
   .card {
-    @apply bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300;
+    @apply bg-white rounded-card shadow-card hover:shadow-card-hover transition-shadow duration-300 border border-gray-100;
   }
-  
+
   .btn-primary {
-    @apply bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-200;
+    @apply inline-flex items-center justify-center font-medium bg-primary-600 text-white px-6 py-3 rounded-button hover:bg-primary-700 active:bg-primary-800 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
-  
+
   .btn-secondary {
-    @apply bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200;
+    @apply inline-flex items-center justify-center font-medium bg-white text-gray-700 px-6 py-3 rounded-button border border-gray-300 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
   }
 
   /* SEO Content Section Styles */

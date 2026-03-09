@@ -1,0 +1,46 @@
+import NewsSections from '@/components/NewsSections';
+import newsData from '@/data/news.json';
+
+export const dynamic = 'force-static';
+
+export default function NewsPage() {
+  const newsItems = (newsData as { items?: unknown[] }).items || [];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-[#fbf7f1] to-white">
+      <section className="relative py-12 md:py-16 bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl" />
+        </div>
+        <div className="container-custom relative z-10">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            Tractor Industry News
+          </h1>
+          <p className="text-lg md:text-xl text-white/95 max-w-3xl">
+            Stay informed with the latest news, trends, and developments in the agricultural tractor industry.
+          </p>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16">
+        <div className="container-custom">
+          <NewsSections items={newsItems} showAll={true} />
+        </div>
+      </section>
+
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container-custom">
+          <div className="max-w-4xl mx-auto prose prose-lg">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 md:mb-6">
+              Stay Updated with Tractor Industry News
+            </h2>
+            <p className="text-base md:text-lg text-gray-700 mb-4 md:mb-6 leading-relaxed">
+              The agricultural tractor industry is constantly evolving. Our news section provides coverage of the latest updates in tractor manufacturing, agricultural machinery, and farming technology.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

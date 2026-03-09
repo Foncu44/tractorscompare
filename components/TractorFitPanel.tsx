@@ -69,7 +69,7 @@ export default function TractorFitPanel({
 
   return (
     <section
-      className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 mb-6 md:mb-10"
+      className="bg-white rounded-card border border-gray-200 shadow-card p-4 md:p-6 mb-6 md:mb-10"
       aria-labelledby="tractorfit-heading"
     >
       <div className="flex flex-wrap items-center gap-2 mb-4">

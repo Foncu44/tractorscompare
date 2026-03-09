@@ -7,7 +7,7 @@ export interface TractorNarrativeSectionProps {
 export default function TractorNarrativeSection({ narrative }: TractorNarrativeSectionProps) {
   return (
     <section
-      className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 p-4 md:p-6"
+      className="mt-8 md:mt-12 bg-white rounded-card border border-gray-200 shadow-card p-4 md:p-6"
       aria-labelledby="tractorfit-narrative-heading"
     >
       <h2 id="tractorfit-narrative-heading" className="text-xl md:text-2xl font-bold text-gray-900 mb-4">

@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { X, Plus, GitCompare as CompareIcon, Share2, RotateCcw, Filter, Info, Zap, Gauge, Settings, Ruler, Droplets } from 'lucide-react';
 import { tractors, getTractorById } from '@/data/tractors';
 import { Tractor } from '@/types/tractor';
 import TractorImagePlaceholder from '@/components/TractorImagePlaceholder';
+import { t } from '@/lib/i18n/t';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
 
 type TabCategory = 'basic' | 'power' | 'transmission' | 'hydraulics' | 'dimensions' | 'other';
 
@@ -15,16 +18,20 @@ interface SpecCategory {
   icon: React.ReactNode;
 }
 
-const categories: SpecCategory[] = [
-  { id: 'basic', label: 'Basic Information', icon: <Info className="w-4 h-4" /> },
-  { id: 'power', label: 'Power', icon: <Zap className="w-4 h-4" /> },
-  { id: 'transmission', label: 'Transmission', icon: <Gauge className="w-4 h-4" /> },
-  { id: 'hydraulics', label: 'Hydraulics', icon: <Droplets className="w-4 h-4" /> },
-  { id: 'dimensions', label: 'Dimensions', icon: <Ruler className="w-4 h-4" /> },
-  { id: 'other', label: 'Other Information', icon: <Settings className="w-4 h-4" /> },
-];
+function buildCategories(locale: Locale): SpecCategory[] {
+  return [
+    { id: 'basic', label: t('comparePage.tabBasic', undefined, locale), icon: <Info className="w-4 h-4" /> },
+    { id: 'power', label: t('comparePage.tabPower', undefined, locale), icon: <Zap className="w-4 h-4" /> },
+    { id: 'transmission', label: t('comparePage.tabTransmission', undefined, locale), icon: <Gauge className="w-4 h-4" /> },
+    { id: 'hydraulics', label: t('comparePage.tabHydraulics', undefined, locale), icon: <Droplets className="w-4 h-4" /> },
+    { id: 'dimensions', label: t('comparePage.tabDimensions', undefined, locale), icon: <Ruler className="w-4 h-4" /> },
+    { id: 'other', label: t('comparePage.tabOther', undefined, locale), icon: <Settings className="w-4 h-4" /> },
+  ];
+}
 
-export default function CompararPage() {
+export default function CompararPage({ locale: localeProp }: { locale?: Locale }) {
+  const locale: Locale = localeProp ?? 'en';
+  const categories = useMemo(() => buildCategories(locale), [locale]);
   const [selectedTractors, setSelectedTractors] = useState<Tractor[]>([]);
   const [showTractorSelector, setShowTractorSelector] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -166,10 +173,10 @@ export default function CompararPage() {
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2 md:mb-3">
-            Comparar Tractores
+            {t('comparePage.title', undefined, locale)}
           </h1>
           <p className="text-gray-600 text-sm md:text-base">
-            Compara hasta 4 tractores lado a lado con todas sus especificaciones técnicas
+            {t('comparePage.subtitle', undefined, locale)}
           </p>
         </div>
 
@@ -185,12 +192,12 @@ export default function CompararPage() {
                   <button
                     onClick={() => removeTractor(tractor.id)}
                     className="absolute top-2 right-2 z-10 bg-white rounded-full p-1.5 shadow-md hover:bg-gray-100 transition-colors"
-                    aria-label="Eliminar tractor"
+                    aria-label={t('comparePage.removeTractor', undefined, locale)}
                   >
                     <X className="w-4 h-4 text-gray-600" />
                   </button>
                   
-                  <Link href={`/tractores/${tractor.slug}`} className="block">
+                  <Link href={pathForLocale(`tractors/${tractor.slug}`, locale)} className="block">
                     <div className="p-4 md:p-6">
                       {/* Image */}
                       <div className="w-full aspect-[4/3] mb-4 rounded-lg overflow-hidden bg-gray-100">
@@ -229,7 +236,7 @@ export default function CompararPage() {
                   className="bg-white rounded-xl border-2 border-dashed border-gray-300 hover:border-primary-400 hover:bg-primary-50 transition-all flex flex-col items-center justify-center min-h-[280px] md:min-h-[320px]"
                 >
                   <Plus className="w-12 h-12 text-gray-400 mb-3" />
-                  <span className="text-gray-600 font-medium text-sm md:text-base">Agregar Tractor</span>
+                  <span className="text-gray-600 font-medium text-sm md:text-base">{t('comparePage.addTractor', undefined, locale)}</span>
                   <span className="text-xs text-gray-500 mt-1">{selectedTractors.length}/4</span>
                 </button>
               )}
@@ -241,16 +248,16 @@ export default function CompararPage() {
         {selectedTractors.length === 0 && (
           <div className="text-center py-12 md:py-16 bg-white rounded-xl shadow-sm border border-gray-200">
             <CompareIcon className="w-16 h-16 md:w-20 md:h-20 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Comenzar Comparación</h3>
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">{t('comparePage.startComparison', undefined, locale)}</h3>
             <p className="text-gray-600 mb-6 text-sm md:text-base max-w-md mx-auto">
-              Agrega tractores para comparar sus especificaciones lado a lado
+              {t('comparePage.startComparisonDesc', undefined, locale)}
             </p>
             <button
               onClick={() => setShowTractorSelector(true)}
               className="btn-primary inline-flex items-center gap-2"
             >
               <Plus className="w-5 h-5" />
-              Agregar Primer Tractor
+              {t('comparePage.addFirstTractor', undefined, locale)}
             </button>
           </div>
         )}
@@ -260,7 +267,7 @@ export default function CompararPage() {
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col">
               <div className="p-4 md:p-6 border-b border-gray-200 flex items-center justify-between">
-                <h2 className="text-xl md:text-2xl font-bold text-gray-900">Seleccionar Tractor</h2>
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900">{t('comparePage.selectTractor', undefined, locale)}</h2>
                 <button
                   onClick={() => setShowTractorSelector(false)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -322,7 +329,7 @@ export default function CompararPage() {
                           </div>
                           {isSelected && (
                             <span className="text-green-600 text-xs md:text-sm font-medium flex-shrink-0">
-                              Agregado
+                              {t('comparePage.added', undefined, locale)}
                             </span>
                           )}
                         </div>
@@ -347,21 +354,21 @@ export default function CompararPage() {
                     className="flex items-center gap-2 px-3 md:px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium text-sm"
                   >
                     <Plus className="w-4 h-4" />
-                    <span className="hidden sm:inline">Agregar</span>
+                    <span className="hidden sm:inline">{t('comparePage.add', undefined, locale)}</span>
                   </button>
                   <button
                     onClick={shareComparison}
                     className="flex items-center gap-2 px-3 md:px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
                   >
                     <Share2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">Compartir</span>
+                    <span className="hidden sm:inline">{t('comparePage.share', undefined, locale)}</span>
                   </button>
                   <button
                     onClick={resetComparison}
                     className="flex items-center gap-2 px-3 md:px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
                   >
                     <RotateCcw className="w-4 h-4" />
-                    <span className="hidden sm:inline">Reiniciar</span>
+                    <span className="hidden sm:inline">{t('comparePage.reset', undefined, locale)}</span>
                   </button>
                 </div>
                 <label htmlFor="compare-show-differences" className="flex items-center gap-2 cursor-pointer">
@@ -373,7 +380,7 @@ export default function CompararPage() {
                     onChange={(e) => setShowOnlyDifferences(e.target.checked)}
                     className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
                   />
-                  <span className="text-sm font-medium text-gray-700">Solo diferencias</span>
+                  <span className="text-sm font-medium text-gray-700">{t('comparePage.onlyDifferences', undefined, locale)}</span>
                   <Filter className="w-4 h-4 text-gray-500" />
                 </label>
               </div>
@@ -432,7 +439,7 @@ export default function CompararPage() {
                         className="px-6 py-4 text-center text-sm font-semibold text-gray-900 min-w-[220px]"
                       >
                         <Link
-                          href={`/tractores/${tractor.slug}`}
+                          href={pathForLocale(`tractors/${tractor.slug}`, locale)}
                           className="hover:text-primary-600 transition-colors"
                         >
                           {tractor.brand} {tractor.model}
@@ -533,7 +540,7 @@ export default function CompararPage() {
                                 className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                               >
                                 <Link
-                                  href={`/tractores/${tractor.slug}`}
+                                  href={pathForLocale(`tractors/${tractor.slug}`, locale)}
                                   className="font-semibold text-primary-600 text-sm hover:underline flex-1"
                                 >
                                   {tractor.brand} {tractor.model}

@@ -107,7 +107,7 @@ export default function BrandsSidebar({ type = 'all' }: BrandsSidebarProps) {
   };
 
   return (
-    <div className="w-full md:w-64 lg:w-72 bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit sticky top-4">
+    <div className="w-full md:w-64 lg:w-72 bg-white rounded-card shadow-card border border-gray-200 p-6 h-fit sticky top-4">
       {/* Título */}
       <h2 className="text-xl font-bold text-gray-900 mb-2">Marcas</h2>
       

@@ -19,7 +19,7 @@ export default function SEOContentSection({ content }: SEOContentSectionProps) {
   }, [content]);
 
   return (
-    <div className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-lg">
+    <div className="mt-8 md:mt-12 bg-white rounded-card border border-gray-200 overflow-hidden shadow-card">
       {/* Header - Siempre visible */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}

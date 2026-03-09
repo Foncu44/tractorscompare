@@ -33,7 +33,7 @@ export default function Header({ locale }: { locale: Locale }) {
         <div className="flex items-center justify-between h-16 md:h-20 gap-4">
           {/* Logo - Left */}
           <LocaleLink locale={locale} logicalPath="" className="flex items-center flex-shrink-0 group min-w-0">
-            <span className="text-lg md:text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-200 truncate">
+            <span className="font-heading text-lg md:text-2xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors duration-200 truncate">
               TractorsCompare.com
             </span>
           </LocaleLink>

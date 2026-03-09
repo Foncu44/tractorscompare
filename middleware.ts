@@ -60,6 +60,26 @@ export function middleware(request: NextRequest) {
       }
     }
 
+    // [locale]/brands/[brand] no existe: reescribir a /marcas/[brand] y enviar x-locale (layout raíz mostrará Header/Footer)
+    if (rest[0] === 'brands' && rest.length > 1) {
+      const tail = rest.slice(1).join('/');
+      newUrl.pathname = `/marcas/${tail}`;
+      const res = NextResponse.rewrite(newUrl);
+      res.headers.set('x-locale', locale);
+      res.headers.set('x-pathname', pathname);
+      return res;
+    }
+
+    // [locale]/best/[category] no existe: reescribir a /best/[category] y enviar x-locale
+    if (rest[0] === 'best' && rest.length > 1) {
+      const tail = rest.slice(1).join('/');
+      newUrl.pathname = `/best/${tail}`;
+      const res = NextResponse.rewrite(newUrl);
+      res.headers.set('x-locale', locale);
+      res.headers.set('x-pathname', pathname);
+      return res;
+    }
+
     const res = NextResponse.next();
     res.headers.set('x-locale', locale);
     res.headers.set('x-pathname', pathname);

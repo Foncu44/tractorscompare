@@ -31,7 +31,7 @@ export default function TractorsSection() {
         <div className="container-custom">
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-64 xl:w-72 flex-shrink-0">
-              <div className="w-full md:w-64 lg:w-72 bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit">
+              <div className="w-full md:w-64 lg:w-72 bg-white rounded-card shadow-card border border-gray-200 p-6 h-fit">
                 <div className="animate-pulse">
                   <div className="h-6 bg-gray-200 rounded w-24 mb-2"></div>
                   <div className="h-1 bg-gray-200 rounded mb-4"></div>
@@ -49,7 +49,7 @@ export default function TractorsSection() {
                 <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-md border border-gray-200">
+                    <div key={i} className="bg-white rounded-card overflow-hidden shadow-card border border-gray-200 hover:shadow-card-hover transition-shadow duration-300">
                       <div className="aspect-[4/3] bg-gray-200"></div>
                       <div className="p-5">
                         <div className="h-4 bg-gray-200 rounded w-20 mb-2"></div>
