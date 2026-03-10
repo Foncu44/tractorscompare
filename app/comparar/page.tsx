@@ -29,7 +29,8 @@ function buildCategories(locale: Locale): SpecCategory[] {
   ];
 }
 
-export default function CompararPage({ locale: localeProp }: { locale?: Locale }) {
+// Named export: used as component from locale pages (accepts locale prop)
+export function CompararComponent({ locale: localeProp }: { locale?: Locale }) {
   const locale: Locale = localeProp ?? 'en';
   const categories = useMemo(() => buildCategories(locale), [locale]);
   const [selectedTractors, setSelectedTractors] = useState<Tractor[]>([]);
@@ -568,4 +569,9 @@ export default function CompararPage({ locale: localeProp }: { locale?: Locale }
       </div>
     </div>
   );
+}
+
+// Default page export — no custom props (Next.js 15 page type validation)
+export default function ComparePage() {
+  return <CompararComponent />;
 }

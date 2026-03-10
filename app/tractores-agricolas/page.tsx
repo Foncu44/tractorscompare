@@ -146,7 +146,8 @@ function TractoresAgricolasContent({ locale }: { locale?: Locale }) {
   );
 }
 
-export default function TractoresAgricolasPage({ locale }: { locale?: Locale }) {
+// Named export: used as component from locale pages (accepts locale prop)
+export function TractoresAgricolasComponent({ locale }: { locale?: Locale }) {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -159,5 +160,10 @@ export default function TractoresAgricolasPage({ locale }: { locale?: Locale }) 
       <TractoresAgricolasContent locale={locale} />
     </Suspense>
   );
+}
+
+// Default page export — no custom props (Next.js 15 page type validation)
+export default function TractoresAgricolasPage() {
+  return <TractoresAgricolasComponent locale="es" />;
 }
 

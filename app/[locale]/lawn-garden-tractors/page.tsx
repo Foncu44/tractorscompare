@@ -1,4 +1,4 @@
-import TractoresJardinPage from '@/app/tractores-jardin/page';
+import { TractoresJardinComponent } from '@/app/tractores-jardin/page';
 import type { Locale } from '@/lib/i18n/config';
 
 export const dynamic = 'force-static';
@@ -9,5 +9,5 @@ export default async function LawnGardenTractorsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return <TractoresJardinPage locale={locale as Locale} />;
+  return <TractoresJardinComponent locale={locale as Locale} />;
 }
