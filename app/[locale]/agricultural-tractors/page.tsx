@@ -1,4 +1,4 @@
-import { TractoresAgricolasComponent } from '@/app/tractores-agricolas/page';
+import { TractoresAgricolasView } from '@/components/TractoresAgricolasView';
 import type { Locale } from '@/lib/i18n/config';
 
 export const dynamic = 'force-static';
@@ -9,5 +9,5 @@ export default async function AgriculturalTractorsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  return <TractoresAgricolasComponent locale={locale as Locale} />;
+  return <TractoresAgricolasView locale={locale as Locale} />;
 }

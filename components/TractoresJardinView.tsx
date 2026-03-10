@@ -1,0 +1,162 @@
+'use client';
+
+import { useState, useMemo, Suspense } from 'react';
+import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { Filter, Search } from 'lucide-react';
+import { brandToSlug, getAllBrands, tractors } from '@/data/tractors';
+import { getBrandColor } from '@/lib/brandLogos';
+import BrandLogo from '@/components/BrandLogo';
+import { pathForLocale } from '@/lib/i18n/routes';
+import type { Locale } from '@/lib/i18n/config';
+
+function TractoresJardinContent({ locale }: { locale?: Locale }) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [q, setQ] = useState(searchParams.get('q') || '');
+  const [sort, setSort] = useState(searchParams.get('sort') || 'name');
+  const basePath = locale ? pathForLocale('lawn-garden-tractors', locale) : '/tractores-jardin';
+  const brandHref = (slug: string) => (locale ? pathForLocale(`brands/${slug}`, locale) + '?tipo=lawn' : `/marcas/${slug}?tipo=lawn`);
+
+  const lawnTractors = useMemo(() => tractors.filter((t) => (t.type || 'farm') === 'lawn'), []);
+
+  // Conteo por marca (solo jardín)
+  const counts = useMemo(() => {
+    const countMap = new Map<string, number>();
+    for (const t of lawnTractors) {
+      countMap.set(t.brand, (countMap.get(t.brand) || 0) + 1);
+    }
+    return countMap;
+  }, [lawnTractors]);
+
+  const allBrands = useMemo(() => getAllBrands(), []);
+
+  const brands = useMemo(() => {
+    const qLower = q.trim().toLowerCase();
+    return allBrands
+      .map((brand) => ({
+        brand,
+        slug: brandToSlug(brand),
+        count: counts.get(brand) || 0,
+        color: getBrandColor(brand),
+      }))
+      .filter((b) => b.count > 0)
+      .filter((b) => !qLower || b.brand.toLowerCase().includes(qLower))
+      .sort((a, b) => {
+        if (sort === 'models') return b.count - a.count;
+        return a.brand.localeCompare(b.brand);
+      });
+  }, [allBrands, counts, q, sort]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (q.trim()) params.set('q', q.trim());
+    if (sort !== 'name') params.set('sort', sort);
+    router.push(`${basePath}${params.toString() ? '?' + params.toString() : ''}`);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero */}
+      <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white py-12 md:py-16">
+        <div className="container-custom">
+          <h1 className="text-4xl font-bold mb-4">Lawn Tractors</h1>
+          <p className="text-white/80 text-lg max-w-3xl">
+            Find specifications of {lawnTractors.length.toLocaleString()} lawn tractors and mowers from {brands.length} brands. Compare technical features and find the best model.
+          </p>
+        </div>
+      </section>
+
+      {/* Filters */}
+      <section className="border-b border-gray-200 bg-white py-4">
+        <div className="container-custom">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+            <div className="relative flex-1 max-w-md w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                id="lawn-brand-search"
+                name="q"
+                type="search"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search brand..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none"
+                aria-label="Search brand"
+              />
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <Filter className="h-4 w-4 text-gray-500" />
+              <select
+                id="lawn-brand-sort"
+                name="sort"
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="w-full sm:w-56 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-200 focus:outline-none bg-white"
+              >
+                <option value="name">Name A-Z</option>
+                <option value="models">Most models</option>
+              </select>
+              <button className="btn-primary py-2 px-5" type="submit">Apply</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      {/* Grid */}
+      <section className="py-10">
+        <div className="container-custom">
+          <div className="mb-6 text-gray-600">
+            Showing <strong>{brands.length}</strong> brands
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {brands.map(({ brand, slug, count, color }) => (
+              <Link
+                key={brand}
+                href={brandHref(slug)}
+                className="group bg-white rounded-xl p-4 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border border-gray-200"
+              >
+                <div className={`aspect-[4/3] ${color} rounded-lg mb-3 flex items-center justify-center overflow-hidden p-4`}>
+                  <div className="w-full h-full flex items-center justify-center">
+                    <BrandLogo
+                      brandName={brand}
+                      width={120}
+                      height={80}
+                      className="max-w-full max-h-full"
+                    />
+                  </div>
+                </div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-primary-700 transition-colors">
+                  {brand}
+                </h3>
+                <p className="text-sm text-gray-500">{count} models</p>
+              </Link>
+            ))}
+          </div>
+
+          {brands.length === 0 && (
+            <div className="text-center py-12 text-gray-600">
+              No brands found matching &quot;{q}&quot;.
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export function TractoresJardinView({ locale }: { locale?: Locale }) {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <TractoresJardinContent locale={locale} />
+    </Suspense>
+  );
+}
