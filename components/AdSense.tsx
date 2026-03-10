@@ -49,9 +49,9 @@ export default function AdSense({
 
     const isAdSenseLoaded = () => {
       if (typeof window === 'undefined') return false;
-      const ads = (window as Window & typeof globalThis).adsbygoogle;
+      const ads = window.adsbygoogle as unknown;
       if (!ads) return false;
-      return Array.isArray(ads) || typeof ads.push === 'function';
+      return Array.isArray(ads) || typeof (ads as { push?: unknown }).push === 'function';
     };
 
     const initializeAd = () => {
