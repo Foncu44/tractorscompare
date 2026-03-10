@@ -1,10 +1,10 @@
-import NewsSections from '@/components/NewsSections';
+import NewsSections, { type NewsItem } from '@/components/NewsSections';
 import newsData from '@/data/news.json';
 
 export const dynamic = 'force-static';
 
 export default function NewsPage() {
-  const newsItems = (newsData as { items?: unknown[] }).items || [];
+  const newsItems = ((newsData as { items?: unknown[] }).items || []) as NewsItem[];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#fbf7f1] to-white">
