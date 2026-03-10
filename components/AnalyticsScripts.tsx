@@ -5,8 +5,11 @@ import Script from 'next/script';
 import { isAdSensePreview } from '@/src/lib/runtimeEnv';
 
 /**
- * Loads GTM/GA only when NOT in AdSense preview (iframe + google referrer).
+ * Loads GA4 only when NOT in AdSense preview (iframe + google referrer).
  * In preview, these scripts can throw; we skip them to avoid client-side exceptions.
+ *
+ * FIX: Using a single gtag('config') call to avoid _ga cookie expires overwrite.
+ * Page view is sent via gtag('event') on first interaction — no second config call.
  */
 export default function AnalyticsScripts() {
   const [allowAnalytics, setAllowAnalytics] = useState(false);
@@ -28,18 +31,16 @@ export default function AnalyticsScripts() {
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-5WVZHK0232', {
-            'send_page_view': false
+          gtag('config', 'G-5WVZHK0232', { send_page_view: false });
+          var _gaSent = false;
+          ['mousedown', 'touchstart', 'keydown', 'scroll'].forEach(function(ev) {
+            document.addEventListener(ev, function() {
+              if (!_gaSent) {
+                _gaSent = true;
+                gtag('event', 'page_view', { send_to: 'G-5WVZHK0232' });
+              }
+            }, { once: true, passive: true });
           });
-          if (typeof window !== 'undefined') {
-            ['mousedown', 'touchstart', 'keydown'].forEach(function(event) {
-              document.addEventListener(event, function() {
-                gtag('config', 'G-5WVZHK0232', {
-                  'send_page_view': true
-                });
-              }, { once: true });
-            });
-          }
         `}
       </Script>
     </>

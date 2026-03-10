@@ -19,7 +19,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400&display=swap"
         />
         <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E🚜%3C/text%3E%3C/svg%3E" />
         <meta name="google-adsense-account" content="ca-pub-1428727998918616" />
@@ -36,7 +36,7 @@ export default async function RootLayout({
           />
         )}
       </head>
-      <body className="font-sans text-gray-900 bg-gray-50/80 overflow-x-hidden antialiased" suppressHydrationWarning>
+      <body className="font-sans text-stone-900 bg-surface-warm overflow-x-hidden antialiased" suppressHydrationWarning>
         <ClientErrorLogger />
         {process.env.NEXT_PUBLIC_DEBUG_ERRORS === 'true' && <ClientErrorReporter />}
         <AnalyticsScripts />

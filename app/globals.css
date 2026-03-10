@@ -2,307 +2,249 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Base ──────────────────────────────────────────────────────────── */
 @layer base {
   html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 font-sans;
+    @apply bg-surface-warm text-stone-900 font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading font-semibold tracking-tight text-gray-900;
+    @apply font-heading font-bold tracking-tight text-stone-900;
+    line-height: 1.15;
   }
 
-  /* Focus styles for accessibility (UI UX Pro Max: a11y) */
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-primary-500;
   }
+
+  /* Smooth link transitions site-wide */
+  a {
+    @apply transition-colors duration-200;
+  }
 }
 
+/* ─── Components ─────────────────────────────────────────────────────── */
 @layer components {
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
+  /* Cards */
   .card {
-    @apply bg-white rounded-card shadow-card hover:shadow-card-hover transition-shadow duration-300 border border-gray-100;
+    @apply bg-white rounded-card shadow-card hover:shadow-card-hover transition-all duration-300 border border-stone-100;
+  }
+  .card-hover {
+    @apply hover:-translate-y-1 hover:border-primary-200;
   }
 
+  /* Buttons */
   .btn-primary {
-    @apply inline-flex items-center justify-center font-medium bg-primary-600 text-white px-6 py-3 rounded-button hover:bg-primary-700 active:bg-primary-800 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center font-semibold bg-primary-600 text-white px-6 py-3 rounded-button
+           hover:bg-primary-700 active:bg-primary-800 transition-all duration-200
+           focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2
+           shadow-sm hover:shadow-md;
   }
-
   .btn-secondary {
-    @apply inline-flex items-center justify-center font-medium bg-white text-gray-700 px-6 py-3 rounded-button border border-gray-300 hover:bg-gray-50 hover:border-gray-400 active:bg-gray-100 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply inline-flex items-center justify-center font-semibold bg-white text-stone-700 px-6 py-3 rounded-button
+           border border-stone-200 hover:bg-stone-50 hover:border-stone-300 active:bg-stone-100
+           transition-all duration-200 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+  }
+  .btn-amber {
+    @apply inline-flex items-center justify-center font-semibold bg-amber-500 text-white px-6 py-3 rounded-button
+           hover:bg-amber-600 active:bg-amber-700 transition-all duration-200
+           shadow-sm hover:shadow-md;
   }
 
-  /* SEO Content Section Styles */
+  /* Gradient text utility */
+  .text-gradient-green {
+    @apply bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent;
+  }
+  .text-gradient-amber {
+    @apply bg-gradient-to-r from-amber-600 to-amber-400 bg-clip-text text-transparent;
+  }
+
+  /* Section divider — organic wave */
+  .wave-divider {
+    @apply w-full overflow-hidden leading-none;
+    line-height: 0;
+  }
+
+  /* Badge / pill */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide;
+  }
+  .badge-green  { @apply bg-primary-100 text-primary-700; }
+  .badge-amber  { @apply bg-amber-100  text-amber-700;  }
+  .badge-stone  { @apply bg-stone-100  text-stone-600;  }
+
+  /* ─── SEO Content Section Styles ──────────────────────────────────── */
   .seo-content-wrapper h1 {
     font-size: 1.875rem;
     line-height: 2.25rem;
-    font-weight: 700;
-    color: #111827;
+    font-weight: 800;
+    color: #1c1917;
     margin-bottom: 1.5rem;
     margin-top: 2rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid #e5e7eb;
+    border-bottom: 2px solid #e7e5e4;
   }
-  
-  .seo-content-wrapper h1:first-child {
-    margin-top: 0;
-  }
-  
+  .seo-content-wrapper h1:first-child { margin-top: 0; }
+
   @media (min-width: 768px) {
-    .seo-content-wrapper h1 {
-      font-size: 2.25rem;
-      line-height: 2.5rem;
-    }
+    .seo-content-wrapper h1 { font-size: 2.25rem; line-height: 2.5rem; }
   }
-  
   @media (min-width: 1024px) {
-    .seo-content-wrapper h1 {
-      font-size: 3rem;
-      line-height: 1;
-    }
+    .seo-content-wrapper h1 { font-size: 3rem; line-height: 1; }
   }
-  
+
   .seo-content-wrapper h2 {
     font-size: 1.5rem;
     line-height: 2rem;
     font-weight: 700;
-    color: #111827;
+    color: #1c1917;
     margin-bottom: 1.25rem;
     margin-top: 2.5rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e7e5e4;
   }
-  
-  .seo-content-wrapper h2:first-of-type {
-    border-top: none;
-    padding-top: 0;
-    margin-top: 0;
-  }
-  
+  .seo-content-wrapper h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
   @media (min-width: 768px) {
-    .seo-content-wrapper h2 {
-      font-size: 1.875rem;
-      line-height: 2.25rem;
-      margin-bottom: 1.5rem;
-      margin-top: 3rem;
-      padding-top: 2rem;
-    }
+    .seo-content-wrapper h2 { font-size: 1.875rem; line-height: 2.25rem; margin-bottom: 1.5rem; margin-top: 3rem; padding-top: 2rem; }
   }
-  
   @media (min-width: 1024px) {
-    .seo-content-wrapper h2 {
-      font-size: 2.25rem;
-      line-height: 2.5rem;
-    }
+    .seo-content-wrapper h2 { font-size: 2.25rem; line-height: 2.5rem; }
   }
-  
+
   .seo-content-wrapper h3 {
     font-size: 1.25rem;
     line-height: 1.75rem;
     font-weight: 600;
-    color: #1f2937;
+    color: #292524;
     margin-bottom: 1rem;
     margin-top: 1.75rem;
   }
-  
   @media (min-width: 768px) {
-    .seo-content-wrapper h3 {
-      font-size: 1.5rem;
-      line-height: 2rem;
-      margin-bottom: 1.25rem;
-      margin-top: 2rem;
-    }
+    .seo-content-wrapper h3 { font-size: 1.5rem; line-height: 2rem; margin-bottom: 1.25rem; margin-top: 2rem; }
   }
-  
   @media (min-width: 1024px) {
-    .seo-content-wrapper h3 {
-      font-size: 1.875rem;
-      line-height: 2.25rem;
-    }
+    .seo-content-wrapper h3 { font-size: 1.875rem; line-height: 2.25rem; }
   }
-  
+
   .seo-content-wrapper p {
-    color: #374151;
-    line-height: 1.75;
+    color: #44403c;
+    line-height: 1.8;
     margin-bottom: 1.25rem;
     font-size: 1rem;
     text-align: justify;
     word-break: break-word;
   }
-  
   @media (min-width: 768px) {
-    .seo-content-wrapper p {
-      margin-bottom: 1.5rem;
-      font-size: 1.125rem;
-    }
+    .seo-content-wrapper p { margin-bottom: 1.5rem; font-size: 1.0625rem; }
   }
-  
+
   .seo-content-wrapper ul {
     list-style: none;
     margin-bottom: 2rem;
-    background: #f9fafb;
-    border-radius: 0.75rem;
+    background: #fafaf9;
+    border-radius: 1rem;
     padding: 1.5rem 1rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e7e5e4;
   }
-  
   @media (min-width: 768px) {
-    .seo-content-wrapper ul {
-      padding: 2rem 1.5rem;
-      margin-bottom: 2.5rem;
-    }
+    .seo-content-wrapper ul { padding: 2rem 1.5rem; margin-bottom: 2.5rem; }
   }
-  
+
   .seo-content-wrapper ul li {
-    color: #374151;
+    color: #44403c;
     line-height: 1.75;
     font-size: 1rem;
-    padding: 1rem;
+    padding: 0.875rem 1rem 0.875rem 3rem;
     margin-bottom: 0.75rem;
     background: white;
-    border-radius: 0.5rem;
-    border-left: 4px solid #10b981;
+    border-radius: 0.625rem;
+    border-left: 4px solid #15744b;
     position: relative;
-    padding-left: 3rem;
   }
-  
-  .seo-content-wrapper ul li:last-child {
-    margin-bottom: 0;
-  }
-  
+  .seo-content-wrapper ul li:last-child { margin-bottom: 0; }
   @media (min-width: 768px) {
-    .seo-content-wrapper ul li {
-      font-size: 1.125rem;
-      padding: 1.25rem;
-      padding-left: 3.5rem;
-    }
+    .seo-content-wrapper ul li { font-size: 1.0625rem; padding: 1.125rem 1.25rem 1.125rem 3.5rem; }
   }
-  
+
   .seo-content-wrapper ul li::before {
-    content: '•';
+    content: '▸';
     position: absolute;
     left: 1.25rem;
-    color: #059669;
-    font-weight: bold;
-    font-size: 1.25rem;
+    color: #15744b;
+    font-size: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  
   @media (min-width: 768px) {
-    .seo-content-wrapper ul li::before {
-      left: 1.5rem;
-    }
+    .seo-content-wrapper ul li::before { left: 1.5rem; }
   }
-  
-  .seo-content-wrapper ul li strong {
-    color: #059669;
-    font-weight: 700;
-    display: inline-block;
-    min-width: 140px;
-  }
-  
+
+  .seo-content-wrapper ul li strong { color: #15744b; font-weight: 700; display: inline-block; min-width: 140px; }
   @media (min-width: 768px) {
-    .seo-content-wrapper ul li strong {
-      min-width: 200px;
-    }
+    .seo-content-wrapper ul li strong { min-width: 200px; }
   }
-  
-  .seo-content-wrapper strong {
-    color: #111827;
-    font-weight: 600;
-  }
-  
-  .seo-content-wrapper a {
-    color: #1d4ed8;
-    text-decoration: none;
-    font-weight: 500;
-    word-break: break-all;
-  }
-  
-  .seo-content-wrapper a:hover {
-    text-decoration: underline;
-  }
+
+  .seo-content-wrapper strong { color: #1c1917; font-weight: 600; }
+  .seo-content-wrapper a { color: #15744b; text-decoration: none; font-weight: 500; word-break: break-all; }
+  .seo-content-wrapper a:hover { text-decoration: underline; }
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+/* ─── Utilities ──────────────────────────────────────────────────────── */
+
+/* Scroll reveal helper — add .reveal to any element, JS adds .visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: none;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Legacy animation classes kept for backwards compat */
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out forwards;
   opacity: 0;
 }
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .animate-fadeInUp {
-  animation: fadeInUp 0.5s ease-out forwards;
+  animation: fadeUp 0.5s ease-out forwards;
   opacity: 0;
 }
 
-/* Hide scrollbar but keep functionality */
+/* Scrollbar utilities */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
-}
-
-/* Thin scrollbar for mobile tabs */
 .tabs-scrollable {
   scrollbar-width: thin;
-  scrollbar-color: #9ca3af #f3f4f6;
+  scrollbar-color: #a8a29e #f5f5f4;
 }
+.tabs-scrollable::-webkit-scrollbar { height: 6px; }
+.tabs-scrollable::-webkit-scrollbar-track { background: #f5f5f4; border-radius: 3px; }
+.tabs-scrollable::-webkit-scrollbar-thumb { background: #a8a29e; border-radius: 3px; }
+.tabs-scrollable::-webkit-scrollbar-thumb:hover { background: #78716c; }
 
-.tabs-scrollable::-webkit-scrollbar {
-  height: 6px;
+/* Grain texture overlay for hero sections */
+.grain-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
 }
-
-.tabs-scrollable::-webkit-scrollbar-track {
-  background: #f3f4f6;
-  border-radius: 3px;
-}
-
-.tabs-scrollable::-webkit-scrollbar-thumb {
-  background: #9ca3af;
-  border-radius: 3px;
-}
-
-.tabs-scrollable::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
-}
-
