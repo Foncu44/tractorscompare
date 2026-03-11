@@ -2,8 +2,14 @@ import Link from 'next/link';
 import { Tractor } from 'lucide-react';
 import { pathForLocale } from '@/lib/i18n/routes';
 import type { Locale } from '@/lib/i18n/config';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
+
+export const metadata: Metadata = {
+  title: 'Tractor Categories – Agricultural & Lawn Tractors Database',
+  description: 'Browse tractors by category. Find agricultural farm tractors, lawn and garden tractors with complete specifications, horsepower data, and side-by-side comparisons.',
+};
 
 export default async function TractorsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

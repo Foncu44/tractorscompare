@@ -20,50 +20,29 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
   // Estados
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [displayTractors, setDisplayTractors] = useState<any[]>([]);
   const [tractors, setTractors] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
-  // Load tractor data asynchronously - Optimized to avoid blocking
+  // Load tractor data asynchronously
   useEffect(() => {
     let mounted = true;
-    
-    function loadData() {
-      setIsLoading(true);
-      
-      // Use requestIdleCallback to avoid blocking main thread
-      const loadAsync = () => {
-        Promise.all([
-          loadTractors(),
-          selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null)
-        ]).then(([tractorsData, brand]) => {
-          if (mounted) {
-            setTractors(tractorsData);
-            setSelectedBrand(brand || null);
-            setIsLoading(false);
-          }
-        }).catch((error) => {
-          console.error('Error loading tractors:', error);
-          if (mounted) {
-            setIsLoading(false);
-          }
-        });
-      };
-      
-      // Defer load if browser is busy
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        requestIdleCallback(loadAsync, { timeout: 500 });
-      } else {
-        // Fallback: small delay to avoid blocking
-        setTimeout(loadAsync, 50);
+    setIsLoading(true);
+
+    Promise.all([
+      loadTractors(),
+      selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null)
+    ]).then(([tractorsData, brand]) => {
+      if (mounted) {
+        setTractors(tractorsData);
+        setSelectedBrand(brand || null);
+        setIsLoading(false);
       }
-    }
-    
-    loadData();
-    
-    return () => {
-      mounted = false;
-    };
+    }).catch((error) => {
+      console.error('Error loading tractors:', error);
+      if (mounted) setIsLoading(false);
+    });
+
+    return () => { mounted = false; };
   }, [selectedBrandSlug]);
 
   // Memoize tractor filtering for better performance
@@ -106,39 +85,6 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
     setCurrentPage(1);
   }, [selectedBrand, type]);
 
-  // Effect to update tractors when filters or page change
-  // Use requestIdleCallback to avoid blocking main thread
-  useEffect(() => {
-    // If first render, set without animation
-    if (displayTractors.length === 0) {
-      setDisplayTractors(tractorsToShow);
-      return;
-    }
-
-    // If there's a change, animate using requestIdleCallback to avoid blocking
-    setIsLoading(true);
-    
-    const scheduleUpdate = () => {
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          setDisplayTractors(tractorsToShow);
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 50);
-        }, { timeout: 200 });
-      } else {
-        // Fallback for browsers without requestIdleCallback
-        setTimeout(() => {
-          setDisplayTractors(tractorsToShow);
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 50);
-        }, 200);
-      }
-    };
-    
-    scheduleUpdate();
-  }, [tractorsToShow, displayTractors.length]);
 
   // Function to change page
   const goToPage = (page: number, event?: React.MouseEvent) => {
@@ -199,7 +145,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
     tractor.engine?.powerHP || tractor.engine?.powerKW ? 
       Math.round((tractor.engine.powerHP || (tractor.engine.powerKW || 0) * 1.341)) : null;
 
-  if (displayTractors.length === 0 && !isLoading) {
+  if (tractorsToShow.length === 0 && !isLoading) {
     return (
       <div className="text-center py-12 animate-fadeIn">
         <p className="text-gray-600 text-lg">
@@ -237,9 +183,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
       {/* Tractor grid with animation */}
       <div 
         data-tractor-grid
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {tractorsToShow.map((tractor, index) => {
           const slug = tractor.slug || `${brandToSlug(tractor.brand)}-${tractor.model.toLowerCase().replace(/\s+/g, '-')}`;
