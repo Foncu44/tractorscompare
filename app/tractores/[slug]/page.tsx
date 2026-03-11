@@ -148,40 +148,35 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
     additionalProperty: [
       {
         '@type': 'PropertyValue',
-        name: 'Potencia del Motor',
+        name: 'Engine Power',
         value: `${tractor.engine.powerHP} HP`,
       },
       {
         '@type': 'PropertyValue',
-        name: 'Tipo de Motor',
-        value: `${tractor.engine.cylinders} cilindros ${tractor.engine.fuelType}`,
+        name: 'Engine Type',
+        value: `${tractor.engine.cylinders}-cylinder ${tractor.engine.fuelType}`,
       },
       {
         '@type': 'PropertyValue',
-        name: 'Tipo de Transmisión',
+        name: 'Transmission Type',
         value: tractor.transmission.type,
       },
       ...(tractor.weight ? [{
         '@type': 'PropertyValue',
-        name: 'Peso',
-        value: `${Math.round(tractor.weight / 1000)} toneladas`,
+        name: 'Weight',
+        value: `${tractor.weight} kg`,
       }] : []),
       ...(tractor.ptoHP ? [{
         '@type': 'PropertyValue',
-        name: 'Potencia PTO',
+        name: 'PTO Power',
         value: `${tractor.ptoHP} HP`,
       }] : []),
       ...(tractor.hydraulicSystem?.liftCapacity ? [{
         '@type': 'PropertyValue',
-        name: 'Capacidad de Elevación',
+        name: 'Lift Capacity',
         value: `${tractor.hydraulicSystem.liftCapacity} kg`,
       }] : []),
     ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.5',
-      reviewCount: '127',
-    },
     ...(tractor.priceRange ? {
       offers: {
         '@type': 'AggregateOffer',
@@ -199,12 +194,32 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
     }),
   };
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://tractorscompare.com' },
+      { '@type': 'ListItem', position: 2, name: tractor.brand, item: `https://tractorscompare.com/marcas/${brandToSlug(tractor.brand)}` },
+      { '@type': 'ListItem', position: 3, name: fullName, item: `https://tractorscompare.com/tractores/${tractor.slug}` },
+    ],
+  };
+
+  const faqLd = faqs.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+    })),
+  } : null;
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
+          __html: JSON.stringify([structuredData, breadcrumbLd, ...(faqLd ? [faqLd] : [])]),
         }}
       />
 

@@ -4,8 +4,17 @@ import { getBrandLogo } from '@/lib/brandLogos';
 import { Filter, Search } from 'lucide-react';
 import { pathForLocale } from '@/lib/i18n/routes';
 import type { Locale } from '@/lib/i18n/config';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const brandCount = getAllBrands().length;
+  return {
+    title: `All ${brandCount} Tractor Brands – Complete Manufacturer Database`,
+    description: `Browse ${brandCount} tractor manufacturers with ${tractors.length.toLocaleString()} models. Find specs for John Deere, Kubota, New Holland, Case IH, Massey Ferguson, and more.`,
+  };
+}
 
 export default async function BrandsPage({
   params,

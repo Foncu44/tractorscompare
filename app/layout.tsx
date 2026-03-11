@@ -1,45 +1,38 @@
 import './globals.css';
 import { headers } from 'next/headers';
+import type { Metadata } from 'next';
 import ClientErrorLogger from '@/components/ClientErrorLogger';
 import ClientErrorReporter from '@/components/ClientErrorReporter';
 import AnalyticsScripts from '@/components/AnalyticsScripts';
 import VercelAnalyticsSafe from '@/components/VercelAnalyticsSafe';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
     default: 'TractorsCompare – Tractor Database & Specifications for 10,000+ Models',
     template: '%s | TractorsCompare',
   },
   description:
-    'Free tractor database with detailed specifications for over 10,000 agricultural, lawn, and industrial tractors. Compare horsepower, engine specs, transmission, dimensions, and TractorFit™ scores side by side.',
+    'Free tractor database with detailed specifications for over 10,000 agricultural, lawn, and industrial tractors. Compare horsepower, engine specs, dimensions, and prices across all major brands.',
   keywords: [
-    'tractor database',
-    'tractor specifications',
-    'tractor data',
-    'tractordata',
-    'tractor comparison',
-    'tractor specs',
-    'agricultural tractor specs',
-    'compare tractors',
-    'tractor horsepower',
-    'tractor comparison tool',
-    'tractor technical data',
-    'farm tractor database',
-    'lawn tractor specs',
+    'tractor database', 'tractor specifications', 'tractor data', 'tractordata',
+    'tractor comparison', 'tractor comparison tool', 'compare tractors',
+    'tractor specs', 'tractor horsepower', 'tractor dimensions',
+    'agricultural tractors', 'farm tractors', 'lawn tractors',
+    'John Deere specs', 'Kubota specs', 'New Holland specs',
+    'tractor price comparison', 'tractor weight', 'tractor engine',
   ],
   openGraph: {
-    title: 'TractorsCompare – Tractor Database & Specifications',
-    description:
-      'Free tractor database with detailed specifications for over 10,000 models. Compare agricultural, lawn, and industrial tractors side by side.',
-    url: 'https://tractorscompare.com',
-    siteName: 'TractorsCompare',
     type: 'website',
     locale: 'en_US',
+    url: 'https://tractorscompare.com',
+    siteName: 'TractorsCompare',
+    title: 'TractorsCompare – Tractor Database & Specifications',
+    description: 'Compare 10,000+ tractors side by side. Free specs, horsepower data, dimensions, and pricing for every major brand.',
   },
   twitter: {
-    card: 'summary_large_image' as const,
+    card: 'summary_large_image',
     title: 'TractorsCompare – Tractor Database & Specifications',
-    description: 'Free tractor database for 10,000+ models. Compare specs, horsepower, engines & more.',
+    description: 'Compare 10,000+ tractors side by side. Free specs, horsepower data, dimensions, and pricing for every major brand.',
   },
   robots: {
     index: true,
@@ -47,9 +40,6 @@ export const metadata = {
     'max-image-preview': 'large' as const,
     'max-snippet': -1,
     'max-video-preview': -1,
-  },
-  other: {
-    'google-site-verification': '',
   },
 };
 
@@ -100,8 +90,9 @@ export default async function RootLayout({
                 name: 'TractorsCompare',
                 alternateName: ['TractorsCompare', 'Tractors Compare', 'Tractor Database'],
                 url: 'https://tractorscompare.com',
-                description: 'Free tractor database with detailed specifications for over 10,000 agricultural, lawn and industrial tractors. Compare horsepower, engine specs, transmission, dimensions and TractorFit™ scores.',
+                description: 'Free tractor database with specs for 10,000+ agricultural, lawn and industrial tractors.',
                 inLanguage: ['en', 'es'],
+                publisher: { '@type': 'Organization', name: 'TractorsCompare', url: 'https://tractorscompare.com' },
                 potentialAction: {
                   '@type': 'SearchAction',
                   target: {
@@ -116,14 +107,13 @@ export default async function RootLayout({
                 '@type': 'Organization',
                 name: 'TractorsCompare',
                 url: 'https://tractorscompare.com',
-                description: 'Comprehensive tractor database and specifications comparison platform.',
-                sameAs: [],
+                logo: 'https://tractorscompare.com/images/banner.webp',
                 contactPoint: {
                   '@type': 'ContactPoint',
                   contactType: 'customer service',
-                  url: 'https://tractorscompare.com/en/contact',
                   availableLanguage: ['English', 'Spanish'],
                 },
+                sameAs: [],
               },
             ]),
           }}

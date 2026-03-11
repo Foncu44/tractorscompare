@@ -132,7 +132,6 @@ export default async function BestCategoryPage({
   const modelFromName = (name: string, brand: string) =>
     name.replace(new RegExp(`^${brand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`), '').trim() || '—';
 
-  // Structured data: BreadcrumbList + FAQPage + ItemList
   const breadcrumbLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -157,7 +156,6 @@ export default async function BestCategoryPage({
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: config.title,
-    description: intro,
     numberOfItems: items.length,
     itemListElement: items.slice(0, 10).map((entry, i) => ({
       '@type': 'ListItem',

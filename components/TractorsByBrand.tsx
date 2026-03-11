@@ -22,26 +22,24 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
   const [tractors, setTractors] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
-  // Load tractor data directly - no requestIdleCallback wrapper
+  // Load tractor data asynchronously
   useEffect(() => {
     let mounted = true;
     setIsLoading(true);
 
     Promise.all([
       loadTractors(),
-      selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null),
-    ])
-      .then(([tractorsData, brand]) => {
-        if (mounted) {
-          setTractors(tractorsData);
-          setSelectedBrand(brand || null);
-          setIsLoading(false);
-        }
-      })
-      .catch((error) => {
-        console.error('Error loading tractors:', error);
-        if (mounted) setIsLoading(false);
-      });
+      selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null)
+    ]).then(([tractorsData, brand]) => {
+      if (mounted) {
+        setTractors(tractorsData);
+        setSelectedBrand(brand || null);
+        setIsLoading(false);
+      }
+    }).catch((error) => {
+      console.error('Error loading tractors:', error);
+      if (mounted) setIsLoading(false);
+    });
 
     return () => { mounted = false; };
   }, [selectedBrandSlug]);
@@ -134,8 +132,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
     tractor.engine?.powerHP || tractor.engine?.powerKW ?
       Math.round((tractor.engine.powerHP || (tractor.engine.powerKW || 0) * 1.341)) : null;
 
-  // Loading skeleton
-  if (isLoading) {
+  if (tractorsToShow.length === 0 && !isLoading) {
     return (
       <div className="relative">
         <div className="mb-6">
