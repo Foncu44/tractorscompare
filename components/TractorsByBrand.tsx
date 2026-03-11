@@ -11,79 +11,55 @@ interface TractorsByBrandProps {
   type?: 'farm' | 'lawn' | 'all';
 }
 
-const ITEMS_PER_PAGE = 24; // Tractors per page
+const ITEMS_PER_PAGE = 24;
 
 export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) {
   const searchParams = useSearchParams();
   const selectedBrandSlug = searchParams.get('marca');
-  
-  // Estados
+
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [displayTractors, setDisplayTractors] = useState<any[]>([]);
   const [tractors, setTractors] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
-  // Load tractor data asynchronously - Optimized to avoid blocking
+  // Load tractor data directly - no requestIdleCallback wrapper
   useEffect(() => {
     let mounted = true;
-    
-    function loadData() {
-      setIsLoading(true);
-      
-      // Use requestIdleCallback to avoid blocking main thread
-      const loadAsync = () => {
-        Promise.all([
-          loadTractors(),
-          selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null)
-        ]).then(([tractorsData, brand]) => {
-          if (mounted) {
-            setTractors(tractorsData);
-            setSelectedBrand(brand || null);
-            setIsLoading(false);
-          }
-        }).catch((error) => {
-          console.error('Error loading tractors:', error);
-          if (mounted) {
-            setIsLoading(false);
-          }
-        });
-      };
-      
-      // Defer load if browser is busy
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        requestIdleCallback(loadAsync, { timeout: 500 });
-      } else {
-        // Fallback: small delay to avoid blocking
-        setTimeout(loadAsync, 50);
-      }
-    }
-    
-    loadData();
-    
-    return () => {
-      mounted = false;
-    };
+    setIsLoading(true);
+
+    Promise.all([
+      loadTractors(),
+      selectedBrandSlug ? loadBrandBySlug(selectedBrandSlug) : Promise.resolve(null),
+    ])
+      .then(([tractorsData, brand]) => {
+        if (mounted) {
+          setTractors(tractorsData);
+          setSelectedBrand(brand || null);
+          setIsLoading(false);
+        }
+      })
+      .catch((error) => {
+        console.error('Error loading tractors:', error);
+        if (mounted) setIsLoading(false);
+      });
+
+    return () => { mounted = false; };
   }, [selectedBrandSlug]);
 
-  // Memoize tractor filtering for better performance
-  // Use chunking to avoid blocking main thread with large arrays
+  // Filter and sort
   const filteredTractors = useMemo(() => {
     if (tractors.length === 0) return [];
-    
+
     let filtered = tractors;
 
-    // Filter by type
     if (type !== 'all') {
-      filtered = filtered.filter(t => (t.type || 'farm') === type);
+      filtered = filtered.filter((t) => (t.type || 'farm') === type);
     }
 
-    // Filter by brand if selected
     if (selectedBrand) {
-      filtered = filtered.filter(t => t.brand === selectedBrand);
+      filtered = filtered.filter((t) => t.brand === selectedBrand);
     }
 
-    // Sort by brand and model - Use stable sort for better performance
     return filtered.sort((a, b) => {
       const brandCompare = a.brand.localeCompare(b.brand);
       if (brandCompare !== 0) return brandCompare;
@@ -91,65 +67,29 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
     });
   }, [tractors, selectedBrand, type]);
 
-  // Calculate pagination
+  // Pagination
   const totalPages = Math.ceil(filteredTractors.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
-  
-  // Tractors to display (paginated)
+
   const tractorsToShow = useMemo(() => {
     return filteredTractors.slice(startIndex, endIndex);
   }, [filteredTractors, startIndex, endIndex]);
 
-  // Effect to reset page when brand or type changes
+  // Reset page when brand or type changes
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedBrand, type]);
-
-  // Effect to update tractors when filters or page change
-  // Use requestIdleCallback to avoid blocking main thread
-  useEffect(() => {
-    // If first render, set without animation
-    if (displayTractors.length === 0) {
-      setDisplayTractors(tractorsToShow);
-      return;
-    }
-
-    // If there's a change, animate using requestIdleCallback to avoid blocking
-    setIsLoading(true);
-    
-    const scheduleUpdate = () => {
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        requestIdleCallback(() => {
-          setDisplayTractors(tractorsToShow);
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 50);
-        }, { timeout: 200 });
-      } else {
-        // Fallback for browsers without requestIdleCallback
-        setTimeout(() => {
-          setDisplayTractors(tractorsToShow);
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 50);
-        }, 200);
-      }
-    };
-    
-    scheduleUpdate();
-  }, [tractorsToShow, displayTractors.length]);
 
   // Function to change page
   const goToPage = (page: number, event?: React.MouseEvent) => {
     if (event) {
       event.preventDefault();
     }
-    
+
     if (page >= 1 && page <= totalPages && page !== currentPage) {
-      setIsLoading(true);
       setCurrentPage(page);
-      
+
       // Smooth scroll only to tractor container, not to top
       setTimeout(() => {
         const gridElement = document.querySelector('[data-tractor-grid]');
@@ -164,26 +104,21 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
     const maxVisible = 7; // Maximum visible page numbers
-    
+
     if (totalPages <= maxVisible) {
-      // Show all pages if there are few
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Logic to show pages with ellipsis
       if (currentPage <= 3) {
-        // At the beginning
         for (let i = 1; i <= 4; i++) pages.push(i);
         pages.push('...');
         pages.push(totalPages);
       } else if (currentPage >= totalPages - 2) {
-        // At the end
         pages.push(1);
         pages.push('...');
         for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
       } else {
-        // In the middle
         pages.push(1);
         pages.push('...');
         for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
@@ -191,19 +126,43 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
 
-  const powerHP = (tractor: typeof tractors[0]) => 
-    tractor.engine?.powerHP || tractor.engine?.powerKW ? 
+  const powerHP = (tractor: typeof tractors[0]) =>
+    tractor.engine?.powerHP || tractor.engine?.powerKW ?
       Math.round((tractor.engine.powerHP || (tractor.engine.powerKW || 0) * 1.341)) : null;
 
-  if (displayTractors.length === 0 && !isLoading) {
+  // Loading skeleton
+  if (isLoading) {
     return (
-      <div className="text-center py-12 animate-fadeIn">
+      <div className="relative">
+        <div className="mb-6">
+          <div className="h-8 bg-gray-200 rounded w-64 mb-2 animate-pulse"></div>
+          <div className="h-5 bg-gray-200 rounded w-48 animate-pulse"></div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <div key={i} className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
+              <div className="aspect-[4/3] bg-gray-200 animate-pulse"></div>
+              <div className="p-5">
+                <div className="h-3 bg-gray-200 rounded w-20 mb-2 animate-pulse"></div>
+                <div className="h-5 bg-gray-200 rounded w-32 mb-2 animate-pulse"></div>
+                <div className="h-4 bg-gray-200 rounded w-16 animate-pulse"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (filteredTractors.length === 0) {
+    return (
+      <div className="text-center py-12">
         <p className="text-gray-600 text-lg">
-          {selectedBrand 
+          {selectedBrand
             ? `No tractors found for brand "${selectedBrand}"`
             : 'No tractors found'}
         </p>
@@ -224,22 +183,10 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
         </p>
       </div>
 
-      {/* Loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-10 flex items-center justify-center rounded-xl">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="text-gray-600 font-medium">Loading tractors...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Tractor grid with animation */}
-      <div 
+      {/* Tractor grid - render directly, no intermediate state */}
+      <div
         data-tractor-grid
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 transition-opacity duration-300 ${
-          isLoading ? 'opacity-0' : 'opacity-100'
-        }`}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
         {tractorsToShow.map((tractor, index) => {
           const slug = tractor.slug || `${brandToSlug(tractor.brand)}-${tractor.model.toLowerCase().replace(/\s+/g, '-')}`;
@@ -250,18 +197,16 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
             <Link
               key={slug}
               href={`/tractores/${slug}`}
-              className="group bg-white rounded-card overflow-hidden shadow-card border border-gray-200 hover:shadow-card-hover transition-all duration-300 hover:-translate-y-2 animate-fadeInUp"
-              style={{
-                animationDelay: `${index * 0.05}s`,
-              }}
+              className="group bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
             >
-              {/* Imagen */}
+              {/* Image */}
               <div className="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
                 {tractor.imageUrl ? (
                   <img
                     src={tractor.imageUrl}
                     alt={`${tractor.brand} ${tractor.model}`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
@@ -277,13 +222,13 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
                     />
                   </div>
                 )}
-                
+
                 {/* Type badge */}
                 {tractor.type && (
                   <div className="absolute top-3 right-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      tractor.type === 'farm' 
-                        ? 'bg-green-600 text-white' 
+                      tractor.type === 'farm'
+                        ? 'bg-green-600 text-white'
                         : tractor.type === 'lawn'
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-600 text-white'
@@ -294,7 +239,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
                 )}
               </div>
 
-              {/* Contenido */}
+              {/* Content */}
               <div className="p-5">
                 <p className="text-xs font-semibold text-gray-600 uppercase mb-1">
                   {tractor.brand}
@@ -302,7 +247,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
                 <h3 className="font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
                   {tractor.model}
                 </h3>
-                
+
                 {/* Specifications */}
                 <div className="space-y-1 mb-3">
                   {hp && (
@@ -328,7 +273,7 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
       </div>
 
       {/* Pagination */}
-      {totalPages > 1 && !isLoading && (
+      {totalPages > 1 && (
         <div className="mt-8 flex flex-col items-center gap-4">
           {/* Pagination information */}
           <div className="text-sm text-gray-600">
@@ -364,10 +309,10 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
                     </span>
                   );
                 }
-                
+
                 const pageNum = page as number;
                 const isActive = pageNum === currentPage;
-                
+
                 return (
                   <button
                     key={pageNum}
@@ -402,4 +347,3 @@ export default function TractorsByBrand({ type = 'all' }: TractorsByBrandProps) 
     </div>
   );
 }
-
