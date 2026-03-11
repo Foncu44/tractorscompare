@@ -132,8 +132,42 @@ export default async function BestCategoryPage({
   const modelFromName = (name: string, brand: string) =>
     name.replace(new RegExp(`^${brand.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*`), '').trim() || '—';
 
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Tractors', item: `${SITE_URL}/tractores` },
+      { '@type': 'ListItem', position: 3, name: config.title, item: `${SITE_URL}/best/${category}` },
+    ],
+  };
+
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.q,
+      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+    })),
+  };
+
+  const itemListLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: config.title,
+    numberOfItems: items.length,
+    itemListElement: items.slice(0, 10).map((entry, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: entry.name,
+      url: `${SITE_URL}/tractores/${entry.slug}`,
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([breadcrumbLd, faqLd, itemListLd]) }} />
       <main className="container-custom py-8 md:py-12">
         <nav className="mb-6 text-sm text-gray-600">
           <Link href="/" className="hover:text-primary-600">Home</Link>
@@ -186,7 +220,7 @@ export default async function BestCategoryPage({
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-xl font-semibold text-gray-900">
-                    <Link href={`/tractor/${entry.slug}`} className="hover:text-primary-600">
+                    <Link href={`/tractores/${entry.slug}`} className="hover:text-primary-600">
                       {entry.name}
                     </Link>
                   </h3>
@@ -206,7 +240,7 @@ export default async function BestCategoryPage({
                     ))}
                   </ul>
                   <Link
-                    href={`/tractor/${entry.slug}`}
+                    href={`/tractores/${entry.slug}`}
                     className="inline-block mt-2 text-primary-600 font-medium hover:underline"
                   >
                     View TractorFit™ analysis →
@@ -223,21 +257,21 @@ export default async function BestCategoryPage({
           <ul className="space-y-2 text-gray-700">
             <li>
               <strong>Top overall:</strong>{' '}
-              <Link href={`/tractor/${picks.topOverall.slug}`} className="text-primary-600 hover:underline">
+              <Link href={`/tractores/${picks.topOverall.slug}`} className="text-primary-600 hover:underline">
                 {picks.topOverall.name}
               </Link>
               {picks.topOverall.hp != null && ` (${picks.topOverall.hp} HP)`}
             </li>
             <li>
               <strong>Top value (highest overall score in list):</strong>{' '}
-              <Link href={`/tractor/${picks.topValue.slug}`} className="text-primary-600 hover:underline">
+              <Link href={`/tractores/${picks.topValue.slug}`} className="text-primary-600 hover:underline">
                 {picks.topValue.name}
               </Link>
               {picks.topValue.hp != null && ` (${picks.topValue.hp} HP, overall ${picks.topValue.overallScore}/100)`}
             </li>
             <li>
               <strong>Lightest:</strong>{' '}
-              <Link href={`/tractor/${picks.lightest.slug}`} className="text-primary-600 hover:underline">
+              <Link href={`/tractores/${picks.lightest.slug}`} className="text-primary-600 hover:underline">
                 {picks.lightest.name}
               </Link>
               {picks.lightest.weightKg != null && ` (${picks.lightest.weightKg} kg)`}
