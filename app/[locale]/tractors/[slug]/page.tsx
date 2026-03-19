@@ -18,6 +18,7 @@ import {
   buildTabMeaningNotes,
   buildFaqs,
   getSimilarTractors,
+  getBetterAlternatives,
   getHpBandHubSlug,
   getBestForSubheading,
 } from '@/lib/tractorPageContent';
@@ -30,169 +31,81 @@ import UsedMarketInsights from '@/components/UsedMarketInsights';
 import SimilarTractors from '@/components/SimilarTractors';
 import TractorFaq from '@/components/TractorFaq';
 import DataSourcesLinks from '@/components/DataSourcesLinks';
+import TractorIntroParagraph from '@/components/TractorIntroParagraph';
+import TractorProsConsSEO from '@/components/TractorProsConsSEO';
+import TractorConclusion from '@/components/TractorConclusion';
 import { getTractorImage } from '@/lib/tractorImages';
-import { pathForLocale, getCanonicalUrl } from '@/lib/i18n/routes';
+import { pathForLocale, getCanonicalUrl, getAlternates } from '@/lib/i18n/routes';
 import type { Locale } from '@/lib/i18n/config';
 import { locales } from '@/lib/i18n/config';
 import { t } from '@/lib/i18n/t';
+import {
+  buildTractorMetadata,
+  buildProductSchema,
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+} from '@/lib/tractorSeo';
 
 interface TractorDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
-// Generar parámetros estáticos para export estático
+// ISR: regenerate individual tractor pages at most once per 30 days.
+// Pages not pre-built are rendered on first request and then cached.
+// This keeps build time manageable for 10,000+ tractors.
+export const revalidate = 86400 * 30;
+
+// Allow on-demand rendering for slugs not in generateStaticParams().
+export const dynamicParams = true;
+
+/** Pre-build the top 500 tractors (best data quality) at deploy time.
+ *  All other tractors are served on first request via ISR. */
+function getTopTractors() {
+  return tractors
+    .filter(
+      (t) =>
+        t.engine?.powerHP != null &&
+        t.transmission?.type &&
+        t.weight != null &&
+        t.slug
+    )
+    .slice(0, 500);
+}
+
 export async function generateStaticParams() {
-  return locales.flatMap((locale) => tractors.map((tractor) => ({ locale, slug: tractor.slug })));
+  const top = getTopTractors();
+  return locales.flatMap((locale) => top.map((tractor) => ({ locale, slug: tractor.slug })));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {
   const { locale, slug } = await params;
   const tractor = getTractorBySlug(slug);
-  
+
   if (!tractor) {
-    return {
-      title: 'Tractor not found',
-    };
+    return { title: 'Tractor not found' };
   }
 
-  const fullName = `${tractor.brand} ${tractor.model}`;
-  const yearText = tractor.year ? ` ${tractor.year}` : '';
-  const powerText = tractor.engine.powerHP ? ` ${tractor.engine.powerHP} HP` : '';
-  const transmissionText = tractor.transmission.type ? ` ${tractor.transmission.type} transmission` : '';
-  
-  const optimizedDescription = tractor.metaDescription || 
-    `${fullName}${yearText} tractor data and specifications.${powerText}${transmissionText} ${tractor.weight ? `Weight: ${Math.round(tractor.weight / 1000)} tons. ` : ''}Complete technical specifications, engine details, dimensions, hydraulic system, and performance data.`;
+  const loc = locale as Locale;
+  const canonicalUrl = getCanonicalUrl('tractors/' + tractor.slug, loc);
 
-  // Keywords específicas para tractores objetivo de SEO
-  const targetTractorKeywords: Record<string, string[]> = {
-    'international-harvester-1586': [
-      '1586 international specs',
-      'ih 1586 specs',
-      'ih 1586 hp',
-      'international harvester 1586',
-      '1586 tractor specifications',
-      'ih 1586 horsepower',
-      'international 1586 specs',
-    ],
-    'international-harvester-1466': [
-      'international 1466 tractor',
-      '1466 horsepower',
-      'ih 1466 specs',
-      'international harvester 1466',
-      '1466 tractor specifications',
-      'ih 1466 horsepower',
-      'international 1466 specs',
-    ],
-    'international-harvester-1066': [
-      'international 1066',
-      'international harvester 1066',
-      'ih 1066 specs',
-      'international 1066 tractor',
-      '1066 tractor specifications',
-      'ih 1066 specifications',
-    ],
-    'international-harvester-353': [
-      'international 353',
-      'international harvester 353',
-      'ih 353 specs',
-      'international 353 tractor',
-      '353 tractor specifications',
-      'ih 353 specifications',
-    ],
-    'kubota-b2230': [
-      'kubota b2230',
-      'kubota b2230 specs',
-      'kubota b2230 specifications',
-      'b2230 tractor specs',
-      'kubota b2230 tractor',
-      'b2230 kubota specifications',
-    ],
-    'kubota-b2530': [
-      'kubota b2530',
-      'kubota b 2530',
-      'kubota b2530 specs',
-      'kubota b2530 specifications',
-      'b2530 tractor specs',
-      'kubota b 2530 tractor',
-      'b 2530 kubota specifications',
-    ],
-    'john-deere-1030': [
-      'john deere 1030',
-      'john deere 1030 specs',
-      'jd 1030 specifications',
-      'john deere 1030 tractor',
-      '1030 tractor specs',
-      'john deere 1030 specifications',
-    ],
-    'caseih-5150-maxxum': [
-      'case maxxum 5150',
-      'case ih maxxum 5150',
-      'maxxum 5150 specs',
-      'case maxxum 5150 tractor',
-      '5150 maxxum specifications',
-      'case ih 5150 specs',
-    ],
-  };
+  let alternateLanguages: Record<string, string> | undefined;
+  try {
+    alternateLanguages = getAlternates('tractors/' + tractor.slug, loc) as Record<string, string>;
+  } catch {
+    alternateLanguages = undefined;
+  }
 
-  const targetKeywords = targetTractorKeywords[tractor.slug] || [];
+  const metadata = buildTractorMetadata(tractor, loc, canonicalUrl, alternateLanguages);
 
-  const optimizedKeywords = [
-    `${fullName} tractor data`,
-    `${fullName} specifications`,
-    `${fullName} specs`,
-    `${fullName} technical data`,
-    `${tractor.brand} ${tractor.model} data`,
-    `${tractor.brand} ${tractor.model} specs`,
-    `${tractor.brand} ${tractor.model} specifications`,
-    `${tractor.brand} tractor data`,
-    `${tractor.brand} tractor specifications`,
-    `${tractor.model} tractor specifications`,
-    `${tractor.model} tractor data`,
-    'tractor data',
-    'tractor specifications',
-    'tractor specs',
-    'tractor technical data',
-    'tractor specs database',
-    tractor.engine.powerHP ? `${tractor.engine.powerHP} hp tractor` : null,
-    tractor.engine.powerHP ? `${tractor.engine.powerHP} horsepower tractor` : null,
-    tractor.type === 'farm' ? 'farm tractor data' : 'lawn tractor data',
-    tractor.type === 'farm' ? 'agricultural tractor specifications' : 'lawn tractor specifications',
-    tractor.transmission?.type ? `${tractor.transmission.type} transmission tractor` : null,
-    tractor.engine.fuelType ? `${tractor.engine.fuelType} tractor` : null,
-    ...targetKeywords,
-  ].filter(Boolean) as string[];
+  // Merge any per-tractor custom keywords from the data layer
+  if (tractor.metaKeywords?.length) {
+    metadata.keywords = [
+      ...(Array.isArray(metadata.keywords) ? metadata.keywords : []),
+      ...tractor.metaKeywords,
+    ];
+  }
 
-  const optimizedTitle = `${fullName}${yearText}: Specs, TractorFit™ Analysis & Used Price Guide | TractorsCompare`;
-
-  return {
-    title: optimizedTitle,
-    description: optimizedDescription,
-    keywords: [
-      ...targetKeywords,
-      `${fullName} specifications`,
-      `${fullName} technical data`,
-      `${fullName} specs`,
-      `${tractor.brand} ${tractor.model} tractor specifications`,
-      'tractor specs',
-      'tractor technical data',
-      ...optimizedKeywords,
-      ...(tractor.metaKeywords || []),
-    ],
-    openGraph: {
-      title: `${fullName}${yearText} - Tractor Data`,
-      description: optimizedDescription,
-      // Using placeholder image component instead
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${fullName} - Tractor Data`,
-      description: optimizedDescription,
-    },
-    alternates: {
-      canonical: getCanonicalUrl('tractors/' + tractor.slug, locale as Locale),
-    },
-  };
+  return metadata;
 }
 
 export default async function TractorDetailPage({ params }: TractorDetailPageProps) {
@@ -256,6 +169,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   const tabMeaningNotes = buildTabMeaningNotes(tractor);
   const faqs = buildFaqs(tractor, suitabilityResult, usedEstimate, narrative);
   const similarTractors = getSimilarTractors(tractor, tractors, 6);
+  const betterAlternatives = getBetterAlternatives(tractor, tractors, 4);
   const hpBandSlug = getHpBandHubSlug(tractor.engine.powerHP ?? 0);
   const hubLinks = hpBandSlug
     ? [
@@ -283,87 +197,48 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
   const tractorImage = tractor.image ?? getTractorImage(tractor.slug);
   const displayImageUrl = tractorImage?.url ?? tractor.imageUrl;
 
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: `${fullName}${tractor.year ? ` ${tractor.year}` : ''}`,
-    description: tractor.description || `Complete tractor data and specifications for ${fullName}`,
-    brand: {
-      '@type': 'Brand',
-      name: tractor.brand,
-    },
-    category: tractor.category || tractor.type,
-    manufacturer: {
-      '@type': 'Organization',
-      name: tractor.brand,
-    },
-    // Image placeholder - no actual image URL used
-    ...(tractor.year && {
-      releaseDate: `${tractor.year}-01-01`,
-      modelDate: `${tractor.year}`,
-    }),
-    additionalProperty: [
-      {
-        '@type': 'PropertyValue',
-        name: 'Potencia del Motor',
-        value: `${tractor.engine.powerHP} HP`,
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'Tipo de Motor',
-        value: `${tractor.engine.cylinders} cilindros ${tractor.engine.fuelType}`,
-      },
-      {
-        '@type': 'PropertyValue',
-        name: 'Tipo de Transmisión',
-        value: tractor.transmission.type,
-      },
-      ...(tractor.weight ? [{
-        '@type': 'PropertyValue',
-        name: 'Peso',
-        value: `${Math.round(tractor.weight / 1000)} toneladas`,
-      }] : []),
-      ...(tractor.ptoHP ? [{
-        '@type': 'PropertyValue',
-        name: 'Potencia PTO',
-        value: `${tractor.ptoHP} HP`,
-      }] : []),
-      ...(tractor.hydraulicSystem?.liftCapacity ? [{
-        '@type': 'PropertyValue',
-        name: 'Capacidad de Elevación',
-        value: `${tractor.hydraulicSystem.liftCapacity} kg`,
-      }] : []),
-    ],
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: '4.5',
-      reviewCount: '127',
-    },
-    ...(tractor.priceRange ? {
-      offers: {
-        '@type': 'AggregateOffer',
-        offerCount: '1',
-        lowPrice: tractor.priceRange.min?.toString() || '50000',
-        highPrice: tractor.priceRange.max?.toString() || '500000',
-        priceCurrency: 'USD',
-      },
-    } : {
-      offers: {
-        '@type': 'AggregateOffer',
-        offerCount: '1',
-        priceCurrency: 'USD',
-      },
-    }),
-  };
+  // ---------------------------------------------------------------------------
+  // JSON-LD structured data
+  // ---------------------------------------------------------------------------
+  const pageUrl = getCanonicalUrl('tractors/' + tractor.slug, loc);
+
+  const productSchema = buildProductSchema({
+    tractor,
+    imageUrl: displayImageUrl,
+    pageUrl,
+    locale: loc,
+  });
+
+  // BreadcrumbList
+  const breadcrumbItems = [
+    { name: 'Home', url: `https://tractorscompare.com/${loc}` },
+    { name: tractor.brand, url: `https://tractorscompare.com${pathForLocale('brands/' + brandToSlug(tractor.brand), loc)}` },
+    { name: fullName, url: pageUrl },
+  ];
+  const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
+
+  // FAQPage
+  const faqSchema = buildFaqSchema(faqs);
 
   return (
     <>
+      {/* Product schema */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(structuredData),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
+      {/* BreadcrumbList schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      {/* FAQPage schema */}
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
 
       <div className="min-h-screen">
         <Breadcrumbs
@@ -375,6 +250,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
           locale={loc}
         />
 
+        {/* ── Hero section ─────────────────────────────────────── */}
         <section className="bg-gradient-to-b from-primary-50 to-gray-50 py-6 md:py-8 lg:py-12">
           <div className="container-custom">
             <Link href={pathForLocale('brands', loc)} className="inline-flex items-center gap-2 text-gray-600 hover:text-primary-700 mb-4 md:mb-6 transition-colors text-sm md:text-base">
@@ -389,6 +265,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                     brand={tractor.brand}
                     model={tractor.model}
                     imageUrl={displayImageUrl}
+                    alt={`${fullName} tractor specs`}
                     width={800}
                     height={600}
                     className="w-full h-full"
@@ -406,8 +283,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
                 <Link href={pathForLocale('brands/' + brandToSlug(tractor.brand), loc)} className="text-primary-700/ hover:text-primary-800 font-semibold mb-2 inline-block">
                   {tractor.brand}
                 </Link>
+                {/* H1: "[Brand] [Model] Specs, Price and Review (2026)" */}
                 <h1 className="text-xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 md:mb-3 break-words">
-                  {fullName}: {t('tractor.h1Suffix', undefined, loc)}
+                  {fullName} {t('tractor.h1Suffix', undefined, loc)}
                 </h1>
                 {subheadingParts.length > 0 && (
                   <p className="text-sm md:text-base text-gray-600 mb-4">
@@ -447,6 +325,11 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
         </section>
 
         <div className="container-custom py-6 md:py-12">
+
+          {/* ── Overview / Intro paragraph (SEO) ─────────────────── */}
+          <TractorIntroParagraph tractor={tractor} locale={loc} />
+
+          {/* ── TractorFit™ analysis ──────────────────────────────── */}
           <TractorFitPanel
             locale={loc}
             result={suitabilityResult}
@@ -462,8 +345,18 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             }}
           />
 
+          {/* ── Real-world performance ────────────────────────────── */}
           <RealWorldInsights locale={loc} insights={insights} />
 
+          {/* ── Pros and Cons (SEO featured snippet target) ──────── */}
+          <TractorProsConsSEO
+            pros={narrative.highlights}
+            cons={narrative.tradeoffs}
+            tractorName={fullName}
+            locale={loc}
+          />
+
+          {/* ── Used market insights ──────────────────────────────── */}
           <UsedMarketInsights
             locale={loc}
             usedEstimate={usedEstimate ?? undefined}
@@ -472,12 +365,14 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             tractorName={fullName}
           />
 
+          {/* ── Live marketplace listings ─────────────────────────── */}
           <UsedListingsInternational
             query={fullName.trim() || 'tractor'}
             brandName={tractor.brand}
             modelName={tractor.model}
           />
 
+          {/* ── Main features list ────────────────────────────────── */}
           {tractor.features && tractor.features.length > 0 && (
             <div className="mt-8 md:mt-12 bg-white rounded-xl border border-gray-200 p-4 md:p-6">
               <h2 className="text-xl font-bold mb-3 text-gray-900">{t('tractor.mainFeatures', undefined, loc)}</h2>
@@ -492,6 +387,7 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             </div>
           )}
 
+          {/* ── Technical specifications ──────────────────────────── */}
           <div className="mt-8 md:mt-12">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-gray-900">{t('tractor.technicalSpecs', undefined, loc)}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
@@ -506,13 +402,49 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             </div>
           </div>
 
+          {/* ── Similar tractors + Better alternatives ────────────── */}
           <SimilarTractors locale={loc} similar={similarTractors} hubLinks={hubLinks} currentName={fullName} />
 
+          {/* Better alternatives section */}
+          {betterAlternatives.length > 0 && (
+            <section
+              className="mt-8 md:mt-10 bg-white rounded-xl border border-gray-200 p-4 md:p-6"
+              aria-labelledby="better-alt-heading"
+            >
+              <h2 id="better-alt-heading" className="text-lg md:text-xl font-bold text-gray-900 mb-3">
+                {t('tractor.betterAlternativesTitle', undefined, loc)}
+              </h2>
+              <ul className="space-y-2">
+                {betterAlternatives.map((alt) => (
+                  <li key={alt.slug}>
+                    <Link
+                      href={pathForLocale('tractors/' + alt.slug, loc)}
+                      className="inline-flex items-center gap-2 text-primary-700 hover:text-primary-800 font-medium text-sm md:text-base"
+                    >
+                      <GitCompare className="h-4 w-4 flex-shrink-0" aria-hidden />
+                      {alt.brand} {alt.model}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {/* ── FAQ ───────────────────────────────────────────────── */}
           <TractorFaq locale={loc} faqs={faqs} tractorSlug={tractor.slug} />
 
+          {/* ── SEO content section (per-tractor custom content) ──── */}
           {tractor.seoContent && (
             <SEOContentSection content={tractor.seoContent} />
           )}
+
+          {/* ── Conclusion ────────────────────────────────────────── */}
+          <TractorConclusion
+            tractor={tractor}
+            suitabilityResult={suitabilityResult}
+            bestFor={narrative.bestFor}
+            locale={loc}
+          />
 
           <DataSourcesLinks />
         </div>
@@ -520,4 +452,3 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
     </>
   );
 }
-

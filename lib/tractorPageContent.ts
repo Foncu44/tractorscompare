@@ -48,6 +48,46 @@ export function getHpBandHubSlug(hp: number): string | null {
   return 'large-farm-tractors';
 }
 
+/**
+ * Tractors with 15–50% more HP than the current model, same type.
+ * Used for "Better Alternatives" section — suggests an upgrade path.
+ * Returns up to `maxCount` items, preferring different brands for variety.
+ */
+export function getBetterAlternatives(
+  current: Tractor,
+  allTractors: Tractor[],
+  maxCount: number = 4
+): SimilarTractorItem[] {
+  const hp = current.engine?.powerHP ?? 0;
+  if (hp <= 0) return [];
+
+  const low = hp * 1.15;   // at least 15% more power
+  const high = hp * 1.50;  // at most 50% more power
+  const type = current.type;
+  const brand = current.brand;
+
+  const sameBrand: SimilarTractorItem[] = [];
+  const other: SimilarTractorItem[] = [];
+
+  for (const t of allTractors) {
+    if (t.slug === current.slug) continue;
+    if (t.type !== type) continue;
+    const tHp = t.engine?.powerHP ?? 0;
+    if (tHp < low || tHp > high) continue;
+
+    const item = { slug: t.slug, brand: t.brand, model: t.model };
+    if (t.brand.toLowerCase() === brand.toLowerCase()) {
+      sameBrand.push(item);
+    } else {
+      other.push(item);
+    }
+  }
+
+  // Prefer variety: take 1 same-brand + fill with other brands
+  const combined = [...other, ...sameBrand];
+  return combined.slice(0, maxCount);
+}
+
 const SUBSCORE_LABELS: { key: keyof TractorSuitabilityResult; label: string }[] = [
   { key: 'loaderScore', label: 'loader work' },
   { key: 'smallFarmScore', label: 'small farms' },

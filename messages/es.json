@@ -83,7 +83,7 @@
     "backToTractors": "Tractores",
     "viewBrand": "Ver marca",
     "compare": "Comparar",
-    "h1Suffix": "Ficha, análisis TractorFit™ y precios de ocasión",
+    "h1Suffix": "Especificaciones, Precio y Review (2026)",
     "mainFeatures": "Características principales",
     "technicalSpecs": "Especificaciones técnicas",
     "bestForPrefix": "Ideal para",
@@ -92,7 +92,13 @@
     "bestForSmallFarms": "granjas pequeñas",
     "bestForLargeFarms": "granjas grandes",
     "bestForFuelEfficiency": "eficiencia combustible",
-    "bestForVersatility": "versatilidad"
+    "bestForVersatility": "versatilidad",
+    "prosConsTitle": "Ventajas y desventajas",
+    "prosLabel": "Ventajas",
+    "consLabel": "Desventajas",
+    "conclusionTitle": "Conclusión",
+    "betterAlternativesTitle": "Mejores alternativas",
+    "compareWithTitle": "Comparar con"
   },
   "tractorFit": {
     "title": "Análisis TractorFit™",

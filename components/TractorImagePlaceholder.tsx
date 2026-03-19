@@ -6,6 +6,7 @@ interface TractorImagePlaceholderProps {
   brand?: string;
   model?: string;
   imageUrl?: string;
+  alt?: string;
   width?: number;
   height?: number;
   className?: string;
@@ -55,10 +56,12 @@ export default function TractorImagePlaceholder({
   brand,
   model,
   imageUrl,
+  alt,
   width = 400,
   height = 300,
   className = '',
 }: TractorImagePlaceholderProps) {
+  const altText = alt ?? (brand && model ? `${brand} ${model} tractor specs` : 'Tractor');
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [shouldTryLoad, setShouldTryLoad] = useState(false);
@@ -194,7 +197,7 @@ export default function TractorImagePlaceholder({
         <img
           ref={imgRef}
           src={imageUrl}
-          alt={brand && model ? `${brand} ${model}` : 'Tractor'}
+          alt={altText}
           width={width}
           height={height}
           className="w-full h-full object-contain"

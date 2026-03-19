@@ -55,7 +55,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   // Metadata SEO reutilizable para todos los modelos
-  return buildTractorMetadata({ tractor });
+  const canonicalUrl = `https://tractorscompare.com/es/tractores/${tractor.slug}`;
+  return buildTractorMetadata(tractor, 'es', canonicalUrl);
 }
 
 export default async function TractorDetailPage({ params }: TractorDetailPageProps) {

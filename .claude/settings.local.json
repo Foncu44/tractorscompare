@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx tsc:*)",
+      "Bash(grep -r generateStaticParams c:/Users/Foncu/Documents/GitHub/tractorscompare/app --include=*.tsx --include=*.ts)"
+    ]
+  }
+}

@@ -93,6 +93,23 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           { key: 'Content-Security-Policy', value: csp },
+          // Tell Google (and other crawlers) that large image previews are
+          // allowed.  This is the HTTP-header equivalent of the <meta> robots
+          // tag already set in app/layout.tsx and is required for Google
+          // Discover eligibility (images must be ≥ 1200 px wide AND the site
+          // must opt-in to large previews via one of these two mechanisms).
+          { key: 'X-Robots-Tag', value: 'max-image-preview:large' },
+        ],
+      },
+      // Cache OG images aggressively — they change only when tractor data
+      // changes.  stale-while-revalidate lets CDNs serve stale during regen.
+      {
+        source: '/:path*/opengraph-image',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400, stale-while-revalidate=604800',
+          },
         ],
       },
     ];
