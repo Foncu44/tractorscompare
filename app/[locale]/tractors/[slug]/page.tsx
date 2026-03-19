@@ -53,7 +53,7 @@ interface TractorDetailPageProps {
 // ISR: regenerate individual tractor pages at most once per 30 days.
 // Pages not pre-built are rendered on first request and then cached.
 // This keeps build time manageable for 10,000+ tractors.
-export const revalidate = 86400 * 30;
+export const revalidate = 2592000; // 30 days
 
 // Allow on-demand rendering for slugs not in generateStaticParams().
 export const dynamicParams = true;

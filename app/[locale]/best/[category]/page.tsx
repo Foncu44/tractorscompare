@@ -31,7 +31,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tractorscompare.co
 const INDEXES_DIR = path.join(process.cwd(), 'data', 'indexes');
 
 // ISR: regenerate at most once every 7 days (category rankings change rarely).
-export const revalidate = 86400 * 7;
+export const revalidate = 604800; // 7 days
 export const dynamicParams = true;
 
 // ---------------------------------------------------------------------------
