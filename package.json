@@ -35,7 +35,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "normalize-tractors": "npx tsx scripts/normalizeProcessedTractors.ts",
-    "prune-old-tractors": "npx tsx scripts/pruneOldTractors.ts"
+    "prune-old-tractors": "npx tsx scripts/pruneOldTractors.ts",
+    "images:collect": "tsx scripts/images/01-collect.ts",
+    "images:download": "tsx scripts/images/02-download.ts",
+    "images:optimize": "tsx scripts/images/03-optimize.ts",
+    "images:review": "tsx scripts/images/04-review.ts",
+    "images:publish": "tsx scripts/images/05-publish.ts",
+    "images:pipeline": "tsx scripts/images/01-collect.ts && tsx scripts/images/02-download.ts && tsx scripts/images/03-optimize.ts"
   },
   "dependencies": {
     "@types/nodemailer": "^7.0.4",
@@ -43,6 +49,7 @@
     "axios": "^1.13.2",
     "cheerio": "^1.1.2",
     "fs-extra": "^11.3.2",
+    "sharp": "^0.33.5",
     "lucide-react": "^0.468.0",
     "next": "15.5.10",
     "nodemailer": "^7.0.12",
