@@ -27,11 +27,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Raíz: redirect a /en (por defecto; sin detección por Accept-Language)
+  // Raíz: redirect permanente a /en (308 para consolidar link equity en Google)
   if (pathname === '/') {
     const url = request.nextUrl.clone();
     url.pathname = `/${defaultLocale}`;
-    const res = NextResponse.redirect(url);
+    const res = NextResponse.redirect(url, 308);
     res.headers.set('x-pathname', url.pathname);
     res.headers.set('x-locale', defaultLocale);
     return res;
@@ -86,13 +86,13 @@ export function middleware(request: NextRequest) {
     return res;
   }
 
-  // Sin locale: redirect a /en/<path-en>. Primer segmento puede ser ES o EN.
+  // Sin locale: redirect permanente a /en/<path-en> (308 para consolidar link equity)
   const rest = segments.slice(1);
   const enFirst = ES_TO_EN_FIRST_SEGMENT[first] ?? (PATH_SEGMENT_BY_LOCALE[first] ? PATH_SEGMENT_BY_LOCALE[first].en : first);
   const pathEn = rest.length > 0 ? [enFirst, ...rest].join('/') : enFirst;
   const url = request.nextUrl.clone();
   url.pathname = `/${defaultLocale}/${pathEn}`;
-  const res = NextResponse.redirect(url);
+  const res = NextResponse.redirect(url, 308);
   res.headers.set('x-pathname', url.pathname);
   res.headers.set('x-locale', defaultLocale);
   return res;

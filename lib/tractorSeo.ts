@@ -16,34 +16,44 @@ const CURRENT_YEAR = 2026;
 // ---------------------------------------------------------------------------
 
 /**
- * "[Brand] [Model] Specs, Price & Review (2026) | TractorsCompare"
- * Optimised for CTR: front-loads the tractor name + core keywords.
+ * "[Brand] [Model] Specs & Tractor Data — [HP] HP | TractorsCompare"
+ * Includes "tractor data" + model name + HP for long-tail spec queries.
  */
 export function buildTractorTitle(tractor: Tractor): string {
-  return `${tractor.brand} ${tractor.model} Specs, Price & Review (${CURRENT_YEAR}) | ${SITE_NAME}`;
+  const hp = tractor.engine?.powerHP ? ` — ${tractor.engine.powerHP} HP` : '';
+  return `${tractor.brand} ${tractor.model} Specs & Tractor Data${hp} | ${SITE_NAME}`;
 }
 
 /**
  * ES variant of the meta title.
  */
 export function buildTractorTitleEs(tractor: Tractor): string {
-  return `${tractor.brand} ${tractor.model} Especificaciones, Precio y Review (${CURRENT_YEAR}) | ${SITE_NAME}`;
+  const hp = tractor.engine?.powerHP ? ` — ${tractor.engine.powerHP} CV` : '';
+  return `${tractor.brand} ${tractor.model} Especificaciones y Datos${hp} | ${SITE_NAME}`;
 }
 
 /**
- * "Full specs, price and review of the [Brand] [Model]. Compare with similar tractors and find the best option."
- * Kept under 160 chars; includes brand + model + 3 core keyword intents.
+ * Rich description: HP + transmission + year range + compare CTA.
+ * Under 160 chars. Targets "[brand] [model] specs" queries.
  */
 export function buildTractorDescription(tractor: Tractor): string {
   const fullName = `${tractor.brand} ${tractor.model}`;
-  const hpClause = tractor.engine?.powerHP ? ` ${tractor.engine.powerHP} HP.` : '.';
-  return `Full specs, price and review of the ${fullName}${hpClause} Compare with similar tractors and find the best option for your farm.`;
+  const hp = tractor.engine?.powerHP ? `${tractor.engine.powerHP} HP` : null;
+  const tx = tractor.transmission?.type ?? null;
+  const yr = tractor.year ?? tractor.productionYears?.start ?? null;
+  const parts = [hp, tx, yr ? `since ${yr}` : null].filter(Boolean).join(', ');
+  const detail = parts ? ` ${parts}.` : '.';
+  return `Free tractor data for the ${fullName}.${detail} Compare specs side by side and find the best option for your farm.`;
 }
 
 export function buildTractorDescriptionEs(tractor: Tractor): string {
   const fullName = `${tractor.brand} ${tractor.model}`;
-  const hpClause = tractor.engine?.powerHP ? ` ${tractor.engine.powerHP} CV.` : '.';
-  return `Especificaciones completas, precio y review del ${fullName}${hpClause} Compara con tractores similares y encuentra la mejor opción.`;
+  const hp = tractor.engine?.powerHP ? `${tractor.engine.powerHP} CV` : null;
+  const tx = tractor.transmission?.type ?? null;
+  const yr = tractor.year ?? tractor.productionYears?.start ?? null;
+  const parts = [hp, tx, yr ? `desde ${yr}` : null].filter(Boolean).join(', ');
+  const detail = parts ? ` ${parts}.` : '.';
+  return `Datos técnicos gratuitos del ${fullName}.${detail} Compara especificaciones y encuentra la mejor opción.`;
 }
 
 // ---------------------------------------------------------------------------

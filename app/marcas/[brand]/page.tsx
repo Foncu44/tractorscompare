@@ -72,8 +72,14 @@ export async function generateMetadata({ params }: BrandPageProps): Promise<Meta
       description: `Complete ${brandName} tractor data and specifications. ${tractors.length} models with detailed technical information, engine specs, transmission, and performance data.`,
       type: 'website',
     },
+    // Canonical apunta a la URL con locale real (no a /marcas/ que haría redirect circular)
     alternates: {
-      canonical: `https://tractorscompare.com/marcas/${brand}`,
+      canonical: `https://tractorscompare.com/en/brands/${brand}`,
+      languages: {
+        en: `https://tractorscompare.com/en/brands/${brand}`,
+        es: `https://tractorscompare.com/es/marcas/${brand}`,
+        'x-default': `https://tractorscompare.com/en/brands/${brand}`,
+      },
     },
   };
 }

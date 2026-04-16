@@ -6,6 +6,7 @@ import { Settings, Fuel, Zap, Cog, Wrench, Ruler, Weight, HelpCircle } from 'luc
 export const metadata: Metadata = {
   title: 'Tractor Specifications Glossary – Definitions & Technical Terms | TractorsCompare',
   description: 'Complete glossary of tractor specifications and technical terms. Learn about PTO, hydraulic flow, rear lift capacity, horsepower vs power, transmission types, diesel fuel, dimensions, weight, and more.',
+  robots: { index: false, follow: false },
 };
 
 const specs = [

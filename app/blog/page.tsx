@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Blog - Tractor Industry News & Insights',
   description: 'Stay informed with the latest news, trends, and insights about tractors, agricultural machinery, and the farming industry. Expert analysis and in-depth articles.',
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = 'force-static';

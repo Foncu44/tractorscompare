@@ -5,6 +5,7 @@ export const metadata = {
   title: 'Tractors - Categories',
   description: 'Browse tractors by category: agricultural or lawn. Explore brands, models and spec sheets.',
   keywords: ['tractors', 'agricultural tractors', 'lawn tractors', 'specifications', 'spec sheet'],
+  robots: { index: false, follow: false },
 };
 
 // Forzar renderizado estático

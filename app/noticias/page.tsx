@@ -5,6 +5,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Industry News - Agriculture & Tractors',
   description: 'Recent news about agriculture, tractors and agricultural machinery (last 6 months).',
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = 'force-static';

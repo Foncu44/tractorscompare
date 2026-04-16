@@ -85,7 +85,15 @@ export async function generateMetadata({
   return {
     title: `${config.title} | TractorsCompare`,
     description,
-    alternates: { canonical: `${SITE_URL}/best/${category}` },
+    // Canonical apunta a la URL con locale (no a /best/ que haría redirect circular)
+    alternates: {
+      canonical: `${SITE_URL}/en/best/${category}`,
+      languages: {
+        en: `${SITE_URL}/en/best/${category}`,
+        es: `${SITE_URL}/es/mejores/${category}`,
+        'x-default': `${SITE_URL}/en/best/${category}`,
+      },
+    },
   };
 }
 

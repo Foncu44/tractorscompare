@@ -54,9 +54,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  // Metadata SEO reutilizable para todos los modelos
-  const canonicalUrl = `https://tractorscompare.com/es/tractores/${tractor.slug}`;
-  return buildTractorMetadata(tractor, 'es', canonicalUrl);
+  // Esta página siempre redirige a /en/tractors/[slug] vía middleware → noindex
+  return {
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function TractorDetailPage({ params }: TractorDetailPageProps) {

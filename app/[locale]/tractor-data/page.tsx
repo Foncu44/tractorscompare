@@ -16,9 +16,14 @@ export async function generateMetadata({
   const canonical = getCanonicalUrl(LOGICAL_PATH, loc);
   const alternates = getAlternates(LOGICAL_PATH, loc);
 
-  const title = 'Tractor data: complete tractor specifications database | TractorsCompare';
+  const title =
+    loc === 'es'
+      ? 'Datos de tractores: especificaciones gratuitas de más de 18.000 modelos | TractorsCompare'
+      : 'Tractor Data: Free Specs & HP for 18,000+ Models | TractorsCompare';
   const description =
-    'Learn how to use tractor data to compare models by horsepower, engine, transmission, PTO and hydraulics. Explore how a structured tractor data platform helps farmers, dealers and analysts make better decisions.';
+    loc === 'es'
+      ? 'Consulta datos técnicos gratuitos de más de 18.000 tractores. Compara potencia, motor, transmisión, TDF e hidráulica sin registro. La mayor base de datos de tractores online.'
+      : 'Free tractor data for 18,000+ models. Compare HP, engine, transmission, PTO and hydraulics instantly — no sign-up needed. The most complete tractor database online.';
 
   return {
     title,
