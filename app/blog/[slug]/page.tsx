@@ -6,6 +6,9 @@ import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
 
+// Esta ruta legacy redirige siempre vía middleware → no indexar
+export const metadata = { robots: { index: false, follow: false } };
+
 interface BlogArticle {
   slug: string;
   title: string;
@@ -19,7 +22,8 @@ interface BlogArticle {
   content: Array<{
     type: string;
     level?: number;
-    text: string;
+    text?: string;
+    items?: string[];
   }>;
   imageUrl?: string;
   imageAlt: string;

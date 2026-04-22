@@ -1,9 +1,43 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import blogData from '@/data/blog.json';
-import { pathForLocale } from '@/lib/i18n/routes';
+import { pathForLocale, getCanonicalUrl, getAlternates } from '@/lib/i18n/routes';
 import type { Locale } from '@/lib/i18n/config';
 
 export const dynamic = 'force-static';
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tractorscompare.com';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = locale as Locale;
+  const canonical = getCanonicalUrl('blog', loc);
+  const alternates = getAlternates('blog', loc);
+  const title = 'Tractor Blog: Expert Guides, Comparisons & Buying Advice | TractorsCompare';
+  const description =
+    'In-depth tractor guides, brand comparisons, buying advice, and technical explainers from the TractorsCompare editorial team. Updated regularly with new content.';
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: { en: alternates.en, es: alternates.es, 'x-default': alternates['x-default'] },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      type: 'website',
+      siteName: 'TractorsCompare',
+      images: [{ url: `${BASE_URL}/en/opengraph-image`, width: 1200, height: 630 }],
+    },
+    robots: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  };
+}
 
 function formatDate(publishedAt: string): string {
   const d = new Date(publishedAt);

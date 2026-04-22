@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npx tsc:*)",
-      "Bash(grep -r generateStaticParams c:/Users/Foncu/Documents/GitHub/tractorscompare/app --include=*.tsx --include=*.ts)"
+      "Bash(grep -r generateStaticParams c:/Users/Foncu/Documents/GitHub/tractorscompare/app --include=*.tsx --include=*.ts)",
+      "Bash(node -e \"const d = require\\('./data/blog.json'\\); console.log\\(d.articles.length, 'articles'\\); d.articles.slice\\(0,8\\).forEach\\(a => console.log\\(a.slug\\)\\)\")"
     ]
   }
 }
