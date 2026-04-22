@@ -6,8 +6,6 @@ import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
 
-// Esta ruta legacy redirige siempre vía middleware → no indexar
-export const metadata = { robots: { index: false, follow: false } };
 
 interface BlogArticle {
   slug: string;
@@ -59,6 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: article.metaTitle,
     description: article.metaDescription,
     keywords: article.keywords,
+    robots: { index: false, follow: false },
     openGraph: {
       title: article.metaTitle,
       description: article.metaDescription,
