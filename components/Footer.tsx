@@ -5,59 +5,97 @@ import type { Locale } from '@/lib/i18n/config';
 
 const COPYRIGHT_YEAR = 2026;
 
-const colLinkCls =
-  'text-stone-400 hover:text-white transition-colors duration-200 inline-flex items-center gap-1.5 group';
-const dotCls =
-  'w-1 h-1 rounded-full bg-primary-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0';
+function FooterLink({ locale, path, label }: { locale: Locale; path: string; label: string }) {
+  return (
+    <li>
+      <LocaleLink
+        locale={locale}
+        logicalPath={path}
+        style={{
+          fontFamily: '"DM Sans", sans-serif',
+          fontSize: '13px',
+          color: 'var(--color-green-300)',
+          textDecoration: 'none',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          transition: 'color 150ms ease',
+          lineHeight: '1.6',
+        }}
+        className="hover:text-white"
+      >
+        {label}
+      </LocaleLink>
+    </li>
+  );
+}
+
+function FooterHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      style={{
+        fontFamily: '"Barlow Condensed", system-ui, sans-serif',
+        fontWeight: 700,
+        fontSize: '13px',
+        textTransform: 'uppercase' as const,
+        letterSpacing: '0.1em',
+        color: '#ffffff',
+        marginBottom: '16px',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export default function Footer({ locale }: { locale: Locale }) {
   return (
-    <footer className="bg-stone-950 text-stone-300 mt-20 border-t border-stone-800">
-      {/* Ad row */}
-      <div className="bg-stone-900 border-b border-stone-800 py-4">
+    <footer
+      style={{ backgroundColor: 'var(--bg-brand-dark)', color: '#6AAB46', marginTop: '80px' }}
+    >
+      {/* Ad strip */}
+      <div style={{ backgroundColor: '#162309', borderBottom: '1px solid #22401A' }} className="py-3">
         <div className="container-custom">
           <AdBanner />
         </div>
       </div>
 
-      {/* Main footer body */}
-      <div className="container-custom py-16">
+      {/* Main body */}
+      <div className="container-custom" style={{ paddingTop: '48px', paddingBottom: '40px' }}>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
 
-          {/* Brand column — wider */}
+          {/* Brand */}
           <div className="lg:col-span-2">
-            {/* Logo lockup */}
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0">
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="7" cy="17" r="2.5"/>
-                  <circle cx="17" cy="17" r="2"/>
-                  <path d="M9.5 17H15M3 17H4.5M14 17V11l4 2v4M4 10l6-4h4l2 5H4z"/>
-                </svg>
-              </div>
-              <span className="font-heading text-lg font-bold text-white">
-                TractorsCompare<span className="text-primary-400">.com</span>
-              </span>
+            <div
+              style={{
+                fontFamily: '"Barlow Condensed", system-ui, sans-serif',
+                fontWeight: 800,
+                fontSize: '22px',
+                textTransform: 'uppercase' as const,
+                letterSpacing: '0.02em',
+                color: '#ffffff',
+                marginBottom: '12px',
+              }}
+            >
+              Tractors<span style={{ color: 'var(--color-amber-400)' }}>Compare</span>
+              <span style={{ color: 'var(--color-green-300)', fontWeight: 400, fontSize: '18px' }}>.com</span>
             </div>
 
-            <p className="text-sm text-stone-400 leading-relaxed max-w-xs">
+            <p style={{ fontSize: '13px', lineHeight: '1.65', color: '#6AAB46', maxWidth: '260px' }}>
               {t('footer.tagline', undefined, locale)}
             </p>
 
-            {/* Color accent stripe */}
-            <div className="mt-6 flex gap-1.5">
-              <div className="h-1 w-12 rounded-full bg-primary-600" />
-              <div className="h-1 w-6  rounded-full bg-amber-500" />
-              <div className="h-1 w-3  rounded-full bg-primary-400" />
+            <div className="flex gap-2 mt-5">
+              <div style={{ height: '3px', width: '40px', borderRadius: '999px', backgroundColor: 'var(--color-green-700)' }} />
+              <div style={{ height: '3px', width: '20px', borderRadius: '999px', backgroundColor: 'var(--color-amber-600)' }} />
+              <div style={{ height: '3px', width: '10px', borderRadius: '999px', backgroundColor: 'var(--color-green-500)' }} />
             </div>
           </div>
 
           {/* Quick links */}
           <div>
-            <h3 className="font-heading text-white font-bold text-sm uppercase tracking-widest mb-5">
-              {t('footer.quickLinks', undefined, locale)}
-            </h3>
-            <ul className="space-y-2.5 text-sm">
+            <FooterHeading>{t('footer.quickLinks', undefined, locale)}</FooterHeading>
+            <ul className="space-y-2">
               {[
                 { path: 'agricultural-tractors', label: t('common.agriculturalTractors', undefined, locale) },
                 { path: 'lawn-garden-tractors',  label: t('common.lawnTractors',         undefined, locale) },
@@ -66,69 +104,62 @@ export default function Footer({ locale }: { locale: Locale }) {
                 { path: 'news',                  label: t('common.news',                  undefined, locale) },
                 { path: 'blog',                  label: t('common.blog',                  undefined, locale) },
               ].map(({ path, label }) => (
-                <li key={path}>
-                  <LocaleLink locale={locale} logicalPath={path} className={colLinkCls}>
-                    <span className={dotCls} />
-                    {label}
-                  </LocaleLink>
-                </li>
+                <FooterLink key={path} locale={locale} path={path} label={label} />
               ))}
             </ul>
           </div>
 
-          {/* Categories */}
+          {/* Data */}
           <div>
-            <h3 className="font-heading text-white font-bold text-sm uppercase tracking-widest mb-5">
-              {t('footer.categories', undefined, locale)}
-            </h3>
-            <ul className="space-y-2.5 text-sm">
+            <FooterHeading>{t('footer.categories', undefined, locale)}</FooterHeading>
+            <ul className="space-y-2">
               {[
-                { path: 'tractors', label: t('common.tractorDatabase',  undefined, locale) },
-                { path: 'best',     label: t('common.bestTractors',      undefined, locale) },
-                { path: 'compare',  label: t('common.compareTractors',   undefined, locale) },
-                { path: 'brands',   label: t('common.allBrands',         undefined, locale) },
+                { path: 'tractors',    label: t('common.tractorDatabase',  undefined, locale) },
+                { path: 'best',        label: t('common.bestTractors',      undefined, locale) },
+                { path: 'compare',     label: t('common.compareTractors',   undefined, locale) },
+                { path: 'brands',      label: t('common.allBrands',         undefined, locale) },
+                { path: 'tractor-data',label: 'Tractor Data' },
               ].map(({ path, label }) => (
-                <li key={path}>
-                  <LocaleLink locale={locale} logicalPath={path} className={colLinkCls}>
-                    <span className={dotCls} />
-                    {label}
-                  </LocaleLink>
-                </li>
+                <FooterLink key={path} locale={locale} path={path} label={label} />
               ))}
             </ul>
           </div>
 
-          {/* Contact / legal */}
+          {/* Legal */}
           <div>
-            <h3 className="font-heading text-white font-bold text-sm uppercase tracking-widest mb-5">
-              {t('footer.contact', undefined, locale)}
-            </h3>
-            <ul className="space-y-2.5 text-sm">
+            <FooterHeading>{t('footer.contact', undefined, locale)}</FooterHeading>
+            <ul className="space-y-2">
               {[
-                { path: 'contact',    label: t('common.contactUs',              undefined, locale) },
-                { path: 'about-us',   label: t('common.aboutUs',                undefined, locale) },
-                { path: 'privacy',    label: t('common.privacy',                undefined, locale) },
-                { path: 'terms',      label: t('common.terms',                  undefined, locale) },
-                { path: 'methodology',label: t('common.methodology',            undefined, locale) },
-                { path: 'disclaimer', label: t('common.editorialAdsDisclosure', undefined, locale) },
+                { path: 'contact',     label: t('common.contactUs',              undefined, locale) },
+                { path: 'about-us',    label: t('common.aboutUs',                undefined, locale) },
+                { path: 'privacy',     label: t('common.privacy',                undefined, locale) },
+                { path: 'terms',       label: t('common.terms',                  undefined, locale) },
+                { path: 'methodology', label: t('common.methodology',            undefined, locale) },
+                { path: 'disclaimer',  label: t('common.editorialAdsDisclosure', undefined, locale) },
               ].map(({ path, label }) => (
-                <li key={path}>
-                  <LocaleLink locale={locale} logicalPath={path} className={colLinkCls}>
-                    <span className={dotCls} />
-                    {label}
-                  </LocaleLink>
-                </li>
+                <FooterLink key={path} locale={locale} path={path} label={label} />
               ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-stone-800 mt-14 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-stone-500 text-center md:text-left">
+        <div
+          style={{
+            borderTop: '1px solid #22401A',
+            marginTop: '40px',
+            paddingTop: '24px',
+            display: 'flex',
+            flexWrap: 'wrap' as const,
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '12px',
+          }}
+        >
+          <p style={{ fontSize: '12px', color: 'var(--color-green-500)', fontFamily: '"DM Sans", sans-serif' }}>
             {t('footer.copyright', { year: String(COPYRIGHT_YEAR) }, locale)}
           </p>
-          <p className="text-xs text-stone-600 text-center max-w-lg leading-relaxed">
+          <p style={{ fontSize: '11px', color: 'var(--color-green-700)', fontFamily: '"DM Sans", sans-serif', maxWidth: '520px', lineHeight: '1.6', textAlign: 'right' as const }}>
             {t('footer.disclaimer', undefined, locale)}
           </p>
         </div>

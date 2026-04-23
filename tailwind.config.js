@@ -1,9 +1,4 @@
-/**
- * Tailwind config – TractorsCompare
- * Redesigned design system: Syne (headings) + Nunito Sans (body), rich earth-green palette + harvest amber accent.
- *
- * @type {import('tailwindcss').Config}
- */
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -13,84 +8,88 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
-        heading: ['Syne', 'system-ui', 'sans-serif'],
-        serif: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+        display:  ['"Barlow Condensed"', 'system-ui', 'sans-serif'],
+        heading:  ['"Barlow Condensed"', 'system-ui', 'sans-serif'],
+        sans:     ['"DM Sans"',          'system-ui', 'sans-serif'],
+        mono:     ['"IBM Plex Mono"',    'ui-monospace', 'monospace'],
       },
       colors: {
-        /* Deep forest green — earthy, trustworthy, agricultural */
+        /* TractorDB green scale */
         primary: {
-          50:  '#f0faf3',
-          100: '#d8f3e1',
-          200: '#b4e5c5',
-          300: '#7dcda2',
-          400: '#45af7a',
-          500: '#22915e',
-          600: '#15744b',
-          700: '#115d3d',
-          800: '#0f4a32',
-          900: '#0c3e2a',
-          950: '#062519',
+          50:  '#F0F8EC',
+          100: '#E6F2DD',
+          200: '#C8E5B0',
+          300: '#91C470',
+          400: '#6DAF4C',
+          500: '#4E8C2E',
+          600: '#3A6E22',
+          700: '#2D5A1B',
+          800: '#1F3F12',
+          900: '#1A2E10',
+          950: '#0F1A09',
         },
-        /* Harvest amber — warm accent, harvest energy */
+        /* TractorDB amber */
         amber: {
-          50:  '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          400: '#EBA840',
+          500: '#D99428',
+          600: '#C47A1E',
+          700: '#A05E0A',
         },
-        /* Stone — warm neutral backgrounds */
+        /* TractorDB neutrals */
         stone: {
-          50:  '#fafaf9',
-          100: '#f5f5f4',
-          200: '#e7e5e4',
-          300: '#d6d3d1',
-          400: '#a8a29e',
-          500: '#78716c',
-          600: '#57534e',
-          700: '#44403c',
-          800: '#292524',
-          900: '#1c1917',
-          950: '#0c0a09',
+          50:  '#F5F3EE',
+          100: '#EEECE6',
+          200: '#D8D5CD',
+          300: '#C4C8BC',
+          400: '#A8ADA0',
+          500: '#8A8F82',
+          600: '#6E7463',
+          700: '#525A46',
+          800: '#3A4030',
+          900: '#2A2E20',
+          950: '#1A1F14',
         },
         surface: {
-          DEFAULT: '#ffffff',
-          muted: '#fafaf9',
-          elevated: '#ffffff',
-          warm: '#f9f7f4',
+          DEFAULT: '#FFFFFF',
+          muted:   '#F5F3EE',
+          warm:    '#F5F3EE',
+          subtle:  '#EEECE6',
         },
       },
       borderRadius: {
-        card: '1rem',
-        button: '0.625rem',
-        pill: '9999px',
+        input:  '4px',
+        card:   '6px',
+        modal:  '8px',
+        button: '4px',
+        pill:   '999px',
       },
       boxShadow: {
-        card:       '0 1px 4px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.06)',
-        'card-hover': '0 8px 24px -4px rgb(0 0 0 / 0.12), 0 4px 8px -4px rgb(0 0 0 / 0.08)',
-        glow:       '0 0 24px 0 rgb(21 116 75 / 0.25)',
-        'glow-amber': '0 0 24px 0 rgb(217 119 6 / 0.25)',
-        inset:      'inset 0 2px 4px 0 rgb(0 0 0 / 0.06)',
+        sm:           '0 2px 8px rgba(0,0,0,0.07)',
+        card:         '0 2px 8px rgba(0,0,0,0.07)',
+        md:           '0 4px 16px rgba(0,0,0,0.10)',
+        'card-hover': '0 4px 16px rgba(0,0,0,0.10)',
+        lg:           '0 8px 32px rgba(0,0,0,0.13)',
+        'focus-ring': '0 0 0 3px rgba(45,90,27,0.12)',
       },
-      backgroundImage: {
-        'hero-grain': "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E\")",
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      fontSize: {
+        'display-hero': ['64px', { lineHeight: '1', letterSpacing: '-0.02em', fontWeight: '800' }],
+        'h1':  ['38px', { lineHeight: '1.1', fontWeight: '700' }],
+        'h2':  ['30px', { lineHeight: '1.15', fontWeight: '700' }],
+        'h3':  ['24px', { lineHeight: '1.2', fontWeight: '600' }],
+        'h4':  ['20px', { lineHeight: '1.3', fontWeight: '600' }],
+        'body':    ['15px', { lineHeight: '1.55' }],
+        'body-sm': ['13px', { lineHeight: '1.5' }],
+        'label':   ['11px', { lineHeight: '1', letterSpacing: '0.1em', fontWeight: '700' }],
+        'spec':    ['13px', { lineHeight: '1.4', fontWeight: '500' }],
+        'spec-hero': ['38px', { lineHeight: '1', fontWeight: '600' }],
+      },
+      maxWidth: {
+        content: '1280px',
       },
       animation: {
         'fade-up':    'fadeUp 0.6s ease-out forwards',
         'fade-in':    'fadeIn 0.5s ease-out forwards',
         'slide-right':'slideRight 0.5s ease-out forwards',
-        'scale-in':   'scaleIn 0.4s ease-out forwards',
-        'count-up':   'countUp 1s ease-out forwards',
-        'shimmer':    'shimmer 2s infinite',
-        'float':      'float 6s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -104,22 +103,6 @@ module.exports = {
         slideRight: {
           from: { opacity: '0', transform: 'translateX(-16px)' },
           to:   { opacity: '1', transform: 'translateX(0)' },
-        },
-        scaleIn: {
-          from: { opacity: '0', transform: 'scale(0.95)' },
-          to:   { opacity: '1', transform: 'scale(1)' },
-        },
-        countUp: {
-          from: { opacity: '0', transform: 'translateY(8px)' },
-          to:   { opacity: '1', transform: 'translateY(0)' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%':      { transform: 'translateY(-8px)' },
-        },
-        shimmer: {
-          '0%':   { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
         },
       },
     },

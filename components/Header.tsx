@@ -12,24 +12,12 @@ import { t } from '@/lib/i18n/t';
 
 export default function Header({ locale }: { locale: Locale }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen]   = useState(false);
+  const [searchOpen, setSearchOpen]   = useState(false);
+  const router   = useRouter();
   const pathname = usePathname();
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsMenuOpen(false);
-    setSearchOpen(false);
-  }, [pathname]);
-
-  // Detect scroll to add shadow
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 8);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  useEffect(() => { setIsMenuOpen(false); setSearchOpen(false); }, [pathname]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,97 +29,120 @@ export default function Header({ locale }: { locale: Locale }) {
   };
 
   const navItems = [
-    { path: '',                      label: t('nav.home',               undefined, locale) },
+    { path: '',                      label: t('nav.home',                undefined, locale) },
     { path: 'agricultural-tractors', label: t('nav.agriculturalTractors', undefined, locale) },
-    { path: 'lawn-garden-tractors',  label: t('nav.lawnTractors',        undefined, locale) },
-    { path: 'best',                  label: t('nav.bestTractors',        undefined, locale) },
-    { path: 'compare',               label: t('nav.compare',             undefined, locale) },
-    { path: 'news',                  label: t('nav.news',                undefined, locale) },
-    { path: 'blog',                  label: t('nav.blog',                undefined, locale) },
+    { path: 'lawn-garden-tractors',  label: t('nav.lawnTractors',         undefined, locale) },
+    { path: 'best',                  label: t('nav.bestTractors',         undefined, locale) },
+    { path: 'compare',               label: t('nav.compare',              undefined, locale) },
+    { path: 'news',                  label: t('nav.news',                 undefined, locale) },
+    { path: 'blog',                  label: t('nav.blog',                 undefined, locale) },
   ];
 
   return (
     <>
-      {/* ── Main Header ── */}
+      {/* ── Nav ─────────────────────────────────────────────────────────── */}
       <header
-        className={`bg-white sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? 'shadow-[0_2px_20px_-4px_rgba(0,0,0,0.10)] border-b border-stone-100'
-            : 'border-b border-stone-100/60'
-        }`}
+        style={{ backgroundColor: 'var(--bg-brand-dark)', height: '60px' }}
+        className="sticky top-0 z-[100] flex items-center"
       >
-        {/* Accent top bar */}
-        <div className="h-0.5 bg-gradient-to-r from-primary-700 via-primary-500 to-amber-500" />
+        <div className="container-custom w-full">
+          <div className="flex items-center justify-between gap-4 h-full">
 
-        <div className="container-custom">
-          <div className="flex items-center justify-between h-16 md:h-[68px] gap-3">
-
-            {/* ── Logo ── */}
+            {/* Logo */}
             <LocaleLink
               locale={locale}
               logicalPath=""
-              className="flex items-center gap-2.5 flex-shrink-0 group"
+              className="flex-shrink-0 flex items-center"
+              style={{
+                fontFamily: '"Barlow Condensed", system-ui, sans-serif',
+                fontWeight: 800,
+                fontSize: '22px',
+                textTransform: 'uppercase',
+                letterSpacing: '0.02em',
+                color: '#ffffff',
+                textDecoration: 'none',
+              }}
             >
-              <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-700 transition-colors duration-200 shadow-sm">
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="7" cy="17" r="2.5"/>
-                  <circle cx="17" cy="17" r="2"/>
-                  <path d="M9.5 17H15M3 17H4.5M14 17V11l4 2v4M4 10l6-4h4l2 5H4z"/>
-                </svg>
-              </div>
-              <span className="font-heading text-lg md:text-xl font-bold text-stone-900 group-hover:text-primary-700 transition-colors duration-200 hidden sm:block leading-tight">
-                TractorsCompare<span className="text-primary-600">.com</span>
-              </span>
+              Tractors
+              <span style={{ color: 'var(--color-amber-400)' }}>Compare</span>
+              <span style={{ color: 'var(--color-green-300)', fontWeight: 400, fontSize: '18px', marginLeft: '1px' }}>.com</span>
             </LocaleLink>
 
-            {/* ── Desktop Navigation ── */}
-            <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-center" aria-label="Main navigation">
+            {/* Desktop nav */}
+            <nav className="hidden lg:flex items-center gap-0" aria-label="Main navigation">
               {navItems.map(({ path, label }) => {
-                const href = pathForLocale(path, locale);
-                const isActive =
-                  pathname === href ||
-                  (path !== '' && pathname.startsWith(href + '/'));
+                const href     = pathForLocale(path, locale);
+                const isActive = pathname === href || (path !== '' && pathname.startsWith(href + '/'));
                 return (
                   <LocaleLink
                     key={path}
                     locale={locale}
                     logicalPath={path}
-                    className={`relative px-3.5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 whitespace-nowrap group
-                      ${isActive
-                        ? 'text-primary-700 bg-primary-50'
-                        : 'text-stone-600 hover:text-primary-700 hover:bg-primary-50/70'
-                      }`}
+                    style={{
+                      fontFamily: '"DM Sans", sans-serif',
+                      fontWeight: 500,
+                      fontSize: '13px',
+                      color: isActive ? '#ffffff' : 'var(--color-green-300)',
+                      padding: '0 12px',
+                      height: '60px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      position: 'relative',
+                      textDecoration: 'none',
+                      transition: 'color 150ms ease',
+                      whiteSpace: 'nowrap',
+                    }}
+                    className="group hover:text-white"
                   >
                     {label}
+                    {/* Active underline */}
                     <span
-                      className={`absolute bottom-0.5 left-3.5 right-3.5 h-0.5 rounded-full bg-primary-500 transition-all duration-300
-                        ${isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-50 group-hover:scale-x-100'}`}
-                      style={{ transformOrigin: 'left' }}
+                      style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        left: '12px',
+                        right: '12px',
+                        height: '3px',
+                        backgroundColor: 'var(--color-amber-400)',
+                        opacity: isActive ? 1 : 0,
+                        transition: 'opacity 150ms ease',
+                      }}
                     />
                   </LocaleLink>
                 );
               })}
             </nav>
 
-            {/* ── Right controls ── */}
-            <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Right controls */}
+            <div className="flex items-center gap-2 flex-shrink-0">
               {/* Search — desktop */}
               <div className="hidden lg:flex items-center">
                 {searchOpen ? (
-                  <form onSubmit={handleSearch} className="flex items-center">
+                  <form onSubmit={handleSearch}>
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: 'var(--fg3)' }} />
                       <input
-                        id="header-search"
-                        name="q"
-                        type="search"
                         autoFocus
+                        type="search"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onBlur={() => { if (!searchQuery) setSearchOpen(false); }}
                         placeholder="Search tractors…"
-                        className="w-56 pl-9 pr-4 py-2 text-sm border border-stone-200 rounded-button bg-stone-50 focus:bg-white focus:ring-2 focus:ring-primary-400 focus:border-primary-400 outline-none transition-all"
                         aria-label="Search tractors"
+                        style={{
+                          width: '220px',
+                          paddingLeft: '32px',
+                          paddingRight: '12px',
+                          paddingTop: '7px',
+                          paddingBottom: '7px',
+                          fontSize: '13px',
+                          fontFamily: '"DM Sans", sans-serif',
+                          backgroundColor: 'rgba(255,255,255,0.10)',
+                          border: '1px solid rgba(255,255,255,0.20)',
+                          borderRadius: '4px',
+                          color: '#ffffff',
+                          outline: 'none',
+                        }}
                       />
                     </div>
                   </form>
@@ -139,9 +150,10 @@ export default function Header({ locale }: { locale: Locale }) {
                   <button
                     onClick={() => setSearchOpen(true)}
                     aria-label="Open search"
-                    className="p-2 rounded-lg text-stone-500 hover:text-primary-600 hover:bg-primary-50 transition-all duration-200"
+                    style={{ color: 'var(--color-green-300)', background: 'none', border: 'none', cursor: 'pointer', padding: '6px' }}
+                    className="hover:text-white transition-colors"
                   >
-                    <Search className="w-5 h-5" />
+                    <Search className="w-4 h-4" />
                   </button>
                 )}
               </div>
@@ -151,69 +163,86 @@ export default function Header({ locale }: { locale: Locale }) {
               {/* Mobile hamburger */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="lg:hidden p-2 rounded-lg text-stone-600 hover:bg-stone-100 transition-colors"
+                className="lg:hidden p-2"
                 aria-label="Toggle menu"
+                style={{ color: 'var(--color-green-300)', background: 'none', border: 'none', cursor: 'pointer' }}
               >
                 {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
-
-          {/* ── Mobile Menu ── */}
-          {isMenuOpen && (
-            <div className="lg:hidden pb-5 pt-3 border-t border-stone-100 animate-fade-in">
-              {/* Mobile search */}
-              <form onSubmit={handleSearch} className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                  <input
-                    id="header-search-mobile"
-                    name="q"
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search tractors…"
-                    className="w-full pl-9 pr-4 py-2.5 text-sm border border-stone-200 rounded-button bg-stone-50 focus:bg-white focus:ring-2 focus:ring-primary-400 outline-none"
-                    aria-label="Search tractors"
-                  />
-                </div>
-              </form>
-
-              {/* Mobile nav */}
-              <nav className="flex flex-col gap-0.5">
-                {navItems.map(({ path, label }) => {
-                  const href = pathForLocale(path, locale);
-                  const isActive =
-                    pathname === href ||
-                    (path !== '' && pathname.startsWith(href + '/'));
-                  return (
-                    <LocaleLink
-                      key={path}
-                      locale={locale}
-                      logicalPath={path}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-colors
-                        ${isActive
-                          ? 'bg-primary-50 text-primary-700'
-                          : 'text-stone-700 hover:bg-stone-50 hover:text-primary-700'
-                        }`}
-                    >
-                      {label}
-                    </LocaleLink>
-                  );
-                })}
-              </nav>
-
-              <div className="mt-4 pt-4 border-t border-stone-100">
-                <LanguageSwitcher locale={locale} />
-              </div>
-            </div>
-          )}
         </div>
       </header>
 
-      {/* ── Ad Banner below header ── */}
-      <div className="bg-stone-50 border-b border-stone-100">
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div
+          style={{ backgroundColor: 'var(--bg-brand-dark)', borderTop: '1px solid #22401A' }}
+          className="lg:hidden z-[99] relative"
+        >
+          <div className="container-custom py-4">
+            <form onSubmit={handleSearch} className="mb-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: 'var(--fg3)' }} />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search tractors…"
+                  style={{
+                    width: '100%',
+                    paddingLeft: '36px',
+                    paddingRight: '12px',
+                    paddingTop: '9px',
+                    paddingBottom: '9px',
+                    fontSize: '14px',
+                    fontFamily: '"DM Sans", sans-serif',
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: '4px',
+                    color: '#ffffff',
+                    outline: 'none',
+                  }}
+                />
+              </div>
+            </form>
+
+            <nav className="flex flex-col">
+              {navItems.map(({ path, label }) => {
+                const href     = pathForLocale(path, locale);
+                const isActive = pathname === href || (path !== '' && pathname.startsWith(href + '/'));
+                return (
+                  <LocaleLink
+                    key={path}
+                    locale={locale}
+                    logicalPath={path}
+                    onClick={() => setIsMenuOpen(false)}
+                    style={{
+                      fontFamily: '"DM Sans", sans-serif',
+                      fontWeight: 500,
+                      fontSize: '14px',
+                      color: isActive ? '#ffffff' : 'var(--color-green-300)',
+                      padding: '10px 8px',
+                      borderLeft: isActive ? '3px solid var(--color-amber-400)' : '3px solid transparent',
+                      paddingLeft: isActive ? '12px' : '8px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {label}
+                  </LocaleLink>
+                );
+              })}
+            </nav>
+
+            <div className="mt-4 pt-4" style={{ borderTop: '1px solid #22401A' }}>
+              <LanguageSwitcher locale={locale} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ad strip */}
+      <div style={{ backgroundColor: 'var(--bg-subtle)', borderBottom: '1px solid var(--border-default)' }}>
         <div className="container-custom">
           <AdBanner />
         </div>
