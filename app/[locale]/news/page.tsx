@@ -1,7 +1,38 @@
 import NewsSections, { type NewsItem } from '@/components/NewsSections';
 import newsData from '@/data/news.json';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-static';
+
+const SITE_NAME = 'TractorsCompare';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tractorscompare.com';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const isEs = locale === 'es';
+
+  const title = isEs
+    ? `Noticias del Sector Tractor — Últimas Novedades | ${SITE_NAME}`
+    : `Tractor Industry News & Latest Updates | ${SITE_NAME}`;
+  const description = isEs
+    ? 'Últimas noticias, tendencias y novedades del sector de la maquinaria agrícola. Mantente informado con TractorsCompare.'
+    : 'Latest news, trends, and developments in the agricultural tractor industry. Stay informed with TractorsCompare — new models, market updates, and expert coverage.';
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      siteName: SITE_NAME,
+      url: `${BASE_URL}/${locale}/${isEs ? 'noticias' : 'news'}`,
+      images: [{ url: `${BASE_URL}/en/opengraph-image`, width: 1200, height: 630 }],
+    },
+    twitter: { card: 'summary_large_image', title, description },
+    robots: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
+  };
+}
 
 export default function NewsPage() {
   const newsItems = ((newsData as { items?: unknown[] }).items || []) as NewsItem[];

@@ -72,47 +72,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const loc = locale as Locale;
   const brands = getAllBrands();
 
-  const websiteJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'TractorsCompare',
-    url: BASE_URL,
-    description: 'Free tractor data and specifications database for 18,000+ models',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${BASE_URL}/en/search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
-  };
-
-  const organizationJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'TractorsCompare',
-    url: BASE_URL,
-    logo: {
-      '@type': 'ImageObject',
-      url: `${BASE_URL}/logo.png`,
-    },
-    description: 'The largest free tractor specifications and comparison database online.',
-    sameAs: [
-      'https://tractorscompare.com',
-    ],
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-      />
       {/* ═══════════════════════════════════════════════════════════
           HERO — full-bleed banner with grain overlay + bold type
       ════════════════════════════════════════════════════════════ */}

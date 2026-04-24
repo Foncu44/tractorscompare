@@ -8,6 +8,7 @@ import { AdSidebar } from '@/components/AdSense';
 import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 import SEOContentSection from '@/components/SEOContentSection';
 import UsedListingsInternational from '@/components/UsedListingsInternational';
+import DealersMap from '@/components/DealersMap';
 import { specsFromTractor, computeSuitability } from '@/lib/tractorSuitability';
 import { buildPerformanceProfile } from '@/lib/tractorIntelligence/profile';
 import { buildTractorNarrative } from '@/lib/tractorNarrative';
@@ -371,6 +372,9 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
             brandName={tractor.brand}
             modelName={tractor.model}
           />
+
+          {/* ── Dealers near you ──────────────────────────────────── */}
+          <DealersMap brand={tractor.brand} />
 
           {/* ── Main features list ────────────────────────────────── */}
           {tractor.features && tractor.features.length > 0 && (

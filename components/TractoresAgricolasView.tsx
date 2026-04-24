@@ -61,9 +61,13 @@ function TractoresAgricolasContent({ locale }: { locale?: Locale }) {
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-12 md:py-16">
         <div className="container-custom">
-          <h1 className="text-4xl font-bold mb-4">Agricultural Tractors</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            {locale === 'es' ? 'Tractores Agrícolas' : 'Agricultural Tractors'}
+          </h1>
           <p className="text-white/80 text-lg max-w-3xl">
-            Find specifications of {farmTractors.length.toLocaleString()} agricultural tractors from {brands.length} brands. Compare power, engine, transmission and technical features.
+            {locale === 'es'
+              ? `Especificaciones de ${farmTractors.length.toLocaleString()} tractores agrícolas de ${brands.length} marcas. Compara potencia, motor, transmisión y características técnicas.`
+              : `Find specifications of ${farmTractors.length.toLocaleString()} agricultural tractors from ${brands.length} brands. Compare power, engine, transmission and technical features.`}
           </p>
         </div>
       </section>

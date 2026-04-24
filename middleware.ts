@@ -14,12 +14,13 @@ import { ES_TO_EN_FIRST_SEGMENT, PATH_SEGMENT_BY_LOCALE } from '@/lib/i18n/route
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // No tocar assets, API, _next
+  // No tocar assets, API, _next, sitemaps
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api/') ||
     pathname.startsWith('/images/') ||
     pathname.startsWith('/favicon') ||
+    pathname.startsWith('/sitemap') ||
     pathname === '/ads.txt' ||
     pathname === '/robots.txt' ||
     pathname.includes('.')

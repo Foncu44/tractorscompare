@@ -61,9 +61,13 @@ function TractoresJardinContent({ locale }: { locale?: Locale }) {
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white py-12 md:py-16">
         <div className="container-custom">
-          <h1 className="text-4xl font-bold mb-4">Lawn Tractors</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            {locale === 'es' ? 'Tractores de Jardín y Cortacésped' : 'Lawn & Garden Tractors'}
+          </h1>
           <p className="text-white/80 text-lg max-w-3xl">
-            Find specifications of {lawnTractors.length.toLocaleString()} lawn tractors and mowers from {brands.length} brands. Compare technical features and find the best model.
+            {locale === 'es'
+              ? `Especificaciones de ${lawnTractors.length.toLocaleString()} tractores de jardín y cortacéspedes de ${brands.length} marcas. Compara características y encuentra el mejor modelo.`
+              : `Find specifications of ${lawnTractors.length.toLocaleString()} lawn tractors and mowers from ${brands.length} brands. Compare technical features and find the best model.`}
           </p>
         </div>
       </section>
