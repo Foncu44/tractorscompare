@@ -35,6 +35,8 @@ const frameSrc = [
   'https://securepubads.g.doubleclick.net',
   'https://*.google.com',
   'https://*.googleusercontent.com',
+  'https://www.youtube-nocookie.com',
+  'https://www.youtube.com',
 ].join(' ');
 const connectSrc = [
   "'self'",

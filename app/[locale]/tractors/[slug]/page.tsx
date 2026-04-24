@@ -9,6 +9,8 @@ import TractorSpecsTabs from '@/components/TractorSpecsTabs';
 import SEOContentSection from '@/components/SEOContentSection';
 import UsedListingsInternational from '@/components/UsedListingsInternational';
 import DealersMap from '@/components/DealersMap';
+import YoutubeVideos from '@/components/YoutubeVideos';
+import ForumDiscussions from '@/components/ForumDiscussions';
 import { specsFromTractor, computeSuitability } from '@/lib/tractorSuitability';
 import { buildPerformanceProfile } from '@/lib/tractorIntelligence/profile';
 import { buildTractorNarrative } from '@/lib/tractorNarrative';
@@ -375,6 +377,12 @@ export default async function TractorDetailPage({ params }: TractorDetailPagePro
 
           {/* ── Dealers near you ──────────────────────────────────── */}
           <DealersMap brand={tractor.brand} />
+
+          {/* ── YouTube videos ────────────────────────────────────── */}
+          <YoutubeVideos brand={tractor.brand} model={tractor.model} />
+
+          {/* ── Community discussions ─────────────────────────────── */}
+          <ForumDiscussions brand={tractor.brand} model={tractor.model} />
 
           {/* ── Main features list ────────────────────────────────── */}
           {tractor.features && tractor.features.length > 0 && (
