@@ -15,8 +15,6 @@
     "start": "next start",
     "lint": "next lint",
     "download-images": "node scripts/downloadImages.js",
-    "scrape-from-brands": "node scripts/scrapeFromBrandPages.js",
-    "scrape-all": "node scripts/scrapeAllTractors.js",
     "process-scraped": "node scripts/processScrapedData.js",
     "check-data": "npx tsx scripts/checkData.ts",
     "test-listings": "npx tsx scripts/testListings.ts",
