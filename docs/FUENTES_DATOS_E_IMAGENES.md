@@ -54,12 +54,9 @@ Basándome en el análisis de tu código y sitios como TractorJunction, aquí es
 - Algunos fabricantes tienen APIs, pero generalmente son privadas
 - Principalmente para dealers autorizados
 
-### 5. **Scraping de Sitios Web**
-- **Tu código actual**: Ya tienes scripts de scraping en `scripts/scrapeAllTractors.js`
-- **Sitios útiles**:
-  - Sitios oficiales de fabricantes
-  - TractorData.com (datos históricos)
-  - Sitios de dealers con especificaciones
+### 5. **APIs Oficiales de Marketplaces**
+- **eBay Finding API**: Listados de tractores usados (oficial, requiere App ID)
+- **Wallapop API pública**: Listados en España/Europa
 
 ## 🔍 Cómo TractorJunction Obtiene Sus Datos
 
@@ -80,11 +77,10 @@ Basándome en el análisis de TractorJunction, probablemente:
 4. **Optimización**: Ya usas formatos WebP, mantenerlo
 
 ### Para Datos:
-1. **Scraping Estructurado**: Continuar con tu enfoque actual
+1. **APIs Oficiales**: Usar solo APIs con términos de uso que lo permitan (eBay, Wallapop)
 2. **Validación de Datos**: Verificar que los datos sean consistentes
-3. **Actualización Periódica**: Scripts automatizados para mantener datos actualizados
-4. **Múltiples Fuentes**: Combinar datos de varias fuentes para verificación
-5. **Licencias**: Asegurar que el uso de datos cumpla con términos legales
+3. **Múltiples Fuentes**: Combinar datos de varias fuentes para verificación
+4. **Licencias**: Los datos de especificaciones técnicas son hechos públicos no sujetos a copyright
 
 ## 📝 Nota Legal Importante
 
