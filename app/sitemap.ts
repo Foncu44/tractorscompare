@@ -20,11 +20,20 @@ import blogData from '@/data/blog.json';
 import { BEST_CATEGORIES } from '@/lib/tractorIntelligence/seo/bestCategory';
 import { pathForLocale } from '@/lib/i18n/routes';
 import { locales } from '@/lib/i18n/config';
+import { isTractorIndexable } from '@/lib/tractorSeo';
 
 const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://tractorscompare.com';
 
 /** Max tractor slugs per sitemap chunk (×2 locales = up to 10,000 URLs/file). */
 const TRACTOR_CHUNK_SIZE = 5000;
+
+/**
+ * Only tractors with a real photo + known core specs are submitted for
+ * indexing (see isTractorIndexable). The rest stay live/linkable but are
+ * marked noindex on their own page and excluded here, so Google's site-wide
+ * quality assessment isn't dragged down by thousands of thin, templated pages.
+ */
+const indexableTractors = tractors.filter(isTractorIndexable);
 
 // ---------------------------------------------------------------------------
 // Helper
@@ -57,7 +66,7 @@ function withLocales(
 // ---------------------------------------------------------------------------
 
 export async function generateSitemaps() {
-  const tractorChunks = Math.ceil(tractors.length / TRACTOR_CHUNK_SIZE);
+  const tractorChunks = Math.ceil(indexableTractors.length / TRACTOR_CHUNK_SIZE);
   // id=0: static + brand + blog + best pages
   // id=1..tractorChunks: tractor page chunks
   return Array.from({ length: tractorChunks + 1 }, (_, i) => ({ id: i }));
@@ -101,8 +110,8 @@ export default function sitemap({ id }: { id: number }): MetadataRoute.Sitemap {
       }))
     );
 
-    // Sample compare pages (50 pairs)
-    const compareSlugs = tractors
+    // Sample compare pages (50 pairs) — only pair up quality-indexable tractors.
+    const compareSlugs = indexableTractors
       .filter((t) => t.slug && t.engine?.powerHP != null && t.transmission?.type)
       .map((t) => t.slug)
       .slice(0, 40);
@@ -165,7 +174,7 @@ export default function sitemap({ id }: { id: number }): MetadataRoute.Sitemap {
   const chunkIndex = id - 1; // 0-based chunk index
   const start = chunkIndex * TRACTOR_CHUNK_SIZE;
   const end = start + TRACTOR_CHUNK_SIZE;
-  const chunk = tractors.slice(start, end);
+  const chunk = indexableTractors.slice(start, end);
 
   return chunk.flatMap((tractor) =>
     locales.map((locale) => {

@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npx tsc:*)",
       "Bash(grep -r generateStaticParams c:/Users/Foncu/Documents/GitHub/tractorscompare/app --include=*.tsx --include=*.ts)",
-      "Bash(node -e \"const d = require\\('./data/blog.json'\\); console.log\\(d.articles.length, 'articles'\\); d.articles.slice\\(0,8\\).forEach\\(a => console.log\\(a.slug\\)\\)\")"
+      "Bash(node -e \"const d = require\\('./data/blog.json'\\); console.log\\(d.articles.length, 'articles'\\); d.articles.slice\\(0,8\\).forEach\\(a => console.log\\(a.slug\\)\\)\")",
+      "Bash(xargs -I {} basename {} .prefab)",
+      "Bash(grep -B 1 -A 6 \"name: TileSet_house_interior_v_1.0_0$\" Assets/Tiles/TileSet_house_interior_v_1.0.png.meta)",
+      "Bash(mkdir -p Assets/Editor)",
+      "Bash(ls Assets/Editor/)"
     ]
   }
 }

@@ -47,6 +47,7 @@ import {
   buildProductSchema,
   buildBreadcrumbSchema,
   buildFaqSchema,
+  isTractorIndexable,
 } from '@/lib/tractorSeo';
 
 interface TractorDetailPageProps {
@@ -98,7 +99,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternateLanguages = undefined;
   }
 
-  const metadata = buildTractorMetadata(tractor, loc, canonicalUrl, alternateLanguages);
+  const metadata = buildTractorMetadata(
+    tractor,
+    loc,
+    canonicalUrl,
+    alternateLanguages,
+    isTractorIndexable(tractor)
+  );
 
   // Merge any per-tractor custom keywords from the data layer
   if (tractor.metaKeywords?.length) {

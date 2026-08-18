@@ -7,9 +7,31 @@
 import type { Metadata } from 'next';
 import type { Tractor } from '@/types/tractor';
 import type { FaqItem } from '@/lib/tractorPageContent';
+import { getTractorImage } from '@/lib/tractorImages';
 
 const SITE_NAME = 'TractorsCompare';
 const CURRENT_YEAR = 2026;
+
+// ---------------------------------------------------------------------------
+// Index eligibility
+// ---------------------------------------------------------------------------
+
+/**
+ * A tractor page is only worth indexing when it has real, non-templated
+ * value: a genuine photo (not the generic placeholder) and known core specs.
+ * Most of the site's ~10k scraped tractors lack a real image (~75%) and rely
+ * entirely on auto-generated boilerplate text, which is what triggers
+ * Google's "low-value / scaled content" classification. Pages that fail this
+ * check stay live and linkable but are marked noindex and dropped from the
+ * sitemap so Google's quality assessment weighs only the pages with real,
+ * differentiated content.
+ */
+export function isTractorIndexable(tractor: Tractor): boolean {
+  const hasRealImage = Boolean(tractor.imageUrl) || Boolean(getTractorImage(tractor.slug));
+  const hasRealPower = (tractor.engine?.powerHP ?? 0) > 0;
+  const hasWeight = (tractor.weight ?? 0) > 0;
+  return hasRealImage && hasRealPower && hasWeight;
+}
 
 // ---------------------------------------------------------------------------
 // Meta title & description
@@ -120,7 +142,8 @@ export function buildTractorMetadata(
   tractor: Tractor,
   locale: 'en' | 'es',
   canonicalUrl: string,
-  alternates?: Record<string, string>
+  alternates?: Record<string, string>,
+  indexable: boolean = true
 ): Metadata {
   const isEs = locale === 'es';
   const title = isEs ? buildTractorTitleEs(tractor) : buildTractorTitle(tractor);
@@ -165,7 +188,7 @@ export function buildTractorMetadata(
     // Explicitly tell crawlers large image previews are allowed (belt + suspenders
     // alongside the root layout robots setting).
     robots: {
-      index: true,
+      index: indexable,
       follow: true,
       'max-image-preview': 'large',
       'max-snippet': -1,
