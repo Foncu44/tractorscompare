@@ -11,44 +11,126 @@
       "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
       "category": "Buying Guides",
       "readingTimeMinutes": 7,
-      "keywords": ["how to choose a tractor", "tractor buying guide", "which tractor do I need", "tractor for small farm", "best tractor 2026"],
+      "keywords": [
+        "how to choose a tractor",
+        "tractor buying guide",
+        "which tractor do I need",
+        "tractor for small farm",
+        "best tractor 2026"
+      ],
       "excerpt": "Buying a tractor is one of the biggest investments a farmer can make. Get the decision right and it serves you for 20 years. Get it wrong and you're either underpowered on a busy harvest day or paying for capacity you never use.",
       "imageUrl": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80&auto=format",
       "imageAlt": "Farmer inspecting a tractor on a green field before purchase",
       "content": [
-        { "type": "heading", "level": 2, "text": "Start With Your Tasks, Not the Brand Brochure" },
-        { "type": "paragraph", "text": "Most buyers make the same mistake: they start shopping by brand, then try to justify the model they already like emotionally. The right approach is the opposite. Start with a list of the actual jobs you need the tractor to do, and work backwards to the specs that support those tasks. It sounds obvious, but it genuinely changes which machine lands on the shortlist." },
-        { "type": "paragraph", "text": "Write down your three to five most demanding jobs. Ploughing, front loader work, hay cutting, post-hole drilling, brushcutting — every operation has different demands on engine power, hydraulic flow, and PTO output. The task that stresses the machine most is the one that sets your minimum specification." },
-        { "type": "heading", "level": 2, "text": "Farm Size Is a Starting Point, Not the Answer" },
-        { "type": "paragraph", "text": "You will often see rules of thumb like '1 HP per acre'. They are a rough sanity check, not a specification. A 10-hectare property running a large round baler needs far more power than the same 10 hectares of paddocks grazed by cattle. What matters more is the weight of the implements you plan to attach and the soil conditions you will be working in." },
-        { "type": "list", "items": [
-          "Under 5 hectares, mostly mowing and light loader: 25–45 HP compact tractor",
-          "5–20 hectares, mixed grazing and hay: 50–75 HP utility tractor",
-          "20–80 hectares, tillage and baling: 75–120 HP mid-range tractor",
-          "80+ hectares or row cropping: 120–200+ HP with a front-linkage option"
-        ]},
-        { "type": "paragraph", "text": "These bands should shift up one tier if your land is hilly, your soil is heavy clay, or you run implements close to the top of the recommended capacity range. Working at 80–90% of rated capacity continuously wears drivetrain components faster and leaves no reserve for harder-than-average conditions." },
-        { "type": "heading", "level": 2, "text": "Understanding the Horsepower Numbers" },
-        { "type": "paragraph", "text": "Tractor horsepower is reported in at least three different ways, and manufacturers don't always make clear which one they are quoting. Engine HP is the gross output of the engine on a test stand. PTO HP is the power available at the rear shaft after drivetrain losses — typically 15–20% less than engine HP. Drawbar HP is the pulling power at the hitch, lower again because of tyre slip and frame friction." },
-        { "type": "paragraph", "text": "When you match a tractor to a baler, mower conditioner, or grain auger, use the PTO HP figure, not the engine HP on the cover of the brochure. If a baler requires 65 PTO HP, you need an engine producing at least 75–80 HP. This gap catches many buyers by surprise." },
-        { "type": "tip", "text": "On any tractor page on TractorsCompare you will find both Engine HP and PTO HP listed separately. Always check both before comparing models." },
-        { "type": "heading", "level": 2, "text": "Transmission: The Choice You Will Live With Every Day" },
-        { "type": "paragraph", "text": "The engine powers the machine, but the transmission defines the experience. A tractor you operate for 300–500 hours a year will feel very different at the end of a long day depending on what type of gearbox is between you and the wheels." },
-        { "type": "list", "items": [
-          "Gear-driven (synchro): reliable and cheap to rebuild, but requires clutching through the field — tiring on long days",
-          "Powershift: changes ratios under load without clutching — good for loader work and frequent speed changes",
-          "CVT (continuously variable): infinite ratios, set your speed precisely, the least fatiguing option — but significantly more expensive and costlier to repair",
-          "Hydrostatic: common on compact and sub-compact tractors, excellent manoeuvrability for mowing and tight areas"
-        ]},
-        { "type": "paragraph", "text": "For mixed farming where loader work shares time with field operations, a powershift or CVT saves meaningful hours of fatigue over a season. For a dedicated field tractor you rarely take out of third gear, a quality synchro gearbox is perfectly adequate and far more affordable to maintain." },
-        { "type": "heading", "level": 2, "text": "Hydraulic Capacity Matters More Than Most Buyers Realise" },
-        { "type": "paragraph", "text": "Hydraulic flow rate — measured in litres per minute — determines how quickly your loader raises and tips, how responsive your three-point linkage is, and whether you can run hydraulic motors on implements like front mowers or seed drills. A tractor with marginal hydraulic capacity feels sluggish even when the engine has plenty of power in reserve." },
-        { "type": "paragraph", "text": "If you plan to run a front loader, check that the tractor specifies a dedicated loader circuit. Many budget models share loader and rear-linkage hydraulics, meaning the loader slows to a crawl when the rear linkage is raised simultaneously. Separate circuits are a genuine quality-of-life upgrade for loader operators." },
-        { "type": "heading", "level": 2, "text": "New vs Used: The Honest Trade-off" },
-        { "type": "paragraph", "text": "A new tractor comes with a warranty, current emission compliance, and access to dealer finance. A well-maintained used machine from 10–15 years ago — bought through a reputable dealer with service history — can represent substantially better value per working hour. The danger zone is machines with high hours and no service records, or those that have clearly been worked hard without maintenance." },
-        { "type": "paragraph", "text": "Whatever budget you set, factor in the cost of a loader if you don't have one. A tractor without a loader is often less useful than a smaller tractor with one. And remember: any tractor you buy will need tyres, service parts, and eventually a repair or two. A machine at the absolute top of your budget leaves nothing for the cost of ownership." },
-        { "type": "heading", "level": 2, "text": "Use the Data Before You Go to the Dealer" },
-        { "type": "paragraph", "text": "Before you visit a showroom, shortlist three or four models using objective specification data. Look at PTO HP, hydraulic flow, rear lift capacity, transmission type, and operating weight. Compare them side by side, and write down the questions the numbers raise. A dealer conversation goes much better when you arrive with a shortlist and specific technical questions rather than an open mind for the salesperson to fill." }
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Start With Your Tasks, Not the Brand Brochure"
+        },
+        {
+          "type": "paragraph",
+          "text": "Most buyers make the same mistake: they start shopping by brand, then try to justify the model they already like emotionally. The right approach is the opposite. Start with a list of the actual jobs you need the tractor to do, and work backwards to the specs that support those tasks. It sounds obvious, but it genuinely changes which machine lands on the shortlist."
+        },
+        {
+          "type": "paragraph",
+          "text": "Write down your three to five most demanding jobs. Ploughing, front loader work, hay cutting, post-hole drilling, brushcutting — every operation has different demands on engine power, hydraulic flow, and PTO output. The task that stresses the machine most is the one that sets your minimum specification."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Farm Size Is a Starting Point, Not the Answer"
+        },
+        {
+          "type": "paragraph",
+          "text": "You will often see rules of thumb like '1 HP per acre'. They are a rough sanity check, not a specification. A 10-hectare property running a large round baler needs far more power than the same 10 hectares of paddocks grazed by cattle. What matters more is the weight of the implements you plan to attach and the soil conditions you will be working in."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Under 5 hectares, mostly mowing and light loader: 25–45 HP compact tractor",
+            "5–20 hectares, mixed grazing and hay: 50–75 HP utility tractor",
+            "20–80 hectares, tillage and baling: 75–120 HP mid-range tractor",
+            "80+ hectares or row cropping: 120–200+ HP with a front-linkage option"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "These bands should shift up one tier if your land is hilly, your soil is heavy clay, or you run implements close to the top of the recommended capacity range. Working at 80–90% of rated capacity continuously wears drivetrain components faster and leaves no reserve for harder-than-average conditions."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Understanding the Horsepower Numbers"
+        },
+        {
+          "type": "paragraph",
+          "text": "Tractor horsepower is reported in at least three different ways, and manufacturers don't always make clear which one they are quoting. Engine HP is the gross output of the engine on a test stand. PTO HP is the power available at the rear shaft after drivetrain losses — typically 15–20% less than engine HP. Drawbar HP is the pulling power at the hitch, lower again because of tyre slip and frame friction."
+        },
+        {
+          "type": "paragraph",
+          "text": "When you match a tractor to a baler, mower conditioner, or grain auger, use the PTO HP figure, not the engine HP on the cover of the brochure. If a baler requires 65 PTO HP, you need an engine producing at least 75–80 HP. This gap catches many buyers by surprise."
+        },
+        {
+          "type": "tip",
+          "text": "On any tractor page on TractorsCompare you will find both Engine HP and PTO HP listed separately. Always check both before comparing models."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Transmission: The Choice You Will Live With Every Day"
+        },
+        {
+          "type": "paragraph",
+          "text": "The engine powers the machine, but the transmission defines the experience. A tractor you operate for 300–500 hours a year will feel very different at the end of a long day depending on what type of gearbox is between you and the wheels."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Gear-driven (synchro): reliable and cheap to rebuild, but requires clutching through the field — tiring on long days",
+            "Powershift: changes ratios under load without clutching — good for loader work and frequent speed changes",
+            "CVT (continuously variable): infinite ratios, set your speed precisely, the least fatiguing option — but significantly more expensive and costlier to repair",
+            "Hydrostatic: common on compact and sub-compact tractors, excellent manoeuvrability for mowing and tight areas"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "For mixed farming where loader work shares time with field operations, a powershift or CVT saves meaningful hours of fatigue over a season. For a dedicated field tractor you rarely take out of third gear, a quality synchro gearbox is perfectly adequate and far more affordable to maintain."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Hydraulic Capacity Matters More Than Most Buyers Realise"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hydraulic flow rate — measured in litres per minute — determines how quickly your loader raises and tips, how responsive your three-point linkage is, and whether you can run hydraulic motors on implements like front mowers or seed drills. A tractor with marginal hydraulic capacity feels sluggish even when the engine has plenty of power in reserve."
+        },
+        {
+          "type": "paragraph",
+          "text": "If you plan to run a front loader, check that the tractor specifies a dedicated loader circuit. Many budget models share loader and rear-linkage hydraulics, meaning the loader slows to a crawl when the rear linkage is raised simultaneously. Separate circuits are a genuine quality-of-life upgrade for loader operators."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "New vs Used: The Honest Trade-off"
+        },
+        {
+          "type": "paragraph",
+          "text": "A new tractor comes with a warranty, current emission compliance, and access to dealer finance. A well-maintained used machine from 10–15 years ago — bought through a reputable dealer with service history — can represent substantially better value per working hour. The danger zone is machines with high hours and no service records, or those that have clearly been worked hard without maintenance."
+        },
+        {
+          "type": "paragraph",
+          "text": "Whatever budget you set, factor in the cost of a loader if you don't have one. A tractor without a loader is often less useful than a smaller tractor with one. And remember: any tractor you buy will need tyres, service parts, and eventually a repair or two. A machine at the absolute top of your budget leaves nothing for the cost of ownership."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Use the Data Before You Go to the Dealer"
+        },
+        {
+          "type": "paragraph",
+          "text": "Before you visit a showroom, shortlist three or four models using objective specification data. Look at PTO HP, hydraulic flow, rear lift capacity, transmission type, and operating weight. Compare them side by side, and write down the questions the numbers raise. A dealer conversation goes much better when you arrive with a shortlist and specific technical questions rather than an open mind for the salesperson to fill."
+        }
       ]
     },
     {
@@ -62,37 +144,99 @@
       "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
       "category": "Technical Guides",
       "readingTimeMinutes": 6,
-      "keywords": ["tractor PTO explained", "what is PTO on a tractor", "540 vs 1000 PTO", "live PTO tractor", "PTO horsepower"],
+      "keywords": [
+        "tractor PTO explained",
+        "what is PTO on a tractor",
+        "540 vs 1000 PTO",
+        "live PTO tractor",
+        "PTO horsepower"
+      ],
       "excerpt": "PTO — Power Take-Off — is the shaft at the rear of a tractor that transfers engine power to attached implements. Understanding it properly can save you from buying the wrong tractor, damaging an implement, or leaving serious capacity on the table.",
       "imageUrl": "https://images.unsplash.com/photo-1589923188900-85dae523342b?w=1200&q=80&auto=format",
       "imageAlt": "Close-up of tractor rear PTO shaft connection point",
       "content": [
-        { "type": "heading", "level": 2, "text": "What PTO Actually Does" },
-        { "type": "paragraph", "text": "The Power Take-Off is a rotating shaft — usually at the rear, sometimes also at the front — that spins at a fixed ratio to the engine and delivers rotational power to implements. Balers, mowers, slurry pumps, augers, generators, and wood chippers are all PTO-driven. Without a functioning PTO, a tractor is little more than a very expensive tow vehicle." },
-        { "type": "paragraph", "text": "PTO horsepower is always lower than engine horsepower — typically by 15 to 20 percent — because the drivetrain consumes energy along the way. This is the figure you need when sizing implements. If a baler is rated for a minimum of 65 PTO HP, a tractor producing 75 engine HP may only deliver 60 PTO HP. Always read the PTO HP column, not just the headline engine figure." },
-        { "type": "heading", "level": 2, "text": "540 RPM vs 1000 RPM: Choosing the Right Speed" },
-        { "type": "paragraph", "text": "Most implements are designed around one of two standard shaft speeds: 540 or 1000 RPM. The speed stamped on the implement matches the engagement notch on the tractor shaft, so using the wrong combination is immediately obvious — but the reason for the two standards is less well understood." },
-        { "type": "list", "items": [
-          "540 RPM: the original agricultural standard, common on implements up to around 60–65 PTO HP rated capacity",
-          "1000 RPM: allows more power transfer through the same shaft diameter — essential for high-demand implements on larger tractors",
-          "540E (Economy): the shaft turns at 540 RPM with the engine running at lower revs — a genuine fuel saver on light-load work like mowing",
-          "Dual-speed PTO: can be selected between 540 and 1000 — very useful on mixed farms running both older and newer implements"
-        ]},
-        { "type": "paragraph", "text": "If you run a mix of older 540 RPM implements alongside newer high-capacity equipment, a dual-speed PTO is worth looking for. Adapters exist, but using the shaft at the wrong speed for extended periods stresses gearboxes and shortens implement life." },
-        { "type": "heading", "level": 2, "text": "Live PTO vs Independent PTO: A Practical Difference" },
-        { "type": "paragraph", "text": "Early tractor PTOs were mechanically tied to the gearbox — pressing the clutch stopped both the wheels and the PTO simultaneously. This made implement disengagement difficult and damaged some machines. The solution was the live PTO, which allows the operator to stop the tractor's forward movement while keeping the PTO spinning." },
-        { "type": "list", "items": [
-          "Transmission PTO: stops when the clutch is pressed — largely obsolete on modern agricultural tractors",
-          "Live PTO (two-stage clutch): first pedal press stops forward movement; second press stops the PTO",
-          "Independent PTO: fully separate clutch controls wheel drive and PTO independently — the most flexible arrangement for complex operations"
-        ]},
-        { "type": "paragraph", "text": "For most modern farms, independent PTO is the expected standard on any mid-range or larger tractor. Where it matters most is on operations that require stopping frequently — headland turns with a baler, manoeuvring a mower through gates, or powering a stationary pump while you move vehicles behind the tractor." },
-        { "type": "heading", "level": 2, "text": "Front PTO: When You Need It" },
-        { "type": "paragraph", "text": "Front PTO is standard equipment on a growing number of utility and large tractors, particularly in European markets where front mowers and front-mounted drills are common. It operates on the same 1000 RPM standard and is driven by a separate clutch. Running front and rear PTO simultaneously is possible on tractors with sufficient hydraulic and engine capacity, but demands careful attention to total power budget." },
-        { "type": "tip", "text": "On TractorsCompare, filter any brand's lineup by PTO type or PTO HP to shortlist models that match your implement requirements before visiting a dealer." },
-        { "type": "heading", "level": 2, "text": "Matching PTO HP to Your Heaviest Implement" },
-        { "type": "paragraph", "text": "The correct rule is simple: your tractor's PTO HP should exceed the heaviest implement's rated requirement by at least 20 percent. This buffer keeps the engine in its efficient operating range, reduces heat and wear during sustained work, and gives you reserve for tougher conditions — wet soil, heavy crop, long steep runs." },
-        { "type": "paragraph", "text": "Running an implement right at the tractor's PTO limit is sometimes unavoidable but should not be the normal condition. If you find yourself regularly pulling the engine down to 1600–1800 RPM with the throttle fully open, the tractor is undersized for the implement. Over time, this shows up as premature clutch wear, increased fuel consumption per output unit, and stress on the implement gearbox which typically assumes rated power is available at all times." }
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "What PTO Actually Does"
+        },
+        {
+          "type": "paragraph",
+          "text": "The Power Take-Off is a rotating shaft — usually at the rear, sometimes also at the front — that spins at a fixed ratio to the engine and delivers rotational power to implements. Balers, mowers, slurry pumps, augers, generators, and wood chippers are all PTO-driven. Without a functioning PTO, a tractor is little more than a very expensive tow vehicle."
+        },
+        {
+          "type": "paragraph",
+          "text": "PTO horsepower is always lower than engine horsepower — typically by 15 to 20 percent — because the drivetrain consumes energy along the way. This is the figure you need when sizing implements. If a baler is rated for a minimum of 65 PTO HP, a tractor producing 75 engine HP may only deliver 60 PTO HP. Always read the PTO HP column, not just the headline engine figure."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "540 RPM vs 1000 RPM: Choosing the Right Speed"
+        },
+        {
+          "type": "paragraph",
+          "text": "Most implements are designed around one of two standard shaft speeds: 540 or 1000 RPM. The speed stamped on the implement matches the engagement notch on the tractor shaft, so using the wrong combination is immediately obvious — but the reason for the two standards is less well understood."
+        },
+        {
+          "type": "list",
+          "items": [
+            "540 RPM: the original agricultural standard, common on implements up to around 60–65 PTO HP rated capacity",
+            "1000 RPM: allows more power transfer through the same shaft diameter — essential for high-demand implements on larger tractors",
+            "540E (Economy): the shaft turns at 540 RPM with the engine running at lower revs — a genuine fuel saver on light-load work like mowing",
+            "Dual-speed PTO: can be selected between 540 and 1000 — very useful on mixed farms running both older and newer implements"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "If you run a mix of older 540 RPM implements alongside newer high-capacity equipment, a dual-speed PTO is worth looking for. Adapters exist, but using the shaft at the wrong speed for extended periods stresses gearboxes and shortens implement life."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Live PTO vs Independent PTO: A Practical Difference"
+        },
+        {
+          "type": "paragraph",
+          "text": "Early tractor PTOs were mechanically tied to the gearbox — pressing the clutch stopped both the wheels and the PTO simultaneously. This made implement disengagement difficult and damaged some machines. The solution was the live PTO, which allows the operator to stop the tractor's forward movement while keeping the PTO spinning."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Transmission PTO: stops when the clutch is pressed — largely obsolete on modern agricultural tractors",
+            "Live PTO (two-stage clutch): first pedal press stops forward movement; second press stops the PTO",
+            "Independent PTO: fully separate clutch controls wheel drive and PTO independently — the most flexible arrangement for complex operations"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "For most modern farms, independent PTO is the expected standard on any mid-range or larger tractor. Where it matters most is on operations that require stopping frequently — headland turns with a baler, manoeuvring a mower through gates, or powering a stationary pump while you move vehicles behind the tractor."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Front PTO: When You Need It"
+        },
+        {
+          "type": "paragraph",
+          "text": "Front PTO is standard equipment on a growing number of utility and large tractors, particularly in European markets where front mowers and front-mounted drills are common. It operates on the same 1000 RPM standard and is driven by a separate clutch. Running front and rear PTO simultaneously is possible on tractors with sufficient hydraulic and engine capacity, but demands careful attention to total power budget."
+        },
+        {
+          "type": "tip",
+          "text": "On TractorsCompare, filter any brand's lineup by PTO type or PTO HP to shortlist models that match your implement requirements before visiting a dealer."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Matching PTO HP to Your Heaviest Implement"
+        },
+        {
+          "type": "paragraph",
+          "text": "The correct rule is simple: your tractor's PTO HP should exceed the heaviest implement's rated requirement by at least 20 percent. This buffer keeps the engine in its efficient operating range, reduces heat and wear during sustained work, and gives you reserve for tougher conditions — wet soil, heavy crop, long steep runs."
+        },
+        {
+          "type": "paragraph",
+          "text": "Running an implement right at the tractor's PTO limit is sometimes unavoidable but should not be the normal condition. If you find yourself regularly pulling the engine down to 1600–1800 RPM with the throttle fully open, the tractor is undersized for the implement. Over time, this shows up as premature clutch wear, increased fuel consumption per output unit, and stress on the implement gearbox which typically assumes rated power is available at all times."
+        }
       ]
     },
     {
@@ -106,30 +250,99 @@
       "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
       "category": "Comparisons",
       "readingTimeMinutes": 8,
-      "keywords": ["John Deere vs Kubota", "best compact tractor 2026", "Kubota or John Deere", "compact tractor comparison", "John Deere 3 series vs Kubota"],
+      "keywords": [
+        "John Deere vs Kubota",
+        "best compact tractor 2026",
+        "Kubota or John Deere",
+        "compact tractor comparison",
+        "John Deere 3 series vs Kubota"
+      ],
       "excerpt": "No two brand names come up more in compact tractor conversations than John Deere and Kubota. Both build genuinely good machines. The question is which one is better suited to your specific situation — and the answer depends on factors that go well beyond the spec sheet.",
       "imageUrl": "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=1200&q=80&auto=format",
       "imageAlt": "Compact tractor working in a green paddock — John Deere vs Kubota comparison",
       "content": [
-        { "type": "heading", "level": 2, "text": "Where Both Brands Excel" },
-        { "type": "paragraph", "text": "John Deere and Kubota are the two best-selling compact tractor brands globally for a reason: both build mechanically reliable machines that hold their value, are supported by extensive dealer networks, and have parts availability that remains strong even for older models. If you buy either brand from a reputable dealer and maintain it properly, you are unlikely to be disappointed." },
-        { "type": "paragraph", "text": "The meaningful differences between the two emerge when you look at dealer proximity, the specific configurations available in your power range, loader performance, and long-term cost of ownership. These factors vary by region and by the specific model series being compared." },
-        { "type": "heading", "level": 2, "text": "Engine and Power Delivery" },
-        { "type": "paragraph", "text": "Kubota builds its own diesel engines — it is one of very few compact tractor manufacturers that does so entirely in-house. The result is a powertrain designed as a complete system, which contributes to the brand's reputation for mechanical simplicity and long engine life. The B and L series engines are widely regarded as among the most durable in the compact segment." },
-        { "type": "paragraph", "text": "John Deere's compact tractors (the 1, 2, 3, and 4 series) use Yanmar and Mitsubishi diesels in the smaller models, transitioning to John Deere-branded engines in the mid-range. Delivered power feels strong for the rated figures, and the integration with John Deere's own transmission systems is well-executed. The 3 and 4 series in particular offer smooth power delivery that operators tend to comment on positively." },
-        { "type": "heading", "level": 2, "text": "Loader Performance: A Key Differentiator" },
-        { "type": "paragraph", "text": "If loader work is a priority — and for most compact tractor buyers it is — this is where the comparison gets interesting. John Deere's H-series loaders are well regarded for breakout force and cycle time relative to the machine size. The integration between the tractor's hydraulics and the loader is tight, and the self-levelling geometry works well in practice." },
-        { "type": "paragraph", "text": "Kubota's LA-series loaders, matched to the B and L series tractors, are competitive on lift height and breakout force for the same power class. The parallel linkage design on higher-spec models offers genuine self-levelling, which matters when you are moving material over distance. Kubota's edge tends to be in the hydraulic flow available — particularly on the Grand L series — which translates to faster loader cycles." },
-        { "type": "tip", "text": "Compare loader specifications directly on TractorsCompare: filter by brand and sort by hydraulic lift capacity to see how specific models rank against each other." },
-        { "type": "heading", "level": 2, "text": "Dealer Network and Support" },
-        { "type": "paragraph", "text": "John Deere's dealer network is denser in North America and in large agricultural regions of Europe, South America, and Australia. The John Deere Operations Centre and connected diagnostics mean modern machines can often be diagnosed remotely, which is a genuine advantage when you are busy and a problem emerges at the wrong moment." },
-        { "type": "paragraph", "text": "Kubota has invested heavily in its dealer network over the past decade and now has competitive coverage across most markets. Parts availability for current models is generally excellent. Where Kubota can lag behind in some regions is dealer technical depth — John Deere's larger dealers tend to run more specialist technicians trained on the full electronic and precision product range." },
-        { "type": "heading", "level": 2, "text": "Resale Value: Both Are Strong, Deere Has the Edge" },
-        { "type": "paragraph", "text": "In most markets, both brands retain value significantly better than non-premium compact tractors. John Deere machines consistently rank at or near the top of used equipment pricing in North America and the UK, often 10–15% above comparable-age Kubota models. Kubota holds value well too, and in some Asian markets the dynamic is reversed." },
-        { "type": "paragraph", "text": "The resale premium on John Deere is partly a reflection of dealer confidence in certifying used machines through their programme, and partly genuine brand premium in the used market. If you are buying to use and eventually sell rather than to run until it stops, John Deere's higher purchase price can be partially offset by the higher exit value." },
-        { "type": "heading", "level": 2, "text": "Which One Should You Buy?" },
-        { "type": "paragraph", "text": "If your nearest John Deere dealer is 20 minutes away and your nearest Kubota dealer is 90 minutes away, buy the John Deere. If the situation is reversed, buy the Kubota. Dealer proximity and quality of service relationship matters more over 15 years of ownership than any spec difference between these two very capable brands." },
-        { "type": "paragraph", "text": "If dealer access is roughly equal, visit both. Sit in both cabs. Run both loaders. The machine you find more natural to operate — the one where the controls fall naturally to hand — is the right machine for you. Compact tractors are tools you use closely, and ergonomic preference is a legitimate factor in a purchase at this level." }
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Where Both Brands Excel"
+        },
+        {
+          "type": "paragraph",
+          "text": "John Deere and Kubota are the two best-selling compact tractor brands globally for a reason: both build mechanically reliable machines that hold their value, are supported by extensive dealer networks, and have parts availability that remains strong even for older models. If you buy either brand from a reputable dealer and maintain it properly, you are unlikely to be disappointed."
+        },
+        {
+          "type": "paragraph",
+          "text": "The meaningful differences between the two emerge when you look at dealer proximity, the specific configurations available in your power range, loader performance, and long-term cost of ownership. These factors vary by region and by the specific model series being compared."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Engine and Power Delivery"
+        },
+        {
+          "type": "paragraph",
+          "text": "Kubota builds its own diesel engines — it is one of very few compact tractor manufacturers that does so entirely in-house. The result is a powertrain designed as a complete system, which contributes to the brand's reputation for mechanical simplicity and long engine life. The B and L series engines are widely regarded as among the most durable in the compact segment."
+        },
+        {
+          "type": "paragraph",
+          "text": "John Deere's compact tractors (the 1, 2, 3, and 4 series) use Yanmar and Mitsubishi diesels in the smaller models, transitioning to John Deere-branded engines in the mid-range. Delivered power feels strong for the rated figures, and the integration with John Deere's own transmission systems is well-executed. The 3 and 4 series in particular offer smooth power delivery that operators tend to comment on positively."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Loader Performance: A Key Differentiator"
+        },
+        {
+          "type": "paragraph",
+          "text": "If loader work is a priority — and for most compact tractor buyers it is — this is where the comparison gets interesting. John Deere's H-series loaders are well regarded for breakout force and cycle time relative to the machine size. The integration between the tractor's hydraulics and the loader is tight, and the self-levelling geometry works well in practice."
+        },
+        {
+          "type": "paragraph",
+          "text": "Kubota's LA-series loaders, matched to the B and L series tractors, are competitive on lift height and breakout force for the same power class. The parallel linkage design on higher-spec models offers genuine self-levelling, which matters when you are moving material over distance. Kubota's edge tends to be in the hydraulic flow available — particularly on the Grand L series — which translates to faster loader cycles."
+        },
+        {
+          "type": "tip",
+          "text": "Compare loader specifications directly on TractorsCompare: filter by brand and sort by hydraulic lift capacity to see how specific models rank against each other."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Dealer Network and Support"
+        },
+        {
+          "type": "paragraph",
+          "text": "John Deere's dealer network is denser in North America and in large agricultural regions of Europe, South America, and Australia. The John Deere Operations Centre and connected diagnostics mean modern machines can often be diagnosed remotely, which is a genuine advantage when you are busy and a problem emerges at the wrong moment."
+        },
+        {
+          "type": "paragraph",
+          "text": "Kubota has invested heavily in its dealer network over the past decade and now has competitive coverage across most markets. Parts availability for current models is generally excellent. Where Kubota can lag behind in some regions is dealer technical depth — John Deere's larger dealers tend to run more specialist technicians trained on the full electronic and precision product range."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Resale Value: Both Are Strong, Deere Has the Edge"
+        },
+        {
+          "type": "paragraph",
+          "text": "In most markets, both brands retain value significantly better than non-premium compact tractors. John Deere machines consistently rank at or near the top of used equipment pricing in North America and the UK, often 10–15% above comparable-age Kubota models. Kubota holds value well too, and in some Asian markets the dynamic is reversed."
+        },
+        {
+          "type": "paragraph",
+          "text": "The resale premium on John Deere is partly a reflection of dealer confidence in certifying used machines through their programme, and partly genuine brand premium in the used market. If you are buying to use and eventually sell rather than to run until it stops, John Deere's higher purchase price can be partially offset by the higher exit value."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Which One Should You Buy?"
+        },
+        {
+          "type": "paragraph",
+          "text": "If your nearest John Deere dealer is 20 minutes away and your nearest Kubota dealer is 90 minutes away, buy the John Deere. If the situation is reversed, buy the Kubota. Dealer proximity and quality of service relationship matters more over 15 years of ownership than any spec difference between these two very capable brands."
+        },
+        {
+          "type": "paragraph",
+          "text": "If dealer access is roughly equal, visit both. Sit in both cabs. Run both loaders. The machine you find more natural to operate — the one where the controls fall naturally to hand — is the right machine for you. Compact tractors are tools you use closely, and ergonomic preference is a legitimate factor in a purchase at this level."
+        }
       ]
     },
     {
@@ -143,32 +356,91 @@
       "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
       "category": "Buying Guides",
       "readingTimeMinutes": 6,
-      "keywords": ["buying used tractor", "used tractor checklist", "used tractor inspection", "second hand tractor guide", "tractor purchase mistakes"],
+      "keywords": [
+        "buying used tractor",
+        "used tractor checklist",
+        "used tractor inspection",
+        "second hand tractor guide",
+        "tractor purchase mistakes"
+      ],
       "excerpt": "The used tractor market offers real value for farmers who know what to look for. It also contains some genuinely poor machines dressed up with a pressure wash and fresh paint. These are the five mistakes that separate informed buyers from expensive lessons.",
       "imageUrl": "https://images.unsplash.com/photo-1605002514369-55e82040a5c7?w=1200&q=80&auto=format",
       "imageAlt": "Old red tractor parked in a barn — used tractor inspection guide",
       "content": [
-        { "type": "heading", "level": 2, "text": "Mistake 1: Skipping the Pre-Purchase Inspection" },
-        { "type": "paragraph", "text": "The single most expensive mistake in used tractor buying is skipping an independent inspection to save money or time. A pre-purchase inspection by a qualified mechanic — ideally from a dealer who services the brand in question — costs between £150 and £400 depending on market. It can reveal problems that would cost ten times that to repair within the first season." },
-        { "type": "paragraph", "text": "The inspection should cover compression test results, hydraulic pressure and flow, PTO clutch engagement, front axle wear, cab pressurisation (on filter cab models), three-point linkage lift and hold, and any active fault codes in the tractor's control system. A seller who resists an independent inspection is telling you something important." },
-        { "type": "heading", "level": 2, "text": "Mistake 2: Judging the Machine by Its Appearance" },
-        { "type": "paragraph", "text": "A fresh coat of paint and a clean cab can hide 5,000 hours of hard work or deferred maintenance. Professional valeting, paint touch-ups, and cab deep cleans are standard practice before auction and private sale. The relevant information is in the service history, the hour meter, and the mechanical condition — not in the presentation." },
-        { "type": "list", "items": [
-          "Check for paint overspray on rubber seals, hoses, and glass — suggests recent cosmetic work to hide damage",
-          "Look under the tractor for oil weeps around the engine sump, axle casings, and transmission cover",
-          "Inspect the three-point linkage top link and lower link pin holes for wear — oval holes indicate heavy use",
-          "Check the loader mounting frame for cracks, particularly at the main pivot points and crossmember welds"
-        ]},
-        { "type": "heading", "level": 2, "text": "Mistake 3: Ignoring the Hour Meter" },
-        { "type": "paragraph", "text": "Hour meters are not odometers — they can be tampered with, and on older tractors they can fail and be replaced, inadvertently or otherwise. A well-maintained tractor with high hours is frequently a better buy than a poorly maintained machine with lower hours, but you need service records to make that judgement." },
-        { "type": "paragraph", "text": "As a rough guide, a well-built agricultural tractor should reach 10,000–15,000 hours before requiring a major engine overhaul, provided it has been serviced to schedule. Compact and sub-compact tractors typically have shorter service intervals and engine lives in the 5,000–8,000 hour range. A machine presented with no service records at high hours requires extra scrutiny and should be priced accordingly." },
-        { "type": "heading", "level": 2, "text": "Mistake 4: Buying Without Checking Parts Availability" },
-        { "type": "paragraph", "text": "For mainstream brands — John Deere, Kubota, New Holland, Case IH, Fendt, Massey Ferguson — parts availability for machines up to 20–25 years old is generally excellent through dealer and independent channels. The risk area is lesser-known brands or models that were sold in limited numbers, and machines from manufacturers that have since been absorbed into larger groups and whose parts supply has consolidated or discontinued." },
-        { "type": "paragraph", "text": "Before committing to any used purchase, search for the specific model number on two or three parts supplier websites. If major components like water pumps, injectors, and hydraulic pumps show as available from multiple sources, you are in good shape. If the model returns no results or 'contact us for availability', factor longer downtime and higher parts costs into your price assessment." },
-        { "type": "tip", "text": "Use TractorsCompare to look up the full specifications and production years of any model you are considering. Knowing whether a tractor was produced for two years or twenty tells you a lot about likely parts availability." },
-        { "type": "heading", "level": 2, "text": "Mistake 5: Buying the Wrong Size to Save Money" },
-        { "type": "paragraph", "text": "A tractor that is slightly too small for your operation is not a bargain — it is a frustration multiplied across every working day. Running implements at the limit of a tractor's PTO and hydraulic capacity stresses the machine, slows your work rate, and produces higher fuel consumption per unit of output than a correctly-sized machine would. In heavy seasons, an undersized tractor creates bottlenecks exactly when you can least afford them." },
-        { "type": "paragraph", "text": "If the choice is between a smaller machine you can afford comfortably and a correctly-sized machine that stretches your budget, it is usually worth waiting and saving the difference. The cost of buying, selling, and buying again — with the depreciation and transaction costs of two deals — typically exceeds the premium for getting the right machine first time." }
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mistake 1: Skipping the Pre-Purchase Inspection"
+        },
+        {
+          "type": "paragraph",
+          "text": "The single most expensive mistake in used tractor buying is skipping an independent inspection to save money or time. A pre-purchase inspection by a qualified mechanic — ideally from a dealer who services the brand in question — costs between £150 and £400 depending on market. It can reveal problems that would cost ten times that to repair within the first season."
+        },
+        {
+          "type": "paragraph",
+          "text": "The inspection should cover compression test results, hydraulic pressure and flow, PTO clutch engagement, front axle wear, cab pressurisation (on filter cab models), three-point linkage lift and hold, and any active fault codes in the tractor's control system. A seller who resists an independent inspection is telling you something important."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mistake 2: Judging the Machine by Its Appearance"
+        },
+        {
+          "type": "paragraph",
+          "text": "A fresh coat of paint and a clean cab can hide 5,000 hours of hard work or deferred maintenance. Professional valeting, paint touch-ups, and cab deep cleans are standard practice before auction and private sale. The relevant information is in the service history, the hour meter, and the mechanical condition — not in the presentation."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Check for paint overspray on rubber seals, hoses, and glass — suggests recent cosmetic work to hide damage",
+            "Look under the tractor for oil weeps around the engine sump, axle casings, and transmission cover",
+            "Inspect the three-point linkage top link and lower link pin holes for wear — oval holes indicate heavy use",
+            "Check the loader mounting frame for cracks, particularly at the main pivot points and crossmember welds"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mistake 3: Ignoring the Hour Meter"
+        },
+        {
+          "type": "paragraph",
+          "text": "Hour meters are not odometers — they can be tampered with, and on older tractors they can fail and be replaced, inadvertently or otherwise. A well-maintained tractor with high hours is frequently a better buy than a poorly maintained machine with lower hours, but you need service records to make that judgement."
+        },
+        {
+          "type": "paragraph",
+          "text": "As a rough guide, a well-built agricultural tractor should reach 10,000–15,000 hours before requiring a major engine overhaul, provided it has been serviced to schedule. Compact and sub-compact tractors typically have shorter service intervals and engine lives in the 5,000–8,000 hour range. A machine presented with no service records at high hours requires extra scrutiny and should be priced accordingly."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mistake 4: Buying Without Checking Parts Availability"
+        },
+        {
+          "type": "paragraph",
+          "text": "For mainstream brands — John Deere, Kubota, New Holland, Case IH, Fendt, Massey Ferguson — parts availability for machines up to 20–25 years old is generally excellent through dealer and independent channels. The risk area is lesser-known brands or models that were sold in limited numbers, and machines from manufacturers that have since been absorbed into larger groups and whose parts supply has consolidated or discontinued."
+        },
+        {
+          "type": "paragraph",
+          "text": "Before committing to any used purchase, search for the specific model number on two or three parts supplier websites. If major components like water pumps, injectors, and hydraulic pumps show as available from multiple sources, you are in good shape. If the model returns no results or 'contact us for availability', factor longer downtime and higher parts costs into your price assessment."
+        },
+        {
+          "type": "tip",
+          "text": "Use TractorsCompare to look up the full specifications and production years of any model you are considering. Knowing whether a tractor was produced for two years or twenty tells you a lot about likely parts availability."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mistake 5: Buying the Wrong Size to Save Money"
+        },
+        {
+          "type": "paragraph",
+          "text": "A tractor that is slightly too small for your operation is not a bargain — it is a frustration multiplied across every working day. Running implements at the limit of a tractor's PTO and hydraulic capacity stresses the machine, slows your work rate, and produces higher fuel consumption per unit of output than a correctly-sized machine would. In heavy seasons, an undersized tractor creates bottlenecks exactly when you can least afford them."
+        },
+        {
+          "type": "paragraph",
+          "text": "If the choice is between a smaller machine you can afford comfortably and a correctly-sized machine that stretches your budget, it is usually worth waiting and saving the difference. The cost of buying, selling, and buying again — with the depreciation and transaction costs of two deals — typically exceeds the premium for getting the right machine first time."
+        }
       ]
     },
     {
@@ -182,38 +454,97 @@
       "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
       "category": "Technical Guides",
       "readingTimeMinutes": 7,
-      "keywords": ["how much horsepower tractor", "tractor HP guide", "tractor horsepower for farm", "what size tractor do I need", "tractor HP requirements"],
+      "keywords": [
+        "how much horsepower tractor",
+        "tractor HP guide",
+        "tractor horsepower for farm",
+        "what size tractor do I need",
+        "tractor HP requirements"
+      ],
       "excerpt": "Horsepower is the number that sells tractors, but it is also the number most commonly misunderstood. Too little and you work the machine too hard; too much and you are paying for capacity that sits unused. Here is how to find the right number for your specific farm.",
       "imageUrl": "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=1200&q=80&auto=format",
       "imageAlt": "Agricultural tractor ploughing a large field — tractor horsepower guide",
       "content": [
-        { "type": "heading", "level": 2, "text": "Why 'Enough' HP Is the Right Target" },
-        { "type": "paragraph", "text": "More horsepower is not always better. Larger tractors burn more fuel at light loads, need wider gates and headlands, compact soil more under their weight, and cost more to purchase and insure. The goal is to find the minimum horsepower that handles your most demanding task with a 20% reserve, and buy that machine rather than the next size up." },
-        { "type": "paragraph", "text": "The 20% reserve is important because manufacturers rate implement requirements under ideal conditions — flat land, average soil conditions, average crop density. In practice, you will regularly encounter conditions that exceed the average: wet springs, heavy clay soils, lodged crops, or slopes that add rolling resistance. Without reserve capacity, the tractor operates under sustained high load, which accelerates wear and increases fuel consumption." },
-        { "type": "heading", "level": 2, "text": "HP Requirements by Task" },
-        { "type": "paragraph", "text": "These figures represent typical PTO or drawbar HP requirements for common farm tasks. Your actual requirement may vary based on soil type, implement size, and operating conditions. Use these as starting points for shortlisting rather than precise specifications." },
-        { "type": "list", "items": [
-          "Ride-on lawn mowing up to 1.5m cut: 18–25 HP",
-          "Light loader work and small acreage tasks: 25–40 HP",
-          "Rotary slasher / brushcutter up to 1.8m: 35–55 HP",
-          "Round baler up to 1.2m bale size: 50–75 HP PTO",
-          "Large square baler or high-capacity round baler: 80–120 HP PTO",
-          "Disc plough up to 4 furrows: 75–100 HP drawbar",
-          "Moldboard plough, 4–5 furrows: 100–140 HP drawbar",
-          "Front-end loader with pallet forks on heavy duty: 60–90 HP",
-          "Row crop planting with press wheels: 80–120 HP",
-          "Large grain combine header or forage harvester: 180–300+ HP"
-        ]},
-        { "type": "heading", "level": 2, "text": "The Multiple-Tractor Strategy" },
-        { "type": "paragraph", "text": "Many farmers eventually arrive at a two-tractor system: a compact tractor in the 35–55 HP range for daily jobs (loader work, mowing, post-hole drilling, spraying) and a larger utility or row-crop tractor for the heavy seasonal work. This combination often costs less overall than a single medium-large tractor because the compact machine is cheaper to run per hour on the light tasks it handles year-round." },
-        { "type": "paragraph", "text": "Before buying a second tractor, look honestly at your annual hours by task. If the heavy work is genuinely seasonal — three to four weeks per year — contract the work rather than owning the capacity. A contracting rate of £70–100 per hour for a large tractor with operator is much less than the annual ownership cost of maintaining that machine yourself at low utilisation." },
-        { "type": "heading", "level": 2, "text": "Understanding Rated vs Boost Power" },
-        { "type": "paragraph", "text": "Modern turbocharged tractor engines offer power boost features — temporary increases in engine output during demanding conditions such as PTO-engaged field work or transport at speed. A tractor rated at 120 HP may deliver 130–135 HP in boost mode for short periods. This is a genuine performance advantage for peak demands, but your steady-state working capacity is the rated figure, not the boosted one." },
-        { "type": "paragraph", "text": "When manufacturers advertise a single headline HP figure, it is worth confirming whether this is the base rating or the boosted figure. The TractorsCompare database records the rated engine HP for each model, which allows consistent comparison across brands regardless of their marketing approach to boost power." },
-        { "type": "tip", "text": "Use the TractorsCompare HP comparison filter to see all tractors in a specific power range from all major brands. Sort by PTO HP to find the models that deliver the most usable power for implement-driven work." },
-        { "type": "heading", "level": 2, "text": "Fuel Consumption as a Cross-Check" },
-        { "type": "paragraph", "text": "Fuel consumption per hour is a good reality check on whether a tractor is appropriately sized for its work. A well-matched tractor running at 70–80% load in field conditions should consume approximately 0.22–0.28 litres per HP per hour. If you are regularly seeing much higher consumption relative to the rated HP, the machine is being overworked for its size. If consumption is consistently very low relative to rated HP, you are carrying more machine than you need." },
-        { "type": "paragraph", "text": "Tracking fuel consumption by operation — not just by the tank — is a straightforward way to see where your tractor is under or over-spec'd. Many modern tractors with onboard monitors provide this data automatically. On older machines, a simple fuel log tied to hour meter readings tells the same story over time." }
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Why 'Enough' HP Is the Right Target"
+        },
+        {
+          "type": "paragraph",
+          "text": "More horsepower is not always better. Larger tractors burn more fuel at light loads, need wider gates and headlands, compact soil more under their weight, and cost more to purchase and insure. The goal is to find the minimum horsepower that handles your most demanding task with a 20% reserve, and buy that machine rather than the next size up."
+        },
+        {
+          "type": "paragraph",
+          "text": "The 20% reserve is important because manufacturers rate implement requirements under ideal conditions — flat land, average soil conditions, average crop density. In practice, you will regularly encounter conditions that exceed the average: wet springs, heavy clay soils, lodged crops, or slopes that add rolling resistance. Without reserve capacity, the tractor operates under sustained high load, which accelerates wear and increases fuel consumption."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "HP Requirements by Task"
+        },
+        {
+          "type": "paragraph",
+          "text": "These figures represent typical PTO or drawbar HP requirements for common farm tasks. Your actual requirement may vary based on soil type, implement size, and operating conditions. Use these as starting points for shortlisting rather than precise specifications."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Ride-on lawn mowing up to 1.5m cut: 18–25 HP",
+            "Light loader work and small acreage tasks: 25–40 HP",
+            "Rotary slasher / brushcutter up to 1.8m: 35–55 HP",
+            "Round baler up to 1.2m bale size: 50–75 HP PTO",
+            "Large square baler or high-capacity round baler: 80–120 HP PTO",
+            "Disc plough up to 4 furrows: 75–100 HP drawbar",
+            "Moldboard plough, 4–5 furrows: 100–140 HP drawbar",
+            "Front-end loader with pallet forks on heavy duty: 60–90 HP",
+            "Row crop planting with press wheels: 80–120 HP",
+            "Large grain combine header or forage harvester: 180–300+ HP"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "The Multiple-Tractor Strategy"
+        },
+        {
+          "type": "paragraph",
+          "text": "Many farmers eventually arrive at a two-tractor system: a compact tractor in the 35–55 HP range for daily jobs (loader work, mowing, post-hole drilling, spraying) and a larger utility or row-crop tractor for the heavy seasonal work. This combination often costs less overall than a single medium-large tractor because the compact machine is cheaper to run per hour on the light tasks it handles year-round."
+        },
+        {
+          "type": "paragraph",
+          "text": "Before buying a second tractor, look honestly at your annual hours by task. If the heavy work is genuinely seasonal — three to four weeks per year — contract the work rather than owning the capacity. A contracting rate of £70–100 per hour for a large tractor with operator is much less than the annual ownership cost of maintaining that machine yourself at low utilisation."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Understanding Rated vs Boost Power"
+        },
+        {
+          "type": "paragraph",
+          "text": "Modern turbocharged tractor engines offer power boost features — temporary increases in engine output during demanding conditions such as PTO-engaged field work or transport at speed. A tractor rated at 120 HP may deliver 130–135 HP in boost mode for short periods. This is a genuine performance advantage for peak demands, but your steady-state working capacity is the rated figure, not the boosted one."
+        },
+        {
+          "type": "paragraph",
+          "text": "When manufacturers advertise a single headline HP figure, it is worth confirming whether this is the base rating or the boosted figure. The TractorsCompare database records the rated engine HP for each model, which allows consistent comparison across brands regardless of their marketing approach to boost power."
+        },
+        {
+          "type": "tip",
+          "text": "Use the TractorsCompare HP comparison filter to see all tractors in a specific power range from all major brands. Sort by PTO HP to find the models that deliver the most usable power for implement-driven work."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Fuel Consumption as a Cross-Check"
+        },
+        {
+          "type": "paragraph",
+          "text": "Fuel consumption per hour is a good reality check on whether a tractor is appropriately sized for its work. A well-matched tractor running at 70–80% load in field conditions should consume approximately 0.22–0.28 litres per HP per hour. If you are regularly seeing much higher consumption relative to the rated HP, the machine is being overworked for its size. If consumption is consistently very low relative to rated HP, you are carrying more machine than you need."
+        },
+        {
+          "type": "paragraph",
+          "text": "Tracking fuel consumption by operation — not just by the tank — is a straightforward way to see where your tractor is under or over-spec'd. Many modern tractors with onboard monitors provide this data automatically. On older machines, a simple fuel log tied to hour meter readings tells the same story over time."
+        }
       ]
     },
     {
@@ -1254,7 +1585,302 @@
       ],
       "imageUrl": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&q=80&auto=format",
       "imageAlt": "Side by side comparison of John Deere, Kubota, and New Holland tractors"
+    },
+    {
+      "slug": "tractor-maintenance-schedule-season-by-season-checklist",
+      "title": "Tractor Maintenance Schedule: A Season-by-Season Checklist",
+      "metaTitle": "Tractor Maintenance Schedule: Season-by-Season Checklist (2026) | TractorsCompare",
+      "metaDescription": "A practical, season-by-season tractor maintenance checklist — what to check before spring work, mid-season, before winter storage, and every 50/250/500 hours.",
+      "publishedAt": "2026-08-31T00:00:00.000Z",
+      "updatedAt": "2026-08-31T00:00:00.000Z",
+      "author": "TractorsCompare Editorial",
+      "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
+      "category": "Technical Guides",
+      "readingTimeMinutes": 8,
+      "keywords": [
+        "tractor maintenance schedule",
+        "tractor maintenance checklist",
+        "tractor service intervals",
+        "winterizing a tractor",
+        "tractor hour meter service"
+      ],
+      "excerpt": "Most tractor breakdowns aren't sudden failures — they're the slow result of a skipped filter change or a season stored wrong. Here's the maintenance rhythm that actually prevents them.",
+      "imageUrl": "https://images.unsplash.com/photo-1592982537447-6f2a6a0c8b53?w=1200&q=80&auto=format",
+      "imageAlt": "Mechanic checking tractor engine oil during routine maintenance",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Tractor manuals bury maintenance schedules in hour intervals — every 50, 250, 500, 1000 hours — which is technically correct but not how most owners actually think about their year. You think in seasons: getting ready for spring fieldwork, keeping things running through the busy summer and harvest months, then putting the machine away for winter. Here's the same maintenance requirements, organized the way you'll actually use them."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Before Spring Work Starts"
+        },
+        {
+          "type": "paragraph",
+          "text": "This is the single most important service window of the year, because it's the first real test after months of sitting idle — fuel can go stale, batteries drain, seals dry out, and rodents find warm engine bays. Don't skip straight to the first field pass."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Change engine oil and filter if it sat over 6 months since the last change, regardless of hours",
+            "Check and, if needed, replace the fuel filter — old diesel picks up condensation and algae growth over winter",
+            "Inspect the battery terminals for corrosion and confirm a full charge before the first cold start",
+            "Check all fluid levels: coolant, hydraulic, transmission, and rear-end/differential oil",
+            "Grease every zerk fitting on the loader, three-point hitch, and PTO shaft — winter storage lets grease harden and squeeze out",
+            "Inspect tires for cracking and correct pressure; a tractor that sat all winter often has one tire noticeably softer",
+            "Look under the hood for rodent nests or chewed wiring — a five-minute check that prevents a very bad day mid-planting"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "During the Busy Season (Every 50–100 Hours)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Once the tractor is in daily or near-daily use, the rhythm shifts to short, frequent checks rather than big service events. These take minutes and catch problems while they're still cheap to fix."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Check engine oil level daily during heavy use, especially with an implement drawing hard on the hydraulics",
+            "Clean or blow out the air filter more often in dusty conditions — a clogged filter quietly kills fuel economy and power before it ever throws a warning light",
+            "Re-grease hitch and loader pivot points every 50 hours, or daily if running a loader constantly",
+            "Check coolant level and radiator screen for chaff, dust, or straw buildup — this is the most common cause of overheating during harvest",
+            "Listen for new noises. A tractor you drive daily will tell you when something changes before a gauge does"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Mid-Season Service (Around 250 Hours)"
+        },
+        {
+          "type": "paragraph",
+          "text": "Most manufacturers set a 250-hour interval for a reason — it's roughly one full season of moderate use, and it's when hydraulic and transmission fluids start accumulating enough fine metal and heat-breakdown byproducts to matter. If you're running the tractor hard (loader work, PTO implements under constant load), move this up rather than pushing it back."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Change engine oil and filter (or sooner if running in heavy dust)",
+            "Change hydraulic filter and check hydraulic fluid condition — cloudy or dark fluid means water contamination or filter bypass",
+            "Check transmission and differential fluid levels",
+            "Inspect belts for cracking or glazing, and adjust or replace as needed",
+            "Check brake and clutch pedal free-play"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Before Winter Storage"
+        },
+        {
+          "type": "paragraph",
+          "text": "How you park a tractor for winter determines how easy — or how painful — spring startup will be. Ten minutes of prep now saves a battery, a fuel system, and possibly a starter motor."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Run the fuel tank close to full to minimize condensation buildup over winter, and add a fuel stabilizer if storage will exceed 60 days",
+            "Change the oil before storage, not after — used oil holds acidic combustion byproducts that sit against internal metal all winter",
+            "Disconnect the battery or put it on a maintainer; a battery left connected in a cold barn drains and can freeze",
+            "Coat exposed hydraulic ram rods with a light oil to prevent surface rust",
+            "Store with tires slightly overinflated to counter the pressure drop from cold temperatures, and off bare concrete if possible"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "The One Habit That Matters More Than the Schedule"
+        },
+        {
+          "type": "paragraph",
+          "text": "Write down the hour meter reading every time you do something — oil change, filter swap, grease job — even a note on paper taped inside the cab. Owners who track this catch problems early because they notice when an interval is creeping past due. Owners who go by memory are the ones who find out a filter was overdue when something fails. The schedule above works regardless of brand or model; what makes it effective is actually following it instead of running until something breaks."
+        }
+      ]
+    },
+    {
+      "slug": "compact-vs-utility-vs-row-crop-tractors-which-do-you-need",
+      "title": "Compact vs Utility vs Row-Crop Tractors: Which Category Do You Actually Need?",
+      "metaTitle": "Compact vs Utility vs Row-Crop Tractors: Which One Do You Need? | TractorsCompare",
+      "metaDescription": "Confused by tractor categories? Here's what actually separates compact, utility, and row-crop tractors — and a straightforward way to figure out which one fits your land and tasks.",
+      "publishedAt": "2026-08-31T00:00:00.000Z",
+      "updatedAt": "2026-08-31T00:00:00.000Z",
+      "author": "TractorsCompare Editorial",
+      "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
+      "category": "Guides",
+      "readingTimeMinutes": 7,
+      "keywords": [
+        "compact tractor vs utility tractor",
+        "tractor categories explained",
+        "row crop tractor",
+        "what tractor category do I need",
+        "compact utility tractor difference"
+      ],
+      "excerpt": "Manufacturers split their lineups into compact, utility, and row-crop tractors, but the lines blur fast once you start comparing spec sheets. Here's what the labels actually mean in practice.",
+      "imageUrl": "https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=1200&q=80&auto=format",
+      "imageAlt": "Rows of different sized tractors lined up in a dealership lot",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Ask three different tractor salespeople where 'compact' ends and 'utility' begins and you'll get three different horsepower numbers. The categories aren't strictly defined by law or standard — they're a mix of horsepower, frame size, intended use, and marketing convention that shifted over decades. That said, the categories aren't meaningless either. They map to real differences in what a tractor is built to do, and understanding those differences is more useful than memorizing an HP cutoff."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Compact Tractors: Built for Property, Not Production Agriculture"
+        },
+        {
+          "type": "paragraph",
+          "text": "Compact tractors generally run from roughly 20 to 50 HP, sit on a smaller frame, and are designed around versatility with light-duty attachments rather than raw pulling power. They're the default choice for rural homeowners, hobby farms, and landscaping businesses — small enough to maneuver around buildings and fences, but still strong enough to run a loader, mower deck, box blade, or post-hole digger."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Best for: under 10–15 acres, mowing, light loader work, snow removal, driveway and fence maintenance",
+            "Typical transmission: hydrostatic (pedal-controlled, no clutching gears) for easy in-and-out operation",
+            "Trade-off: not built for continuous heavy tillage or large implements — the frame and hydraulics aren’t sized for it"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Utility Tractors: The Do-Everything Middle Ground"
+        },
+        {
+          "type": "paragraph",
+          "text": "Utility tractors typically span 50 to roughly 120 HP and are the most common category on working small-to-mid-size farms. They're built heavier than compacts, with stronger hydraulics, higher lift capacity, and often a choice between hydrostatic and gear-driven transmissions. A utility tractor can run a loader, a rotary cutter, a manure spreader, hay equipment, and a mid-size tiller — it's genuinely the generalist of the lineup."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Best for: 15–150 acres, mixed livestock and hay operations, general fieldwork, loader-heavy chores",
+            "Typical transmission: often gear-driven with power shuttle, though CVT and hydrostatic options exist at the smaller end of the range",
+            "Trade-off: heavier and less nimble than a compact, and underpowered compared to a dedicated row-crop tractor for large-scale tillage or planting"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Row-Crop Tractors: Purpose-Built for Field Production"
+        },
+        {
+          "type": "paragraph",
+          "text": "Row-crop tractors are the largest category, generally starting around 100 HP and running well past 400 HP for the biggest models. They're engineered specifically for large-scale tillage, planting, and harvest support — wide stance for straddling crop rows, high ground clearance, and hydraulic and PTO systems sized for the biggest implements on the market. This is not a category most small landowners need, but if you're farming hundreds of acres of row crops, it's the only category that makes sense."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Best for: 150+ acres of row crops, large-scale tillage, planting, and harvest logistics",
+            "Typical transmission: powershift or CVT, built to handle sustained high-load operation for long field days",
+            "Trade-off: overkill (and needlessly expensive to buy, fuel, and maintain) for anything smaller than a full-scale row-crop operation"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "A Faster Way to Decide"
+        },
+        {
+          "type": "paragraph",
+          "text": "Instead of starting from the category label, start from your heaviest routine task and your acreage, then let that point you to the category. Someone mowing five acres and running a small loader almost never needs to look above the compact range, no matter how appealing a bigger tractor looks on a lot. Someone baling hay across 60 acres will find a compact frustratingly underpowered and should be shopping utility. And someone planting several hundred acres of corn or soybeans has already outgrown utility tractors regardless of what the spec sheet says about horsepower — the frame, hydraulics, and cab ergonomics for full field days are built into the row-crop category for a reason."
+        },
+        {
+          "type": "paragraph",
+          "text": "Categories overlap at the edges on purpose — a 55 HP tractor and a 95 HP tractor can both technically be called utility tractors, and the right one for you depends more on your actual implements and acreage than the label on the brochure. Use the category as a starting filter, then compare real specifications side by side for the models that fit your range."
+        }
+      ]
+    },
+    {
+      "slug": "tractor-total-cost-of-ownership-beyond-the-sticker-price",
+      "title": "Tractor Total Cost of Ownership: What the Sticker Price Doesn't Tell You",
+      "metaTitle": "Tractor Total Cost of Ownership Explained (2026) | TractorsCompare",
+      "metaDescription": "The purchase price is a small part of what a tractor actually costs over its life. A breakdown of financing, fuel, maintenance, and depreciation to budget for before you buy.",
+      "publishedAt": "2026-08-31T00:00:00.000Z",
+      "updatedAt": "2026-08-31T00:00:00.000Z",
+      "author": "TractorsCompare Editorial",
+      "authorBio": "The TractorsCompare editorial team combines decades of agricultural knowledge with hands-on tractor testing to deliver honest, practical advice for farmers and landowners worldwide.",
+      "category": "Buying Guides",
+      "readingTimeMinutes": 8,
+      "keywords": [
+        "tractor total cost of ownership",
+        "tractor financing",
+        "tractor depreciation",
+        "cost of owning a tractor",
+        "tractor budget planning"
+      ],
+      "excerpt": "Two tractors with the same price tag can cost very different amounts over ten years. Financing terms, fuel efficiency, parts availability, and resale value all move the real number more than the sticker does.",
+      "imageUrl": "https://images.unsplash.com/photo-1592982537322-4b41d2b8a0d0?w=1200&q=80&auto=format",
+      "imageAlt": "Farmer reviewing paperwork and budget next to a tractor",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "It's easy to compare two tractors by their purchase price alone, because that's the number on the quote sheet in front of you. But the purchase price is typically only a fraction of what a tractor costs over the years you'll own it. Financing terms, fuel consumption, routine service, parts costs, and resale value all compound over time — and they can easily flip which of two similarly priced tractors was actually the better buy."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Financing: The Interest Rate Matters More Than the Monthly Payment"
+        },
+        {
+          "type": "paragraph",
+          "text": "Dealers often lead with a monthly payment number because it's the easiest figure to make attractive, but a lower monthly payment can hide a longer term or a higher rate that costs thousands more over the life of the loan. Before comparing offers, convert everything to the same terms: total amount repaid, and effective interest rate. A 0% promotional financing offer from a manufacturer is genuinely valuable when available, but it's usually reserved for new equipment and specific models — used tractors and off-brand financing rarely get the same terms."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Compare total repayment amount, not just the monthly figure, across any financing offers",
+            "Check whether a longer term is quietly increasing the total interest paid, even with a lower rate",
+            "Factor in a down payment large enough that you’re not financing a depreciating asset for longer than it holds that value"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Fuel: A Bigger Line Item Than Most Buyers Expect"
+        },
+        {
+          "type": "paragraph",
+          "text": "Fuel consumption scales with horsepower, load, and hours used — and for a tractor run several hundred hours a year, it adds up to a real annual cost, not a rounding error. Two tractors of similar horsepower can differ meaningfully in fuel efficiency depending on engine tuning and transmission type; a well-matched CVT or powershift transmission that keeps the engine in its efficient RPM range under partial load can noticeably reduce consumption compared to a tractor that's frequently over-revved or lugging under load. If you're buying for regular, heavy use, ask for real fuel consumption figures under load, not just the spec sheet's best-case number."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Maintenance and Parts: Where Brand and Age Both Matter"
+        },
+        {
+          "type": "paragraph",
+          "text": "Routine maintenance cost is fairly predictable and similar across brands — oil, filters, and fluids scale with engine size more than manufacturer. Where costs diverge sharply is in parts availability and price for less common brands or older models. A tractor from a manufacturer with a strong dealer network nearby will generally get you same-week parts and service; a tractor from a brand with sparse regional support can mean weeks of downtime waiting on a part during your busiest season. Before buying, it's worth checking how far the nearest dealer or independent mechanic familiar with that brand actually is."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Ask what a routine service (oil, filters) costs at a local dealer for that specific model before buying, not after",
+            "Check parts lead time for common wear items — hydraulic filters, belts, and PTO components",
+            "Older or less common brands can have excellent equipment but genuinely worse parts logistics; factor in downtime risk, not just part price"
+          ]
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Depreciation and Resale: The Cost You Only Feel Later"
+        },
+        {
+          "type": "paragraph",
+          "text": "Depreciation is the least visible cost at purchase time and often the largest one over a five-to-ten-year ownership period. Well-known brands with strong resale demand tend to hold value better than niche or regionally unsupported brands, even when the initial purchase price was lower. Hours matter enormously here too — a tractor bought with unusually low hours for its age generally retains value better than an equivalent tractor with heavy hour usage, because buyers of used equipment weight hours almost as heavily as year of manufacture."
+        },
+        {
+          "type": "heading",
+          "level": 2,
+          "text": "Putting It Together"
+        },
+        {
+          "type": "paragraph",
+          "text": "A useful exercise before buying: sketch out a rough five-year cost for each tractor you're seriously considering — purchase price minus expected resale value, plus financing interest, plus estimated annual fuel based on your expected hours, plus routine maintenance. It doesn't need to be precise to be useful; even a rough estimate often reveals that the cheaper tractor upfront isn't actually the cheaper tractor over time, or that a slightly pricier model from a better-supported brand pays for the difference in resale value alone. The sticker price is the easiest number to compare — it's just rarely the number that matters most."
+        }
+      ]
     }
   ]
 }
-

@@ -5,6 +5,7 @@ import { brandToSlug, getBrandBySlug, getTractorsByBrand, getAllBrands } from '@
 import type { Metadata } from 'next';
 import type { TractorType } from '@/types/tractor';
 import { getBrandLogo } from '@/lib/brandLogos';
+import { isTractorIndexable } from '@/lib/tractorSeo';
 
 interface BrandPageProps {
   params: Promise<{ brand: string }>;
@@ -100,6 +101,13 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
     notFound();
   }
 
+  // Models with a real photo + known core specs get the full browsable table.
+  // The rest (scraped, no photo, incomplete specs) stay reachable but are moved
+  // to a secondary archive list so the main browsing path — and what a reviewer
+  // clicking through the site sees — leads mostly to substantial, unique pages.
+  const qualityTractors = allBrandTractors.filter(isTractorIndexable);
+  const archiveTractors = allBrandTractors.filter((t) => !isTractorIndexable(t));
+
   const sp = searchParams ? await searchParams : {};
   const q = (sp.q || '').trim().toLowerCase();
   const tipo = sp.tipo;
@@ -112,15 +120,15 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
     industrial: 'Industrial',
   };
 
-  // Stats (sobre el total de la marca)
-  const uniqueTypes = Array.from(new Set(allBrandTractors.map(t => (t.type || 'farm') as TractorType)));
-  const hpValues = allBrandTractors.map(t => t.engine?.powerHP || 0).filter(hp => hp > 0);
+  // Stats (sobre los modelos con ficha completa)
+  const uniqueTypes = Array.from(new Set(qualityTractors.map(t => (t.type || 'farm') as TractorType)));
+  const hpValues = qualityTractors.map(t => t.engine?.powerHP || 0).filter(hp => hp > 0);
   const minHP = hpValues.length ? Math.min(...hpValues) : 0;
   const maxHP = hpValues.length ? Math.max(...hpValues) : 0;
   const brandLogo = getBrandLogo(brandName);
 
-  // Filtrar + ordenar (server-side)
-  let filtered = allBrandTractors;
+  // Filtrar + ordenar (server-side) — solo modelos con ficha completa en la tabla principal
+  let filtered = qualityTractors;
   if (tipo) {
     filtered = filtered.filter(t => (t.type || 'farm') === tipo);
   }
@@ -186,13 +194,13 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
                 <div className="min-w-0 flex-1">
                   <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gray-900 break-words">{brandName}</h1>
                   <p className="text-gray-600 mt-1 text-sm md:text-base">
-                    {allBrandTractors.length} models · {uniqueTypes.length} types
+                    {qualityTractors.length} models · {uniqueTypes.length} types
                   </p>
                 </div>
               </div>
 
               <p className="text-gray-700 text-base md:text-lg leading-relaxed max-w-2xl mb-4">
-                Complete {brandName} tractor database with detailed specifications for all {allBrandTractors.length} models. Filter by type, search models, and access comprehensive technical specifications including engine data, transmission options, PTO specifications, hydraulic systems, dimensions, and weight.
+                Complete {brandName} tractor database with detailed specifications for {qualityTractors.length} models. Filter by type, search models, and access comprehensive technical specifications including engine data, transmission options, PTO specifications, hydraulic systems, dimensions, and weight.
               </p>
 
               <Link
@@ -208,7 +216,7 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 text-center shadow-sm">
                 <TractorIcon className="h-6 w-6 md:h-8 md:w-8 text-primary-700 mx-auto mb-2" />
-                <p className="text-2xl md:text-3xl font-bold text-gray-900">{allBrandTractors.length}</p>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900">{qualityTractors.length}</p>
                 <p className="text-xs md:text-sm text-gray-600">Models</p>
               </div>
               <div className="bg-white rounded-xl border border-gray-200 p-4 md:p-6 text-center shadow-sm">
@@ -390,6 +398,34 @@ export default async function BrandPage({ params, searchParams }: BrandPageProps
           )}
         </div>
       </section>
+
+      {/* Archive: older/incomplete-data models. Kept reachable, but off the
+          main browsing path since they lack a real photo or full specs. */}
+      {archiveTractors.length > 0 && (
+        <section className="py-6 md:py-8 bg-gray-50 border-t border-gray-200">
+          <div className="container-custom">
+            <details>
+              <summary className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-900">
+                + {archiveTractors.length} older {brandName} models with limited data
+              </summary>
+              <p className="text-xs text-gray-500 mt-2 mb-3 max-w-2xl">
+                These models are missing a verified photo or full technical specifications, so they're kept out of the main list above. Data may still be useful for reference.
+              </p>
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
+                {archiveTractors.map((tractor) => (
+                  <Link
+                    key={tractor.id}
+                    href={`/tractores/${tractor.slug}`}
+                    className="text-sm text-gray-500 hover:text-primary-700 hover:underline"
+                  >
+                    {tractor.model}
+                  </Link>
+                ))}
+              </div>
+            </details>
+          </div>
+        </section>
+      )}
 
       {/* Brand Information Section - SEO Content */}
       <section className="py-12 md:py-16 bg-white border-t border-gray-200">
